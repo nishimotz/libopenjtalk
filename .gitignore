@@ -1,0 +1,7 @@
+*.a
+*.o
+*.log
+*.status
+*/Makefile
+*/.deps
+*~
