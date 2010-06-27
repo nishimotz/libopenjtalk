@@ -4,6 +4,9 @@
  * since 2010-06-27    
  */
 
+#define VOICE "/usr/local/share/open_jtalk/hts_voice_nitech_jp_atr503_m001-1.01"
+#define DIC   "/usr/local/share/open_jtalk/open_jtalk_dic_utf_8-1.00"
+
 /* ----------------------------------------------------------------- */
 /*           The HMM-Based Speech Synthesis System (HTS)             */
 /*           Open JTalk developed by HTS Working Group               */
@@ -276,7 +279,7 @@ FILE *Getfp(const char *name, const char *opt)
    return (fp);
 }
 
-int main(int argc, char **argv)
+int libopen_jtalk_main(int argc, char **argv)
 {
    FILE *txtfp = stdin;
    char *txtfn = NULL;
@@ -351,13 +354,13 @@ int main(int argc, char **argv)
             switch (*(*argv + 2)) {
             case 'f':
             case 'p':
-               fn_ts_lf0 = *(++argv);
+               fn_ts_lf0 = *(++argv); /* -tf $VOICE/tree-lf0.inf */
                break;
             case 'm':
-               fn_ts_mcp = *(++argv);
+               fn_ts_mcp = *(++argv); /* -tm $VOICE/tree-mgc.inf */
                break;
             case 'd':
-               fn_ts_dur = *(++argv);
+               fn_ts_dur = *(++argv); /* -td $VOICE/tree-dur.inf */
                break;
             default:
                fprintf(stderr,
@@ -370,13 +373,13 @@ int main(int argc, char **argv)
             switch (*(*argv + 2)) {
             case 'f':
             case 'p':
-               fn_ms_lf0 = *(++argv);
+               fn_ms_lf0 = *(++argv); /* -mf $VOICE/lf0.pdf */
                break;
             case 'm':
-               fn_ms_mcp = *(++argv);
+               fn_ms_mcp = *(++argv); /* -mm $VOICE/mgc.pdf */
                break;
             case 'd':
-               fn_ms_dur = *(++argv);
+               fn_ms_dur = *(++argv); /* -md $VOICE/dur.pdf */
                break;
             default:
                fprintf(stderr,
@@ -389,11 +392,11 @@ int main(int argc, char **argv)
             switch (*(*argv + 2)) {
             case 'f':
             case 'p':
-               fn_ws_lf0[num_ws_lf0] = *(++argv);
+               fn_ws_lf0[num_ws_lf0] = *(++argv); /* -df $VOICE/lf0.win1 -df $VOICE/lf0.win2 -df $VOICE/lf0.win3 */
                num_ws_lf0++;
                break;
             case 'm':
-               fn_ws_mcp[num_ws_mcp] = *(++argv);
+               fn_ws_mcp[num_ws_mcp] = *(++argv); /* -dm $VOICE/mgc.win1 -dm $VOICE/mgc.win2 -dm $VOICE/mgc.win3 */
                num_ws_mcp++;
                break;
             default:
@@ -406,10 +409,10 @@ int main(int argc, char **argv)
          case 'o':
             switch (*(*argv + 2)) {
             case 'w':
-               wavfp = Getfp(*(++argv), "wb");
+               wavfp = Getfp(*(++argv), "wb"); /* -ow _hoge.wav */
                break;
             case 't':
-               logfp = Getfp(*(++argv), "w");
+               logfp = Getfp(*(++argv), "w"); /* -ot _log.txt */
                break;
             default:
                fprintf(stderr, "ERROR: main() in open_jtalk.c: Invalid option '-o%c'.\n",
@@ -452,10 +455,10 @@ int main(int argc, char **argv)
             switch (*(*argv + 2)) {
             case 'f':
             case 'p':
-               fn_ts_gvl = *(++argv);
+               fn_ts_gvl = *(++argv); /* -ef $VOICE/tree-gv-lf0.inf */
                break;
             case 'm':
-               fn_ts_gvm = *(++argv);
+               fn_ts_gvm = *(++argv); /* -em $VOICE/tree-gv-mgc.inf */
                break;
             default:
                fprintf(stderr,
@@ -468,10 +471,10 @@ int main(int argc, char **argv)
             switch (*(*argv + 2)) {
             case 'f':
             case 'p':
-               fn_ms_gvl = *(++argv);
+               fn_ms_gvl = *(++argv); /* -cf $VOICE/gv-lf0.pdf */
                break;
             case 'm':
-               fn_ms_gvm = *(++argv);
+               fn_ms_gvm = *(++argv); /* -cm $VOICE/gv-mgc.pdf */
                break;
             default:
                fprintf(stderr,
@@ -497,7 +500,7 @@ int main(int argc, char **argv)
             --argc;
             break;
          case 'k':
-            fn_gv_switch = *++argv;
+            fn_gv_switch = *++argv; /* -k $VOICE/gv-switch.inf */
             --argc;
             break;
          case 'z':
@@ -513,6 +516,7 @@ int main(int argc, char **argv)
          txtfp = Getfp(txtfn, "rt");
       }
    }
+#if 0
    /* dictionary directory check */
    if (dn_mecab == NULL) {
       fprintf(stderr, "ERROR: main() in open_jtalk.c: No dictionary directory.\n");
@@ -526,13 +530,34 @@ int main(int argc, char **argv)
               "ERROR: main() in open_jtalk.c: Specify models (trees) for each parameter.\n");
       exit(1);
    }
-
+#endif
    /* initialize and load */
    OpenJTalk_initialize(&open_jtalk, sampling_rate, fperiod, alpha, stage, beta, audio_buff_size,
                         uv_threshold, use_log_gain, gv_weight_mcp, gv_weight_lf0);
-   OpenJTalk_load(&open_jtalk, dn_mecab, fn_ms_dur, fn_ts_dur, fn_ms_mcp, fn_ts_mcp, fn_ws_mcp,
-                  num_ws_mcp, fn_ms_lf0, fn_ts_lf0, fn_ws_lf0, num_ws_lf0, fn_ms_gvm, fn_ts_gvm,
-                  fn_ms_gvl, fn_ts_gvl, fn_gv_switch);
+   fn_ws_mcp[0] = VOICE "/mgc.win1";
+   fn_ws_mcp[1] = VOICE "/mgc.win2";
+   fn_ws_mcp[2] = VOICE "/mgc.win3";
+   fn_ws_lf0[0] = VOICE "/lf0.win1";
+   fn_ws_lf0[1] = VOICE "/lf0.win2";
+   fn_ws_lf0[2] = VOICE "/lf0.win3";
+   OpenJTalk_load(&open_jtalk,
+		  DIC, /* dn_mecab */ 
+		  VOICE "/dur.pdf", /* fn_ms_dur */
+		  VOICE "/tree-dur.inf", /* fn_ts_dur */
+		  VOICE "/mgc.pdf", /* fn_ms_mcp */
+		  VOICE "/tree-mgc.inf", /* fn_ts_mcp */
+		  fn_ws_mcp,
+		  3, /* num_ws_mcp */
+		  VOICE "/lf0.pdf", /* fn_ms_lf0 */
+		  VOICE "/tree-lf0.inf", /* fn_ts_lf0 */
+		  fn_ws_lf0, 
+		  3, /* num_ws_lf0 */
+		  VOICE "/gv-mgc.pdf", /* fn_ms_gvm */
+		  VOICE "/tree-gv-mgc.inf", /* fn_ts_gvm */
+		  VOICE "/gv-lf0.pdf",  /* fn_ms_gvl */
+		  VOICE "/tree-gv-lf0.inf", /* fn_ts_gvl */
+		  VOICE "/gv-switch.inf" /* fn_gv_switch */
+		  );
 
    /* synthesis */
    fgets(buff, MAXBUFLEN - 1, txtfp);

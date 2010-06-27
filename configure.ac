@@ -317,7 +317,7 @@ else
 fi
 
 # Makefiles
-AC_CONFIG_FILES([Makefile bin/Makefile text2mecab/Makefile mecab/Makefile mecab/src/Makefile mecab2njd/Makefile njd/Makefile njd_set_pronunciation/Makefile njd_set_digit/Makefile njd_set_accent_phrase/Makefile njd_set_accent_type/Makefile njd_set_unvoiced_vowel/Makefile njd_set_long_vowel/Makefile njd2jpcommon/Makefile jpcommon/Makefile mecab-naist-jdic/Makefile])
+AC_CONFIG_FILES([Makefile bin/Makefile text2mecab/Makefile mecab/Makefile mecab/src/Makefile mecab2njd/Makefile njd/Makefile njd_set_pronunciation/Makefile njd_set_digit/Makefile njd_set_accent_phrase/Makefile njd_set_accent_type/Makefile njd_set_unvoiced_vowel/Makefile njd_set_long_vowel/Makefile njd2jpcommon/Makefile jpcommon/Makefile mecab-naist-jdic/Makefile lib/Makefile])
 
 # make mecab/config.h
 AC_OUTPUT

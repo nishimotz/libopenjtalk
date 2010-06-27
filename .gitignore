@@ -2,6 +2,7 @@
 *.o
 *.log
 *.status
-*/Makefile
-*/.deps
+Makefile
+.deps
+autom4te.cache
 *~
