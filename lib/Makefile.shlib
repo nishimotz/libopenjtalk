@@ -1,0 +1,44 @@
+# Makefile.shlib
+# by Takuya Nishimoto
+# usage:
+# $ make -f Makefile.shlib
+
+target: shlib dlmain
+
+INCLUDES = -I ../text2mecab \
+           -I ../mecab/src \
+           -I ../mecab2njd \
+           -I ../njd \
+           -I ../njd_set_pronunciation \
+           -I ../njd_set_digit \
+           -I ../njd_set_accent_phrase \
+           -I ../njd_set_accent_type \
+           -I ../njd_set_unvoiced_vowel \
+           -I ../njd_set_long_vowel \
+           -I ../njd2jpcommon \
+           -I ../jpcommon \
+           -I /usr/local/include \
+           -I. -I../mecab
+
+LDADD = ../text2mecab/libtext2mecab.a \
+                   ../mecab2njd/libmecab2njd.a \
+                   ../njd/libnjd.a \
+                   ../njd_set_pronunciation/libnjd_set_pronunciation.a \
+                   ../njd_set_digit/libnjd_set_digit.a \
+                   ../njd_set_accent_phrase/libnjd_set_accent_phrase.a \
+                   ../njd_set_accent_type/libnjd_set_accent_type.a \
+                   ../njd_set_unvoiced_vowel/libnjd_set_unvoiced_vowel.a \
+                   ../njd_set_long_vowel/libnjd_set_long_vowel.a \
+                   ../njd2jpcommon/libnjd2jpcommon.a \
+                   ../jpcommon/libjpcommon.a \
+                   ../mecab/src/libmecab.a \
+                   /usr/local/lib/libHTSEngine.a -lstdc++
+
+shlib: libopen_jtalk.c
+	gcc -DHAVE_CONFIG_H -I. -I../mecab -I ../text2mecab -I ../mecab/src -I ../mecab2njd -I ../njd -I ../njd_set_pronunciation -I ../njd_set_digit -I ../njd_set_accent_phrase -I ../njd_set_accent_type -I ../njd_set_unvoiced_vowel -I ../njd_set_long_vowel -I ../njd2jpcommon -I ../jpcommon -I /usr/local/include     -O2 -Wall -g -g -O2 -finput-charset=UTF-8 -fexec-charset=UTF-8  -MT libopen_jtalk.o -MD -MP -MF .deps/libopen_jtalk.Tpo -c -o libopen_jtalk.o libopen_jtalk.c
+	gcc -shared -Wl,-soname,libopenjtalk.so.1 -o libopenjtalk.so.1.0.1 libopen_jtalk.o $(LDADD)
+
+dlmain: dlmain.c
+	gcc dlmain.c -o dlmain -ldl
+
+

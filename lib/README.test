@@ -1,0 +1,6 @@
+
+$ ls /usr/local/share/open_jtalk/
+hts_voice_nitech_jp_atr503_m001-1.01  open_jtalk_dic_utf_8-1.00
+
+$ ./main -ow out.wav input.txt
+$ play out.wav
