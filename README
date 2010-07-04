@@ -6,14 +6,22 @@ Notice: This is unfinished work. See 'lib' directory.
 
 http://ja.nishimotz.com/open-jtalk
 
-Environment: Ubuntu Linux 10.04
+Environment: Ubuntu Linux 9.04 / 10.04
 
 $ sudo aptitude install autoconf libtool
-
 $ autoreconf
+
+== how to test shared-lib ==
+
+$ cd /usr/local/share
+$ sudo mkdir /open_jtalk
+$ sudo tar xvfz /path/to/open_jtalk_dic_utf8-1.00.tar.gz
+$ sudo tar xvfz /path/to/hts_voice_nitech_jp_atr503_m001-1.01.tar.gz
+
 $ sh configure --with-charset=UTF-8
-
-
-
-
+$ make
+$ cd lib
+$ make -f Makefile.shlib
+$ export LD_LIBRARY_PATH=.
+$ ./dlmain -ow _hoge.wav input.txt
 
