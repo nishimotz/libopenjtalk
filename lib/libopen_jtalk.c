@@ -151,8 +151,24 @@ void OpenJTalk_synthesis(OpenJTalk * open_jtalk, char *txt, FILE * wavfp, FILE *
       HTS_Engine_create_sstream(&open_jtalk->engine);
       HTS_Engine_create_pstream(&open_jtalk->engine);
       HTS_Engine_create_gstream(&open_jtalk->engine);
+#if 0
       if (wavfp != NULL)
          HTS_Engine_save_riff(&open_jtalk->engine, wavfp);
+#else
+      /* based on HTS_engine_API:
+       * HTS_Engine_save_generated_speech: output generated speech */
+      {
+        HTS_Engine *engine = &open_jtalk->engine;
+        int i;
+        short temp;
+        HTS_GStreamSet *gss = &engine->gss;
+        for (i = 0; i < HTS_GStreamSet_get_total_nsample(gss); i++) {
+          temp = HTS_GStreamSet_get_speech(gss, i);
+          fwrite(&temp, sizeof(short), 1, wavfp);
+        }
+      }
+#endif
+#if 0
       if (logfp != NULL) {
          fprintf(logfp, "[Text analysis result]\n");
          NJD_fprint(&open_jtalk->njd, logfp);
@@ -161,6 +177,7 @@ void OpenJTalk_synthesis(OpenJTalk * open_jtalk, char *txt, FILE * wavfp, FILE *
          fprintf(logfp, "\n");
          HTS_Engine_save_information(&open_jtalk->engine, logfp);
       }
+#endif
       HTS_Engine_refresh(&open_jtalk->engine);
    }
    JPCommon_refresh(&open_jtalk->jpcommon);
