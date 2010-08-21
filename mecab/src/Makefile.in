@@ -15,7 +15,6 @@
 
 @SET_MAKE@
 
-
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -35,7 +34,6 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-noinst_PROGRAMS = mecab-dict-index$(EXEEXT)
 subdir = mecab/src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -60,10 +58,6 @@ am_libmecab_a_OBJECTS = char_property.$(OBJEXT) connector.$(OBJEXT) \
 	string_buffer.$(OBJEXT) tagger.$(OBJEXT) tokenizer.$(OBJEXT) \
 	utils.$(OBJEXT) viterbi.$(OBJEXT) writer.$(OBJEXT)
 libmecab_a_OBJECTS = $(am_libmecab_a_OBJECTS)
-PROGRAMS = $(noinst_PROGRAMS)
-am_mecab_dict_index_OBJECTS = mecab-dict-index.$(OBJEXT)
-mecab_dict_index_OBJECTS = $(am_mecab_dict_index_OBJECTS)
-mecab_dict_index_DEPENDENCIES = libmecab.a
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/mecab
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -77,8 +71,8 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(libmecab_a_SOURCES) $(mecab_dict_index_SOURCES)
-DIST_SOURCES = $(libmecab_a_SOURCES) $(mecab_dict_index_SOURCES)
+SOURCES = $(libmecab_a_SOURCES)
+DIST_SOURCES = $(libmecab_a_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -196,7 +190,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 DISTCLEANFILES = *.log *.out *~
-MAINTAINERCLEANFILES = Makefile.in mecab-dict-index
+
+# MAINTAINERCLEANFILES = Makefile.in mecab-dict-index
+MAINTAINERCLEANFILES = Makefile.in
 INCLUDES = -D DIC_VERSION=@DIC_VERSION@ \
            @MECAB_WITHOUT_MUTEX_LOCK@ \
            @MECAB_USE_UTF8_ONLY@ \
@@ -204,8 +200,11 @@ INCLUDES = -D DIC_VERSION=@DIC_VERSION@ \
            -D PACKAGE="\"@PACKAGE@\"" \
            -D VERSION="\"@VERSION@\""
 
-mecab_dict_index_SOURCES = mecab-dict-index.cpp
-mecab_dict_index_LDADD = libmecab.a
+
+#noinst_PROGRAMS = mecab-dict-index
+#
+#mecab_dict_index_SOURCES = mecab-dict-index.cpp
+#mecab_dict_index_LDADD = libmecab.a
 noinst_LIBRARIES = libmecab.a
 libmecab_a_SOURCES = char_property.cpp \
                      char_property.h \
@@ -303,12 +302,6 @@ libmecab.a: $(libmecab_a_OBJECTS) $(libmecab_a_DEPENDENCIES)
 	$(libmecab_a_AR) libmecab.a $(libmecab_a_OBJECTS) $(libmecab_a_LIBADD)
 	$(RANLIB) libmecab.a
 
-clean-noinstPROGRAMS:
-	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
-mecab-dict-index$(EXEEXT): $(mecab_dict_index_OBJECTS) $(mecab_dict_index_DEPENDENCIES) 
-	@rm -f mecab-dict-index$(EXEEXT)
-	$(CXXLINK) $(mecab_dict_index_OBJECTS) $(mecab_dict_index_LDADD) $(LIBS)
-
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -329,7 +322,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/learner.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/learner_tagger.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmecab.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mecab-dict-index.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mecab.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nbest_generator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/param.Po@am__quote@
@@ -438,7 +430,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES) $(PROGRAMS)
+all-am: Makefile $(LIBRARIES)
 installdirs:
 install: install-am
 install-exec: install-exec-am
@@ -469,8 +461,7 @@ maintainer-clean-generic:
 	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 clean: clean-am
 
-clean-am: clean-generic clean-noinstLIBRARIES clean-noinstPROGRAMS \
-	mostlyclean-am
+clean-am: clean-generic clean-noinstLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -540,14 +531,14 @@ uninstall-am:
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-noinstLIBRARIES clean-noinstPROGRAMS ctags distclean \
-	distclean-compile distclean-generic distclean-tags distdir dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
+	clean-noinstLIBRARIES ctags distclean distclean-compile \
+	distclean-generic distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am

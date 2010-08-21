@@ -265,14 +265,14 @@ fi
 # search winmm for hts_engine API
 AC_SUBST(AUDIO_PLAY)
 case "$host_os" in
-   *wince* )
-      AC_HAVE_LIBRARY([winmm],,AC_MSG_ERROR(No winmm))
-      AUDIO_PLAY="-D AUDIO_PLAY_WINCE"
-      ;;
-   *win32* | *wince* | *cygwin* | *mingw* )
-      AC_HAVE_LIBRARY([winmm],,AC_MSG_ERROR(No winmm))
-      AUDIO_PLAY="-D AUDIO_PLAY_WIN32"
-      ;;
+#   *wince* )
+#      AC_HAVE_LIBRARY([winmm],,AC_MSG_ERROR(No winmm))
+#      AUDIO_PLAY="-D AUDIO_PLAY_WINCE"
+#      ;;
+#   *win32* | *wince* | *cygwin* | *mingw* )
+#      AC_HAVE_LIBRARY([winmm],,AC_MSG_ERROR(No winmm))
+#      AUDIO_PLAY="-D AUDIO_PLAY_WIN32"
+#      ;;
    *)
       AUDIO_PLAY=""
       ;;

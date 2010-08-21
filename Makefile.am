@@ -12,8 +12,9 @@ SUBDIRS = text2mecab \
           njd2jpcommon \
           jpcommon \
           bin \
-          mecab-naist-jdic \
           lib
+
+#         mecab-naist-jdic 
 
 EXTRA_DIST = AUTHORS COPYING ChangeLog INSTALL NEWS README
 
