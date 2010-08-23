@@ -4,8 +4,8 @@
  * since 2010-06-27    
  */
 
-#define VOICE "/usr/local/share/open_jtalk/hts_voice_nitech_jp_atr503_m001-1.01"
-#define DIC   "/usr/local/share/open_jtalk/open_jtalk_dic_utf_8-1.00"
+#define VOICE "../../../share/open_jtalk/hts_voice_nitech_jp_atr503_m001-1.01"
+#define DIC   "../../../share/open_jtalk/open_jtalk_dic_utf_8-1.00"
 
 /* ----------------------------------------------------------------- */
 /*           The HMM-Based Speech Synthesis System (HTS)             */
@@ -53,8 +53,12 @@
 #include <string.h>
 #include <math.h>
 
+#define USE_MECAB 0
+
 /* Main headers */
+#if USE_MECAB
 #include "mecab.h"
+#endif
 #include "njd.h"
 #include "jpcommon.h"
 #include "HTS_engine.h"
@@ -73,7 +77,9 @@
 #define MAXBUFLEN 1024
 
 typedef struct _OpenJTalk {
-   Mecab mecab;
+#if USE_MECAB
+    Mecab mecab;
+#endif
    NJD njd;
    JPCommon jpcommon;
    HTS_Engine engine;
@@ -83,8 +89,10 @@ void OpenJTalk_initialize(OpenJTalk * open_jtalk, int sampling_rate, int fperiod
                           int stage, double beta, int audio_buff_size, double uv_threshold,
                           HTS_Boolean use_log_gain, double gv_weight_mcp, double gv_weight_lf0)
 {
-   Mecab_initialize(&open_jtalk->mecab);
-   NJD_initialize(&open_jtalk->njd);
+#if USE_MECAB
+    Mecab_initialize(&open_jtalk->mecab);
+#endif
+    NJD_initialize(&open_jtalk->njd);
    JPCommon_initialize(&open_jtalk->jpcommon);
    HTS_Engine_initialize(&open_jtalk->engine, 2);
    HTS_Engine_set_sampling_rate(&open_jtalk->engine, sampling_rate);
@@ -105,8 +113,10 @@ void OpenJTalk_load(OpenJTalk * open_jtalk, char *dn_mecab, char *fn_ms_dur, cha
                     char *fn_ms_gvm, char *fn_ts_gvm, char *fn_ms_gvl, char *fn_ts_gvl,
                     char *fn_gv_switch)
 {
-   Mecab_load(&open_jtalk->mecab, dn_mecab);
-   HTS_Engine_load_duration_from_fn(&open_jtalk->engine, &fn_ms_dur, &fn_ts_dur, 1);
+#if USE_MECAB
+    Mecab_load(&open_jtalk->mecab, dn_mecab);
+#endif
+    HTS_Engine_load_duration_from_fn(&open_jtalk->engine, &fn_ms_dur, &fn_ts_dur, 1);
    HTS_Engine_load_parameter_from_fn(&open_jtalk->engine, &fn_ms_mcp, &fn_ts_mcp,
                                      fn_ws_mcp, 0, FALSE, num_ws_mcp, 1);
    HTS_Engine_load_parameter_from_fn(&open_jtalk->engine, &fn_ms_lf0, &fn_ts_lf0,
@@ -132,11 +142,15 @@ void OpenJTalk_synthesis(OpenJTalk * open_jtalk, char *txt, FILE * wavfp, FILE *
    char *buff = (char *) calloc(2 * strlen(txt) + 1, sizeof(char));
 
    text2mecab(buff, txt);
-   Mecab_analysis(&open_jtalk->mecab, buff);
-   free(buff);
-   mecab2njd(&open_jtalk->njd, Mecab_get_feature(&open_jtalk->mecab),
+#if USE_MECAB
+    Mecab_analysis(&open_jtalk->mecab, buff);
+#endif
+    free(buff);
+#if USE_MECAB
+    mecab2njd(&open_jtalk->njd, Mecab_get_feature(&open_jtalk->mecab),
              Mecab_get_size(&open_jtalk->mecab));
-   njd_set_pronunciation(&open_jtalk->njd);
+#endif
+    njd_set_pronunciation(&open_jtalk->njd);
    njd_set_digit(&open_jtalk->njd);
    njd_set_accent_phrase(&open_jtalk->njd);
    njd_set_accent_type(&open_jtalk->njd);
@@ -182,12 +196,16 @@ void OpenJTalk_synthesis(OpenJTalk * open_jtalk, char *txt, FILE * wavfp, FILE *
    }
    JPCommon_refresh(&open_jtalk->jpcommon);
    NJD_refresh(&open_jtalk->njd);
-   Mecab_refresh(&open_jtalk->mecab);
+#if USE_MECAB
+    Mecab_refresh(&open_jtalk->mecab);
+#endif
 }
 
 void OpenJTalk_clear(OpenJTalk * open_jtalk)
 {
-   Mecab_clear(&open_jtalk->mecab);
+#if USE_MECAB
+    Mecab_clear(&open_jtalk->mecab);
+#endif
    NJD_clear(&open_jtalk->njd);
    JPCommon_clear(&open_jtalk->jpcommon);
    HTS_Engine_clear(&open_jtalk->engine);
@@ -296,15 +314,17 @@ FILE *Getfp(const char *name, const char *opt)
    return (fp);
 }
 
-int libopen_jtalk_main(int argc, char **argv)
+int libopen_jtalk_main(char *buff, char *owfile)
 {
-   FILE *txtfp = stdin;
+    fprintf(stderr, "buff %s\n", buff);
+    fprintf(stderr, "owfile %s\n", owfile);
+   //FILE *txtfp = stdin;
    char *txtfn = NULL;
    FILE *wavfp = NULL;
    FILE *logfp = NULL;
 
    /* text */
-   char buff[MAXBUFLEN];
+   // char buff[MAXBUFLEN];
 
    /* engine */
    OpenJTalk open_jtalk;
@@ -351,15 +371,16 @@ int libopen_jtalk_main(int argc, char **argv)
    HTS_Boolean use_log_gain = FALSE;
 
    /* parse command line */
-   if (argc == 1)
-      Usage();
+   //if (argc == 1)
+   //   Usage();
 
    /* delta window handler for log f0 */
-   fn_ws_lf0 = (char **) calloc(argc, sizeof(char *));
+   fn_ws_lf0 = (char **) calloc(10 /*argc*/, sizeof(char *));
    /* delta window handler for mel-cepstrum */
-   fn_ws_mcp = (char **) calloc(argc, sizeof(char *));
+   fn_ws_mcp = (char **) calloc(10 /*argc*/, sizeof(char *));
 
-   /* read command */
+#if 0
+    /* read command */
    while (--argc) {
       if (**++argv == '-') {
          switch (*(*argv + 1)) {
@@ -533,6 +554,7 @@ int libopen_jtalk_main(int argc, char **argv)
          txtfp = Getfp(txtfn, "rt");
       }
    }
+#endif
 #if 0
    /* dictionary directory check */
    if (dn_mecab == NULL) {
@@ -577,19 +599,19 @@ int libopen_jtalk_main(int argc, char **argv)
 		  );
 
    /* synthesis */
-   fgets(buff, MAXBUFLEN - 1, txtfp);
+   // fgets(buff, MAXBUFLEN - 1, txtfp);
+   wavfp = Getfp("out.wav" /*owfile*/, "wb"); /* -ow _hoge.wav */
    OpenJTalk_synthesis(&open_jtalk, buff, wavfp, logfp);
 
    /* free */
    OpenJTalk_clear(&open_jtalk);
    free(fn_ws_mcp);
    free(fn_ws_lf0);
-   if (txtfn != NULL)
-      fclose(txtfp);
+   //if (txtfn != NULL)
+   //   fclose(txtfp);
    if (wavfp != NULL)
       fclose(wavfp);
    if (logfp != NULL)
       fclose(logfp);
-
-   return 0;
+    return 0;
 }

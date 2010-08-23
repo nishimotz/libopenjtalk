@@ -2,6 +2,7 @@
  * by Takuya Nishimoto
  */
 
+#if 0
 #include <stdlib.h>
 #include <stdio.h>
 #include <dlfcn.h>
@@ -13,7 +14,7 @@ int main(int argc, char **argv)
     int (*func_jtalk)(int ac, char **av);
     char *error;
     int ret;
-    handle = dlopen("libopenjtalk.so.1.0.1", RTLD_LAZY);
+    handle = dlopen("libopenjtalk.dll", RTLD_LAZY);
     if (!handle) {
         fputs (dlerror(), stderr);
         exit(1);
@@ -27,3 +28,27 @@ int main(int argc, char **argv)
     dlclose(handle);
     return ret;
 }
+
+#else
+#include <windows.h>
+
+int main(int argc, char **argv)
+{
+    HMODULE hModule;
+    int (*func_jtalk)(char *buff, char *owfile);
+    int ret = 1;
+
+    hModule = LoadLibrary( "libopenjtalk.dll" );
+    if (hModule != NULL) {
+	func_jtalk = (void *)GetProcAddress( hModule, "libopen_jtalk_main" );
+	if (func_jtalk != NULL) {
+	    char *buff = "こんにちは"; // UTF-8
+	    char *owfile = "out1.wav";
+	    ret = (*func_jtalk)(buff, owfile);
+	}
+	FreeLibrary(hModule);
+    }
+    return ret;
+}
+
+#endif

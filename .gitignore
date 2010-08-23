@@ -6,3 +6,6 @@ Makefile
 .deps
 autom4te.cache
 *~
+*.exe
+mecab/config.h
+mecab/stamp-h1

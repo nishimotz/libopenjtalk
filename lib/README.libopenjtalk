@@ -8,5 +8,5 @@ $ play out1.wav
 
 $ make -f Makefile.shlib
 $ export LD_LIBRARY_PATH=.
-$ ./dlmain -ow out.wav input.txt
+$ ./dlmain -ow out2.wav input.txt
 $ play out2.wav
