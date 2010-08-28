@@ -1,5 +1,5 @@
 /*
- * libopen_jtalk.h
+ * libopenjtalk.h
  * by Takuya Nishimoto
  */
 

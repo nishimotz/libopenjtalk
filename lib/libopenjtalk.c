@@ -1,4 +1,4 @@
-/* libopen_jtalk.c    
+/* libopenjtalk.c    
  * based on ../bin/open_jtalk.c
  * by Takuya Nishimoto
  * since 2010-06-27    

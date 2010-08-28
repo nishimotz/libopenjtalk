@@ -1,9 +1,10 @@
-# Makefile.shlib
-# by Takuya Nishimoto
-# usage:
-# $ make -f Makefile.shlib
+# Makefile
+# libopenjtalk by Takuya Nishimoto
+# for cygwin-mingw-gcc3
+# based on Open-JTalk
+# 
 
-target: libopen_jtalk.o ojt_mecab.dll libopenjtalk.dll dlmain.exe
+target: libopenjtalk.o libopenjtalk.dll
 
 CC = gcc -mno-cygwin
 CXX = g++ -mno-cygwin
@@ -37,28 +38,28 @@ LDADD = ../text2mecab/libtext2mecab.a \
            ../jpcommon/libjpcommon.a \
            ../../htsengineapi/lib/libHTSEngine.a
 
-ojt_mecab.dll:
-	$(CC) -shared -o ojt_mecab.dll ../mecab/src/libmecab.a -lstdc++ \
-	-Wl,--output-def,ojt_mecab.def,--out-implib,ojt_mecab_imp.lib
+#ojt_mecab.dll:
+#	$(CC) -shared -o ojt_mecab.dll ../mecab/src/libmecab.a -lstdc++ \
+#	-Wl,--output-def,ojt_mecab.def,--out-implib,ojt_mecab_imp.lib
 
-libopen_jtalk.o: libopen_jtalk.c
-	$(CC) -c -o libopen_jtalk.o -DHAVE_CONFIG_H $(INCLUDES) libopen_jtalk.c
+libopenjtalk.o: libopenjtalk.c
+	$(CC) -c -o libopenjtalk.o -DHAVE_CONFIG_H $(INCLUDES) libopenjtalk.c
 
-libopenjtalk.dll: libopen_jtalk.o ojt_mecab_imp.lib
+libopenjtalk.dll: libopenjtalk.o
 	$(CC) -shared -o libopenjtalk.dll \
-	libopen_jtalk.o $(LDADD) \
-	-Wl,--output-def,libopenjtalk.def,--out-implib,libopenjtalk_implib.lib
+	libopenjtalk.o $(LDADD) \
+	-Wl,--output-def,libopenjtalk.def,--out-implib,libopenjtalk_imp.lib
 
 #ojt_mecab_imp.lib 
 
 #libopenjtalk_static.a: libopen_jtalk.o
 #	ar crus libopenjtalk_static.a libopen_jtalk.o
 
-dlmain.exe:
-	$(CC) dlmain.c -o dlmain
-
-test: libopenjtalk.dll ojt_mecab.dll dlmain.exe
-	./dlmain 
+#dlmain.exe:
+#	$(CC) dlmain.c -o dlmain
+#
+#test: libopenjtalk.dll ojt_mecab.dll dlmain.exe
+#	./dlmain 
 
 clean:
-	\rm -f libopenjtalk.dll dlmain.exe libopen_jtalk.o ojt_mecab.dll
+	\rm -f libopenjtalk.dll libopenjtalk.o
