@@ -4,7 +4,7 @@
 # based on Open-JTalk
 # 
 
-target: libopenjtalk.o libopenjtalk.dll
+target: libopenjtalk.o libopenjtalk.dll mytest.exe
 
 CC = gcc -mno-cygwin
 CXX = g++ -mno-cygwin
@@ -38,10 +38,6 @@ LDADD = ../text2mecab/libtext2mecab.a \
            ../jpcommon/libjpcommon.a \
            ../../htsengineapi/lib/libHTSEngine.a
 
-#ojt_mecab.dll:
-#	$(CC) -shared -o ojt_mecab.dll ../mecab/src/libmecab.a -lstdc++ \
-#	-Wl,--output-def,ojt_mecab.def,--out-implib,ojt_mecab_imp.lib
-
 libopenjtalk.o: libopenjtalk.c
 	$(CC) -c -o libopenjtalk.o -DHAVE_CONFIG_H $(INCLUDES) libopenjtalk.c
 
@@ -50,16 +46,8 @@ libopenjtalk.dll: libopenjtalk.o
 	libopenjtalk.o $(LDADD) \
 	-Wl,--output-def,libopenjtalk.def,--out-implib,libopenjtalk_imp.lib
 
-#ojt_mecab_imp.lib 
-
-#libopenjtalk_static.a: libopen_jtalk.o
-#	ar crus libopenjtalk_static.a libopen_jtalk.o
-
-#dlmain.exe:
-#	$(CC) dlmain.c -o dlmain
-#
-#test: libopenjtalk.dll ojt_mecab.dll dlmain.exe
-#	./dlmain 
+mytest.exe:
+	$(CC) mytest.c $(INCLUDES) -o mytest
 
 clean:
-	\rm -f libopenjtalk.dll libopenjtalk.o
+	\rm -f libopenjtalk.dll libopenjtalk.o mytest.exe

@@ -1,8 +1,10 @@
-/* dlmain.c
+/* mytest.c
  * by Takuya Nishimoto
  */
 
-#if 0
+#define WINDOWS
+
+#ifndef WINDOWS
 #include <stdlib.h>
 #include <stdio.h>
 #include <dlfcn.h>
@@ -31,7 +33,10 @@ int main(int argc, char **argv)
 
 #else
 #include <windows.h>
-
+#include <stdio.h>
+#include "njd.h"
+#include "jpcommon.h"
+#include "HTS_engine.h"
 int main(int argc, char **argv)
 {
     HMODULE hModule;
@@ -48,6 +53,15 @@ int main(int argc, char **argv)
 	}
 	FreeLibrary(hModule);
     }
+    
+    printf("HTS_Global %d\n", sizeof(HTS_Global));
+    printf("HTS_ModelSet %d\n", sizeof(HTS_ModelSet));
+    printf("HTS_Label %d\n", sizeof(HTS_Label));
+    printf("HTS_SStreamSet %d\n", sizeof(HTS_SStreamSet));
+    printf("HTS_PStreamSet %d\n", sizeof(HTS_PStreamSet));
+    printf("HTS_GStreamSet %d\n", sizeof(HTS_GStreamSet));
+    printf("NJD %d\n", sizeof(NJD));
+    printf("JPCommon %d\n", sizeof(JPCommon));
     return ret;
 }
 
