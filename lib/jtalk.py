@@ -6,8 +6,12 @@
 import os
 from ctypes import *
 
-mcdic = r"C:\openjtalk\open_jtalk_dic_utf_8-1.00"
-voice = r"C:\openjtalk\hts_voice_nitech_jp_atr503_m001-1.01"
+DIC = r"C:\openjtalk\open_jtalk_dic_utf_8-1.00"
+VOICE = r"C:\openjtalk\hts_voice_nitech_jp_atr503_m001-1.01"
+
+c_double_p = POINTER(c_double)
+c_double_p_p = POINTER(c_double_p) 
+c_char_p_p = POINTER(c_char_p) 
 
 ##############################################
 
@@ -60,6 +64,39 @@ mecab_node_t._fields_ = [
 
 ############################################
 
+mecab = None
+libmc = None
+
+def Mecab_initialize():
+	global libmc
+	libmc = cdll.LoadLibrary(r"C:\MeCab\bin\libmecab.dll")
+	libmc.mecab_sparse_tonode.restype = mecab_node_t_ptr
+
+def Mecab_load():
+	global mecab
+	mecab = libmc.mecab_new2(r"mecab -d " + DIC)
+	libmc.mecab_sparse_tonode.restype = mecab_node_t_ptr
+
+def Mecab_analysis(text):
+	# for test
+	n = libmc.mecab_sparse_tonode(mecab, text)
+	n = n[0].next
+	while n:
+		print n[0].stat
+		len = n[0].length
+		print len
+		print string_at(n[0].surface, len).decode('utf-8')
+		print string_at(n[0].feature).decode('utf-8')
+		n = n[0].next
+
+def Mecab_refresh():
+	pass
+
+def Mecab_clear():
+	libmc.mecab_destroy(mecab)
+
+############################################
+
 # htsengineapi/include/HTS_engine.h
 
 # size of structure:
@@ -69,9 +106,6 @@ mecab_node_t._fields_ = [
 # HTS_SStreamSet 24
 # HTS_PStreamSet 12
 # HTS_GStreamSet 20
-
-c_double_p = POINTER(c_double)
-c_double_p_p = POINTER(c_double_p) 
 
 class HTS_ModelSet(Structure):
 	_fields_ = [
@@ -142,20 +176,6 @@ JPCommon_ptr = POINTER(JPCommon)
 
 ############################################
 
-mecab = None
-libmc = None
-
-def Mecab_initialize():
-	global mecab, libmc
-	libmc = cdll.LoadLibrary(r"C:\MeCab\bin\libmecab.dll")
-	mecab = libmc.mecab_new2(r"mecab -d " + mcdic)
-	# s = libmc.mecab_sparse_tostr(mecab, text)
-	# ret = c_char_p(s).value
-	# print ret
-	libmc.mecab_sparse_tonode.restype = mecab_node_t_ptr
-
-############################################
-
 njd = NJD()
 jpcommon = JPCommon()
 engine = HTS_Engine()
@@ -202,6 +222,20 @@ def OpenJTalk_initialize():
 	libjt.HTS_Engine_set_gv_weight(engine, 0, 1.0);
 	libjt.HTS_Engine_set_gv_weight(engine, 1, 0.7);
 
+FILENAME = c_char * 1000
+FILENAME_ptr = POINTER(FILENAME)
+FILENAME_ptr_ptr = POINTER(FILENAME_ptr)
+
+def OpenJTalk_load():
+	libjt.HTS_Engine_load_duration_from_fn.argtypes = [HTS_Engine_ptr, FILENAME_ptr_ptr, FILENAME_ptr_ptr, c_int]
+	fn_ms_dur_buf = create_string_buffer(VOICE + "/dur.pdf", 1000)
+	fn_ms_dur_buf_ptr = cast(byref(fn_ms_dur_buf), FILENAME_ptr)
+	fn_ms_dur = cast(byref(fn_ms_dur_buf_ptr), FILENAME_ptr_ptr)
+	fn_ts_dur_buf = create_string_buffer(VOICE + "/tree-dur.inf", 1000)
+	fn_ts_dur_buf_ptr = cast(byref(fn_ts_dur_buf), FILENAME_ptr)
+	fn_ts_dur = cast(byref(fn_ts_dur_buf_ptr), FILENAME_ptr_ptr)
+	libjt.HTS_Engine_load_duration_from_fn(engine, fn_ms_dur, fn_ts_dur, 1)
+
 ############################################
 
 def main():
@@ -209,25 +243,21 @@ def main():
 	#text = u'こんにちは。今日はいい天気です。'
 	text = u'今日は。'
 	text = text.encode('utf-8')
+
+	# Notice: Mecab is separated from OpenJTalk
 	Mecab_initialize()
+	Mecab_load()
+	
 	OpenJTalk_initialize()
+	OpenJTalk_load()
 
-	n = libmc.mecab_sparse_tonode(mecab, text)
-	n = n[0].next
-	while n:
-		print n[0].stat
-		len = n[0].length
-		print len
-		print string_at(n[0].surface, len).decode('utf-8')
-		print string_at(n[0].feature).decode('utf-8')
-		n = n[0].next
-
-	libmc.mecab_destroy(mecab)
+	Mecab_analysis(text)
 
 	#s1 = create_string_buffer(text, 200)
 	#s2 = create_string_buffer('out2.wav', 20)
 	#e = libjt.libopen_jtalk_main(s1, s2)
 	#print e
+	Mecab_clear()
 
 if __name__ == "__main__":
 	main()
