@@ -105,13 +105,13 @@ def Mecab_analysis(str):
 	if head == None: return [None, None]
 
 	# count node
-	node = head
-	mecab_size = 0
-	while node:
-		s = node[0].stat
-		if s != MECAB_BOS_NODE and s != MECAB_EOS_NODE:
-			mecab_size += 1
-		node = node[0].next
+	#node = head
+	#mecab_size = 0
+	#while node:
+	#	s = node[0].stat
+	#	if s != MECAB_BOS_NODE and s != MECAB_EOS_NODE:
+	#		mecab_size += 1
+	#	node = node[0].next
 
 	# make array of features
 	node = head
