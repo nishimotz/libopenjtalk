@@ -64,30 +64,71 @@ mecab_node_t._fields_ = [
 
 ############################################
 
+# typedef struct _Mecab{
+#    char **feature;
+#    int size;
+#    mecab_t *mecab;
+# } Mecab;
+
+SFLEN   = 500
+SFCOUNT = 300
+SURFACE = c_char * SFLEN
+SURFACE_ptr = POINTER(SURFACE)
+SURFACE_ptr_array = SURFACE_ptr * SFCOUNT
+SURFACE_ptr_array_ptr = POINTER(SURFACE_ptr_array)
+
 mecab = None
 libmc = None
+mecab_feature = None
+mecab_size = None
 
 def Mecab_initialize():
 	global libmc
+	global mecab_feature, mecab_size
 	libmc = cdll.LoadLibrary(r"C:\MeCab\bin\libmecab.dll")
 	libmc.mecab_sparse_tonode.restype = mecab_node_t_ptr
+	mecab_size = 0
+	mecab_feature = SURFACE_ptr_array()
+	#for i in xrange(0, SFCOUNT):
+	#	buf = create_string_buffer(SFLEN)
+	#	mecab_feature[i] = cast(byref(buf), SURFACE_ptr)
 
 def Mecab_load():
 	global mecab
 	mecab = libmc.mecab_new2(r"mecab -d " + DIC)
 	libmc.mecab_sparse_tonode.restype = mecab_node_t_ptr
 
-def Mecab_analysis(text):
-	# for test
-	n = libmc.mecab_sparse_tonode(mecab, text)
-	n = n[0].next
-	while n:
-		print n[0].stat
-		len = n[0].length
-		print len
-		print string_at(n[0].surface, len).decode('utf-8')
-		print string_at(n[0].feature).decode('utf-8')
-		n = n[0].next
+
+def Mecab_analysis(str):
+	global mecab_feature, mecab_size
+	head = libmc.mecab_sparse_tonode(mecab, str)
+	if head == None: return [None, None]
+
+	# count node
+	node = head
+	mecab_size = 0
+	while node:
+		s = node[0].stat
+		if s != MECAB_BOS_NODE and s != MECAB_EOS_NODE:
+			mecab_size += 1
+		node = node[0].next
+
+	# make array of features
+	node = head
+	i = 0
+	while node:
+		s = node[0].stat
+		if s != MECAB_BOS_NODE and s != MECAB_EOS_NODE:
+			len = node[0].length
+			s = string_at(node[0].surface, len) + "," + string_at(node[0].feature)
+			print s.decode('utf-8') # for debug
+			buf = create_string_buffer(s, SFLEN)
+			mecab_feature[i] = cast(byref(buf), SURFACE_ptr)
+		node = node[0].next
+		mecab_size = i
+		i += 1
+		if i > SFCOUNT: return [mecab_feature, mecab_size]
+	return [mecab_feature, mecab_size]
 
 def Mecab_refresh():
 	pass
@@ -311,8 +352,8 @@ def OpenJTalk_load():
 	libjt.HTS_Engine_load_gv_switch_from_fn(
 		engine, fn_gv_switch)
 
-def OpenJTalk_text2mecab(txt):
-	pass
+def OpenJTalk_text2mecab(buff, txt):
+	libjt.text2mecab(buff, txt)
 
 def OpenJTalk_synthesis(txt):
 	pass
@@ -325,7 +366,7 @@ def OpenJTalk_clear():
 def main():
 	#global mecab
 	#text = u'こんにちは。今日はいい天気です。'
-	text = u'今日は。'
+	text = u'今日ABC'
 	text = text.encode('utf-8')
 
 	# Notice: Mecab is separated from OpenJTalk
@@ -335,8 +376,11 @@ def main():
 	OpenJTalk_initialize()
 	OpenJTalk_load()
 
-	OpenJTalk_text2mecab(text)
-	Mecab_analysis(text)
+	buff = create_string_buffer(len(text) * 2 + 1)
+	OpenJTalk_text2mecab(buff, text)
+	print buff.value.decode('utf-8')
+
+	[feature, size] = Mecab_analysis(buff.value)
 	OpenJTalk_synthesis(text)
 
 	OpenJTalk_clear()
