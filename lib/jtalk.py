@@ -367,6 +367,24 @@ def OpenJTalk_synthesis(feature, size):
 	libjt.mecab2njd(njd, feature, size)
 	#print "done"
 
+	libjt.njd_set_pronunciation.argtypes = [NJD_ptr]
+	libjt.njd_set_digit.argtypes = [NJD_ptr]
+	libjt.njd_set_accent_phrase.argtypes = [NJD_ptr]
+	libjt.njd_set_accent_type.argtypes = [NJD_ptr]
+	libjt.njd_set_unvoiced_vowel.argtypes = [NJD_ptr]
+	libjt.njd_set_long_vowel.argtypes = [NJD_ptr]
+	libjt.njd2jpcommon.argtypes = [JPCommon_ptr, NJD_ptr]
+	libjt.JPCommon_make_label.argtypes = [JPCommon_ptr]
+
+	libjt.njd_set_pronunciation(njd)
+	libjt.njd_set_digit(njd)
+	libjt.njd_set_accent_phrase(njd)
+	libjt.njd_set_accent_type(njd)
+	libjt.njd_set_unvoiced_vowel(njd)
+	libjt.njd_set_long_vowel(njd)
+	libjt.njd2jpcommon(jpcommon, njd)
+	libjt.JPCommon_make_label(jpcommon)
+
 def OpenJTalk_clear():
 	pass
 
