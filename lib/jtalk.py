@@ -240,9 +240,19 @@ class NJD(Structure):
 	]
 NJD_ptr = POINTER(NJD)
 
+class JPCommonNode(Structure):
+	pass
+JPCommonNode_ptr = POINTER(JPCommonNode)
+
+class JPCommonLabel(Structure):
+	pass
+JPCommonLabel_ptr = POINTER(JPCommonLabel)
+
 class JPCommon(Structure):
 	_fields_ = [
-		("_dummy", c_byte * 12),
+		("head", JPCommonNode_ptr),
+		("tail", JPCommonNode_ptr),
+		("label", JPCommonLabel_ptr),
 	]
 JPCommon_ptr = POINTER(JPCommon)
 
@@ -332,6 +342,7 @@ def OpenJTalk_initialize():
 	libjt.HTS_GStreamSet_get_speech.argtypes = [HTS_GStreamSet_ptr, c_int]
 	libjt.NJD_print.argtypes = [NJD_ptr]
 	libjt.JPCommon_print.argtypes = [JPCommon_ptr]
+	libjt.JPCommonLabel_print.argtypes = [JPCommonLabel_ptr]
 
 def OpenJTalk_load():
 	libjt.HTS_Engine_load_duration_from_fn.argtypes = [
@@ -446,6 +457,7 @@ def OpenJTalk_synthesis(feature, size):
 	libjt.njd2jpcommon(jpcommon, njd)
 	print "JPCommon_print: "; libjt.JPCommon_print(jpcommon) # for debug
 	libjt.JPCommon_make_label(jpcommon)
+	print "JPCommonLabel_print: "; libjt.JPCommonLabel_print(jpcommon.label) # for debug
 	
 	s = libjt.JPCommon_get_label_size(jpcommon)
 	if s > 2:
