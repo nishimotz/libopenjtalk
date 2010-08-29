@@ -232,6 +232,7 @@ FILENAME_ptr_x3_ptr = POINTER(FILENAME_ptr_x3)
 def OpenJTalk_load():
 	libjt.HTS_Engine_load_duration_from_fn.argtypes = [
 		HTS_Engine_ptr, FILENAME_ptr_ptr, FILENAME_ptr_ptr, c_int]
+	
 	fn_ms_dur_buf = create_string_buffer(VOICE + "/dur.pdf", FNLEN)
 	fn_ms_dur_buf_ptr = cast(byref(fn_ms_dur_buf), FILENAME_ptr)
 	fn_ms_dur = cast(byref(fn_ms_dur_buf_ptr), FILENAME_ptr_ptr)
@@ -243,6 +244,7 @@ def OpenJTalk_load():
 	libjt.HTS_Engine_load_parameter_from_fn.argtypes = [
 		HTS_Engine_ptr, FILENAME_ptr_ptr, FILENAME_ptr_ptr,
 		FILENAME_ptr_x3_ptr, c_int, c_int, c_int, c_int]
+	
 	fn_ms_mcp_buf = create_string_buffer(VOICE + "/mgc.pdf", FNLEN)
 	fn_ms_mcp_buf_ptr = cast(byref(fn_ms_mcp_buf), FILENAME_ptr)
 	fn_ms_mcp = cast(byref(fn_ms_mcp_buf_ptr), FILENAME_ptr_ptr)
@@ -261,11 +263,53 @@ def OpenJTalk_load():
 		engine, fn_ms_mcp, fn_ts_mcp, fn_ws_mcp, 
 		0, 0, 3, 1)
 	
-	#libjt.HTS_Engine_load_parameter_from_fn(
-	#	&open_jtalk->engine, &
-	#	fn_ms_lf0, &fn_ts_lf0,fn_ws_lf0, 
-	#	1, TRUE, num_ws_lf0, 1)
+	fn_ms_lf0_buf = create_string_buffer(VOICE + "/lf0.pdf", FNLEN)
+	fn_ms_lf0_buf_ptr = cast(byref(fn_ms_lf0_buf), FILENAME_ptr)
+	fn_ms_lf0 = cast(byref(fn_ms_lf0_buf_ptr), FILENAME_ptr_ptr)
+	fn_ts_lf0_buf = create_string_buffer(VOICE + "/tree-lf0.inf", FNLEN)
+	fn_ts_lf0_buf_ptr = cast(byref(fn_ts_lf0_buf), FILENAME_ptr)
+	fn_ts_lf0 = cast(byref(fn_ts_lf0_buf_ptr), FILENAME_ptr_ptr)
+	fn_ws_lf0_buf_1 = create_string_buffer(VOICE + "/lf0.win1", FNLEN)
+	fn_ws_lf0_buf_2 = create_string_buffer(VOICE + "/lf0.win2", FNLEN)
+	fn_ws_lf0_buf_3 = create_string_buffer(VOICE + "/lf0.win3", FNLEN)
+	fn_ws_lf0_buf_ptr_x3 = FILENAME_ptr_x3(
+		cast(byref(fn_ws_lf0_buf_1), FILENAME_ptr),
+		cast(byref(fn_ws_lf0_buf_2), FILENAME_ptr),
+		cast(byref(fn_ws_lf0_buf_3), FILENAME_ptr))
+	fn_ws_lf0 = cast(byref(fn_ws_lf0_buf_ptr_x3), FILENAME_ptr_x3_ptr)
+	libjt.HTS_Engine_load_parameter_from_fn(
+		engine, fn_ms_lf0, fn_ts_lf0, fn_ws_lf0, 
+		1, 1, 3, 1)
+	
+	libjt.HTS_Engine_load_gv_from_fn.argtypes = [
+		HTS_Engine_ptr, FILENAME_ptr_ptr, FILENAME_ptr_ptr, 
+		c_int, c_int]
 
+	fn_ms_gvm_buf = create_string_buffer(VOICE + "/gv-mgc.pdf", FNLEN)
+	fn_ms_gvm_buf_ptr = cast(byref(fn_ms_gvm_buf), FILENAME_ptr)
+	fn_ms_gvm = cast(byref(fn_ms_gvm_buf_ptr), FILENAME_ptr_ptr)
+	fn_ts_gvm_buf = create_string_buffer(VOICE + "/tree-gv-mgc.inf", FNLEN)
+	fn_ts_gvm_buf_ptr = cast(byref(fn_ts_gvm_buf), FILENAME_ptr)
+	fn_ts_gvm = cast(byref(fn_ts_gvm_buf_ptr), FILENAME_ptr_ptr)
+	libjt.HTS_Engine_load_gv_from_fn(
+		engine, fn_ms_gvm, fn_ts_gvm, 0, 1)
+
+	fn_ms_gvl_buf = create_string_buffer(VOICE + "/gv-lf0.pdf", FNLEN)
+	fn_ms_gvl_buf_ptr = cast(byref(fn_ms_gvl_buf), FILENAME_ptr)
+	fn_ms_gvl = cast(byref(fn_ms_gvl_buf_ptr), FILENAME_ptr_ptr)
+	fn_ts_gvl_buf = create_string_buffer(VOICE + "/tree-gv-lf0.inf", FNLEN)
+	fn_ts_gvl_buf_ptr = cast(byref(fn_ts_gvl_buf), FILENAME_ptr)
+	fn_ts_gvl = cast(byref(fn_ts_gvl_buf_ptr), FILENAME_ptr_ptr)
+	libjt.HTS_Engine_load_gv_from_fn(
+		engine, fn_ms_gvl, fn_ts_gvl, 1, 1)
+
+	libjt.HTS_Engine_load_gv_switch_from_fn.argtypes = [
+		HTS_Engine_ptr, FILENAME_ptr]
+
+	fn_gv_switch_buf = create_string_buffer(VOICE + "/gv-switch.inf", FNLEN)
+	fn_gv_switch = cast(byref(fn_gv_switch_buf), FILENAME_ptr)
+	libjt.HTS_Engine_load_gv_switch_from_fn(
+		engine, fn_gv_switch)
 
 ############################################
 
