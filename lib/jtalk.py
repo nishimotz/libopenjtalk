@@ -11,6 +11,7 @@ VOICE = r"C:\openjtalk\hts_voice_nitech_jp_atr503_m001-1.01"
 
 c_double_p = POINTER(c_double)
 c_double_p_p = POINTER(c_double_p) 
+c_short_p = POINTER(c_short)
 c_char_p_p = POINTER(c_char_p) 
 
 ##############################################
@@ -89,9 +90,9 @@ def Mecab_initialize():
 	libmc.mecab_sparse_tonode.restype = mecab_node_t_ptr
 	mecab_size = 0
 	mecab_feature = FEATURE_ptr_array()
-# 	for i in xrange(0, FECOUNT):
-# 		buf = create_string_buffer(FELEN)
-# 		mecab_feature[i] = cast(byref(buf), FEATURE_ptr)
+	# for i in xrange(0, FECOUNT):
+	# 	buf = create_string_buffer(FELEN)
+	# 	mecab_feature[i] = cast(byref(buf), FEATURE_ptr)
 	if libjt == None: return
 	for i in xrange(0, FECOUNT):
 		buf = libjt.jt_malloc(FELEN)
@@ -173,10 +174,24 @@ class HTS_PStreamSet(Structure):
 		("_dummy", c_byte * 12),
 	]
 
+class HTS_GStream(Structure):
+	_fields_ = [
+		("static_length", c_int), # int static_length;           /* static features length */
+		("par", c_double_p_p), # double **par;                /* generated parameter */
+	]
+
+HTS_GStream_ptr = POINTER(HTS_GStream)
+
 class HTS_GStreamSet(Structure):
 	_fields_ = [
-		("_dummy", c_byte * 20),
+		# ("_dummy", c_byte * 20),
+		("total_nsample", c_int), #   int total_nsample;           /* total sample */
+		("total_frame", c_int), #    int total_frame;             /* total frame */
+		("nstream", c_int), # int nstream;                 /* # of streams */
+		("gstream", HTS_GStream_ptr), # HTS_GStream *gstream;        /* generated parameter streams */
+		("gspeech", c_short_p), # short *gspeech;              /* generated speech */
 	]
+HTS_GStreamSet_ptr = POINTER(HTS_GStreamSet)
 
 class HTS_Global(Structure):
 	_fields_ = [
@@ -286,6 +301,18 @@ def OpenJTalk_initialize():
 	libjt.njd2jpcommon.argtypes = [JPCommon_ptr, NJD_ptr]
 	libjt.JPCommon_make_label.argtypes = [JPCommon_ptr]
 	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
+	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
+	libjt.JPCommon_get_label_feature.argtypes = [JPCommon_ptr]
+	libjt.JPCommon_get_label_feature.restype = FEATURE_ptr_array_ptr
+	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
+	libjt.HTS_Engine_load_label_from_string_list.argtypes = [
+		HTS_Engine_ptr, FEATURE_ptr_array_ptr, c_int]
+	libjt.HTS_Engine_create_sstream.argtypes = [HTS_Engine_ptr]
+	libjt.HTS_Engine_create_pstream.argtypes = [HTS_Engine_ptr]
+	libjt.HTS_Engine_create_gstream.argtypes = [HTS_Engine_ptr]
+	libjt.HTS_Engine_refresh.argtypes = [HTS_Engine_ptr]
+	libjt.JPCommon_refresh.argtypes = [JPCommon_ptr]
+	libjt.NJD_refresh.argtypes = [NJD_ptr]
 
 def OpenJTalk_load():
 	libjt.HTS_Engine_load_duration_from_fn.argtypes = [
@@ -386,21 +413,13 @@ def OpenJTalk_synthesis(feature, size):
 	libjt.njd2jpcommon(jpcommon, njd)
 	libjt.JPCommon_make_label(jpcommon)
 	
-	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
-	libjt.JPCommon_get_label_feature.argtypes = [JPCommon_ptr]
-	libjt.JPCommon_get_label_feature.restype = FEATURE_ptr_array_ptr
-	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
-	libjt.HTS_Engine_load_label_from_string_list.argtypes = [
-		HTS_Engine_ptr, FEATURE_ptr_array_ptr, c_int]
-	libjt.HTS_Engine_create_sstream.argtypes = [HTS_Engine_ptr]
-	libjt.HTS_Engine_create_pstream.argtypes = [HTS_Engine_ptr]
-	libjt.HTS_Engine_create_gstream.argtypes = [HTS_Engine_ptr]
-	libjt.HTS_Engine_refresh.argtypes = [HTS_Engine_ptr]
-	libjt.JPCommon_refresh.argtypes = [JPCommon_ptr]
-	libjt.NJD_refresh.argtypes = [NJD_ptr]
+	libjt.HTS_GStreamSet_get_total_nsample.argtypes = [HTS_GStreamSet_ptr]
+	libjt.HTS_GStreamSet_get_speech.argtypes = [HTS_GStreamSet_ptr, c_int]
+	
 	if libjt.JPCommon_get_label_size(jpcommon) > 2:
 		f = libjt.JPCommon_get_label_feature(jpcommon)
 		s = libjt.JPCommon_get_label_size(jpcommon)
+		print "label_size: ", s
 		libjt.HTS_Engine_load_label_from_string_list(engine, f, s)
 		libjt.HTS_Engine_create_sstream(engine)
 		libjt.HTS_Engine_create_pstream(engine)
@@ -413,6 +432,10 @@ def OpenJTalk_synthesis(feature, size):
 		#   temp = HTS_GStreamSet_get_speech(gss, i);
 		#   fwrite(&temp, sizeof(short), 1, wavfp);
 		# }
+		gss = engine.gss
+		n = libjt.HTS_GStreamSet_get_total_nsample(gss)
+		print "total_nsample: ", n
+		#
 		libjt.HTS_Engine_refresh(engine)
 	libjt.JPCommon_refresh(jpcommon)
 	libjt.NJD_refresh(njd)
