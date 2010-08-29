@@ -311,6 +311,15 @@ def OpenJTalk_load():
 	libjt.HTS_Engine_load_gv_switch_from_fn(
 		engine, fn_gv_switch)
 
+def OpenJTalk_text2mecab(txt):
+	pass
+
+def OpenJTalk_synthesis(txt):
+	pass
+
+def OpenJTalk_clear():
+	pass
+
 ############################################
 
 def main():
@@ -326,12 +335,11 @@ def main():
 	OpenJTalk_initialize()
 	OpenJTalk_load()
 
+	OpenJTalk_text2mecab(text)
 	Mecab_analysis(text)
+	OpenJTalk_synthesis(text)
 
-	#s1 = create_string_buffer(text, 200)
-	#s2 = create_string_buffer('out2.wav', 20)
-	#e = libjt.libopen_jtalk_main(s1, s2)
-	#print e
+	OpenJTalk_clear()
 	Mecab_clear()
 
 if __name__ == "__main__":
