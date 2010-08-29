@@ -222,19 +222,50 @@ def OpenJTalk_initialize():
 	libjt.HTS_Engine_set_gv_weight(engine, 0, 1.0);
 	libjt.HTS_Engine_set_gv_weight(engine, 1, 0.7);
 
-FILENAME = c_char * 1000
+FNLEN = 1000
+FILENAME = c_char * FNLEN
 FILENAME_ptr = POINTER(FILENAME)
 FILENAME_ptr_ptr = POINTER(FILENAME_ptr)
+FILENAME_ptr_x3 = FILENAME_ptr * 3
+FILENAME_ptr_x3_ptr = POINTER(FILENAME_ptr_x3)
 
 def OpenJTalk_load():
-	libjt.HTS_Engine_load_duration_from_fn.argtypes = [HTS_Engine_ptr, FILENAME_ptr_ptr, FILENAME_ptr_ptr, c_int]
-	fn_ms_dur_buf = create_string_buffer(VOICE + "/dur.pdf", 1000)
+	libjt.HTS_Engine_load_duration_from_fn.argtypes = [
+		HTS_Engine_ptr, FILENAME_ptr_ptr, FILENAME_ptr_ptr, c_int]
+	fn_ms_dur_buf = create_string_buffer(VOICE + "/dur.pdf", FNLEN)
 	fn_ms_dur_buf_ptr = cast(byref(fn_ms_dur_buf), FILENAME_ptr)
 	fn_ms_dur = cast(byref(fn_ms_dur_buf_ptr), FILENAME_ptr_ptr)
-	fn_ts_dur_buf = create_string_buffer(VOICE + "/tree-dur.inf", 1000)
+	fn_ts_dur_buf = create_string_buffer(VOICE + "/tree-dur.inf", FNLEN)
 	fn_ts_dur_buf_ptr = cast(byref(fn_ts_dur_buf), FILENAME_ptr)
 	fn_ts_dur = cast(byref(fn_ts_dur_buf_ptr), FILENAME_ptr_ptr)
 	libjt.HTS_Engine_load_duration_from_fn(engine, fn_ms_dur, fn_ts_dur, 1)
+	
+	libjt.HTS_Engine_load_parameter_from_fn.argtypes = [
+		HTS_Engine_ptr, FILENAME_ptr_ptr, FILENAME_ptr_ptr,
+		FILENAME_ptr_x3_ptr, c_int, c_int, c_int, c_int]
+	fn_ms_mcp_buf = create_string_buffer(VOICE + "/mgc.pdf", FNLEN)
+	fn_ms_mcp_buf_ptr = cast(byref(fn_ms_mcp_buf), FILENAME_ptr)
+	fn_ms_mcp = cast(byref(fn_ms_mcp_buf_ptr), FILENAME_ptr_ptr)
+	fn_ts_mcp_buf = create_string_buffer(VOICE + "/tree-mgc.inf", FNLEN)
+	fn_ts_mcp_buf_ptr = cast(byref(fn_ts_mcp_buf), FILENAME_ptr)
+	fn_ts_mcp = cast(byref(fn_ts_mcp_buf_ptr), FILENAME_ptr_ptr)
+	fn_ws_mcp_buf_1 = create_string_buffer(VOICE + "/mgc.win1", FNLEN)
+	fn_ws_mcp_buf_2 = create_string_buffer(VOICE + "/mgc.win2", FNLEN)
+	fn_ws_mcp_buf_3 = create_string_buffer(VOICE + "/mgc.win3", FNLEN)
+	fn_ws_mcp_buf_ptr_x3 = FILENAME_ptr_x3(
+		cast(byref(fn_ws_mcp_buf_1), FILENAME_ptr),
+		cast(byref(fn_ws_mcp_buf_2), FILENAME_ptr),
+		cast(byref(fn_ws_mcp_buf_3), FILENAME_ptr))
+	fn_ws_mcp = cast(byref(fn_ws_mcp_buf_ptr_x3), FILENAME_ptr_x3_ptr)
+	libjt.HTS_Engine_load_parameter_from_fn(
+		engine, fn_ms_mcp, fn_ts_mcp, fn_ws_mcp, 
+		0, 0, 3, 1)
+	
+	#libjt.HTS_Engine_load_parameter_from_fn(
+	#	&open_jtalk->engine, &
+	#	fn_ms_lf0, &fn_ts_lf0,fn_ws_lf0, 
+	#	1, TRUE, num_ws_lf0, 1)
+
 
 ############################################
 
