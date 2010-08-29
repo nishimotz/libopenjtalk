@@ -20,6 +20,7 @@ INCLUDES = -I ../text2mecab \
            -I ../njd_set_unvoiced_vowel \
            -I ../njd_set_long_vowel \
            -I ../njd2jpcommon \
+           -I ../mecab2njd \
            -I ../jpcommon \
            -I ../../htsengineapi/include \
            -I. \

@@ -70,12 +70,12 @@ mecab_node_t._fields_ = [
 #    mecab_t *mecab;
 # } Mecab;
 
-SFLEN   = 500
-SFCOUNT = 300
-SURFACE = c_char * SFLEN
-SURFACE_ptr = POINTER(SURFACE)
-SURFACE_ptr_array = SURFACE_ptr * SFCOUNT
-SURFACE_ptr_array_ptr = POINTER(SURFACE_ptr_array)
+FELEN   = 1000 # string len
+FECOUNT = 100
+FEATURE = c_char * FELEN
+FEATURE_ptr = POINTER(FEATURE)
+FEATURE_ptr_array = FEATURE_ptr * FECOUNT
+FEATURE_ptr_array_ptr = POINTER(FEATURE_ptr_array)
 
 mecab = None
 libmc = None
@@ -88,10 +88,10 @@ def Mecab_initialize():
 	libmc = cdll.LoadLibrary(r"C:\MeCab\bin\libmecab.dll")
 	libmc.mecab_sparse_tonode.restype = mecab_node_t_ptr
 	mecab_size = 0
-	mecab_feature = SURFACE_ptr_array()
-	#for i in xrange(0, SFCOUNT):
-	#	buf = create_string_buffer(SFLEN)
-	#	mecab_feature[i] = cast(byref(buf), SURFACE_ptr)
+	mecab_feature = FEATURE_ptr_array()
+	for i in xrange(0, FECOUNT):
+		buf = create_string_buffer(FELEN)
+		mecab_feature[i] = cast(byref(buf), FEATURE_ptr)
 
 def Mecab_load():
 	global mecab
@@ -102,15 +102,7 @@ def Mecab_analysis(str):
 	global mecab_size
 	head = libmc.mecab_sparse_tonode(mecab, str)
 	if head == None: return [None, None]
-
-	# count node
-	#node = head
-	#mecab_size = 0
-	#while node:
-	#	s = node[0].stat
-	#	if s != MECAB_BOS_NODE and s != MECAB_EOS_NODE:
-	#		mecab_size += 1
-	#	node = node[0].next
+	mecab_size = 0
 
 	# make array of features
 	node = head
@@ -118,15 +110,23 @@ def Mecab_analysis(str):
 	while node:
 		s = node[0].stat
 		if s != MECAB_BOS_NODE and s != MECAB_EOS_NODE:
-			len = node[0].length
-			s = string_at(node[0].surface, len) + "," + string_at(node[0].feature)
+			c = node[0].length
+			s = string_at(node[0].surface, c) + "," + string_at(node[0].feature)
 			print s.decode('utf-8') # for debug
-			buf = create_string_buffer(s, SFLEN)
-			mecab_feature[i] = cast(byref(buf), SURFACE_ptr)
+			buf = create_string_buffer(s)
+# 			dst_ptr = mecab_feature[i]
+# 			src_ptr = byref(buf)
+# 			memmove(dst_ptr, src_ptr, len(s)+1)
+			i += 1
 		node = node[0].next
 		mecab_size = i
-		i += 1
-		if i > SFCOUNT: return [mecab_feature, mecab_size]
+		if i > FECOUNT: return [mecab_feature, mecab_size]
+
+	# for debug
+	print "size:", mecab_size
+	for i in xrange(0, mecab_size):
+		print string_at(mecab_feature[i])
+	
 	return [mecab_feature, mecab_size]
 
 def Mecab_refresh():
@@ -228,10 +228,10 @@ def OpenJTalk_initialize():
 	libjt = cdll.LoadLibrary("libopenjtalk.dll")
 
 	libjt.NJD_initialize.argtypes = [NJD_ptr]
-	e = libjt.NJD_initialize(njd)
+	libjt.NJD_initialize(njd)
 
 	libjt.JPCommon_initialize.argtypes = [JPCommon_ptr]
-	e = libjt.JPCommon_initialize(jpcommon)
+	libjt.JPCommon_initialize(jpcommon)
 
 	libjt.HTS_Engine_initialize.argtypes = [HTS_Engine_ptr, c_int]
 	libjt.HTS_Engine_initialize(engine, 2);
@@ -356,8 +356,12 @@ def OpenJTalk_load():
 def OpenJTalk_text2mecab(buff, txt):
 	libjt.text2mecab(buff, txt)
 
-def OpenJTalk_synthesis(txt):
-	pass
+def OpenJTalk_synthesis(feature, size):
+	if feature == None or size == None: return
+	print "starting OpenJTalk_synthesis, size:", size
+	libjt.mecab2njd.argtypes = [NJD_ptr, FEATURE_ptr_array_ptr, c_int]
+	libjt.mecab2njd(njd, feature, size)
+	print "done"
 
 def OpenJTalk_clear():
 	pass
@@ -382,7 +386,7 @@ def main():
 	print buff.value.decode('utf-8')
 
 	[feature, size] = Mecab_analysis(buff.value)
-	OpenJTalk_synthesis(text)
+	OpenJTalk_synthesis(feature, size)
 
 	OpenJTalk_clear()
 	Mecab_clear()

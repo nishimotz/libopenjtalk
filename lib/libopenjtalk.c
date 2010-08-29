@@ -143,14 +143,16 @@ void OpenJTalk_synthesis(OpenJTalk * open_jtalk, char *txt, FILE * wavfp, FILE *
 
    text2mecab(buff, txt);
 #if USE_MECAB
-    Mecab_analysis(&open_jtalk->mecab, buff);
+   Mecab_analysis(&open_jtalk->mecab, buff);
 #endif
-    free(buff);
+   free(buff);
 #if USE_MECAB
-    mecab2njd(&open_jtalk->njd, Mecab_get_feature(&open_jtalk->mecab),
+   mecab2njd(&open_jtalk->njd, Mecab_get_feature(&open_jtalk->mecab),
              Mecab_get_size(&open_jtalk->mecab));
+#else
+   mecab2njd(&open_jtalk->njd, (char **)NULL, 0);
 #endif
-    njd_set_pronunciation(&open_jtalk->njd);
+   njd_set_pronunciation(&open_jtalk->njd);
    njd_set_digit(&open_jtalk->njd);
    njd_set_accent_phrase(&open_jtalk->njd);
    njd_set_accent_type(&open_jtalk->njd);
@@ -615,3 +617,4 @@ int libopen_jtalk_main(char *buff, char *owfile)
       fclose(logfp);
     return 0;
 }
+
