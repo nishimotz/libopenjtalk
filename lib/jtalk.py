@@ -83,6 +83,19 @@ libmc = None
 mecab_feature = None
 mecab_size = None
 
+# for debug
+def Mecab_print_utf8(feature, size):
+	if feature == None or size == None: 
+		print "Mecab_print size: 0"
+		return
+	print "Mecab_print size:", size
+	for i in xrange(0, size):
+		s = string_at(feature[i])
+		if s:
+			print s.decode('utf-8')
+		else:
+			print "[None]"
+
 def Mecab_initialize():
 	global libmc
 	global mecab_feature, mecab_size
@@ -105,6 +118,7 @@ def Mecab_load():
 
 def Mecab_analysis(str):
 	global mecab_size
+	if len(str) == 0: return [None, None]
 	head = libmc.mecab_sparse_tonode(mecab, str)
 	if head == None: return [None, None]
 	mecab_size = 0
@@ -117,7 +131,7 @@ def Mecab_analysis(str):
 		if s != MECAB_BOS_NODE and s != MECAB_EOS_NODE:
 			c = node[0].length
 			s = string_at(node[0].surface, c) + "," + string_at(node[0].feature)
-			print s.decode('utf-8') # for debug
+			# print s.decode('utf-8') # for debug
 			buf = create_string_buffer(s)
 			dst_ptr = mecab_feature[i]
 			src_ptr = byref(buf)
@@ -126,12 +140,6 @@ def Mecab_analysis(str):
 		node = node[0].next
 		mecab_size = i
 		if i > FECOUNT: return [mecab_feature, mecab_size]
-
-	# for debug
-	print "size:", mecab_size
-	for i in xrange(0, mecab_size):
-		print string_at(mecab_feature[i])
-	
 	return [mecab_feature, mecab_size]
 
 def Mecab_refresh():
@@ -249,6 +257,10 @@ FILENAME_ptr_ptr = POINTER(FILENAME_ptr)
 FILENAME_ptr_x3 = FILENAME_ptr * 3
 FILENAME_ptr_x3_ptr = POINTER(FILENAME_ptr_x3)
 
+LABEL_ptr = c_char_p
+LABEL_ptr_array = LABEL_ptr * 100
+LABEL_ptr_array_ptr = POINTER(LABEL_ptr_array)
+
 def OpenJTalk_initialize():
 	global libjt
 	libjt = cdll.LoadLibrary("libopenjtalk.dll")
@@ -303,16 +315,20 @@ def OpenJTalk_initialize():
 	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
 	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
 	libjt.JPCommon_get_label_feature.argtypes = [JPCommon_ptr]
-	libjt.JPCommon_get_label_feature.restype = FEATURE_ptr_array_ptr
+	libjt.JPCommon_get_label_feature.restype = LABEL_ptr_array_ptr
 	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
 	libjt.HTS_Engine_load_label_from_string_list.argtypes = [
-		HTS_Engine_ptr, FEATURE_ptr_array_ptr, c_int]
+		HTS_Engine_ptr, LABEL_ptr_array_ptr, c_int]
 	libjt.HTS_Engine_create_sstream.argtypes = [HTS_Engine_ptr]
 	libjt.HTS_Engine_create_pstream.argtypes = [HTS_Engine_ptr]
 	libjt.HTS_Engine_create_gstream.argtypes = [HTS_Engine_ptr]
 	libjt.HTS_Engine_refresh.argtypes = [HTS_Engine_ptr]
 	libjt.JPCommon_refresh.argtypes = [JPCommon_ptr]
 	libjt.NJD_refresh.argtypes = [NJD_ptr]
+	libjt.HTS_GStreamSet_get_total_nsample.argtypes = [HTS_GStreamSet_ptr]
+	libjt.HTS_GStreamSet_get_speech.argtypes = [HTS_GStreamSet_ptr, c_int]
+	libjt.NJD_print.argtypes = [NJD_ptr]
+	libjt.JPCommon_print.argtypes = [JPCommon_ptr]
 
 def OpenJTalk_load():
 	libjt.HTS_Engine_load_duration_from_fn.argtypes = [
@@ -397,29 +413,41 @@ def OpenJTalk_load():
 		engine, fn_gv_switch)
 
 def OpenJTalk_text2mecab(buff, txt):
+	libjt.text2mecab.argtypes = [c_char_p, c_char_p] # (char *output, char *input);
 	libjt.text2mecab(buff, txt)
+
+# for debug
+def JPC_label_print(feature, size):
+	if feature == None or size == None: 
+		print "JPC_label_print size: 0"
+		return
+	print "JPC_label_print size:", size
+	for i in xrange(0, size):
+		s = string_at(feature[i])
+		if s:
+			print s
+		else:
+			print "[None]"
 
 def OpenJTalk_synthesis(feature, size):
 	if feature == None or size == None: return
 	#print "starting OpenJTalk_synthesis, size:", size
 	libjt.mecab2njd(njd, feature, size)
-
 	libjt.njd_set_pronunciation(njd)
 	libjt.njd_set_digit(njd)
 	libjt.njd_set_accent_phrase(njd)
 	libjt.njd_set_accent_type(njd)
 	libjt.njd_set_unvoiced_vowel(njd)
 	libjt.njd_set_long_vowel(njd)
+	print "NJD_print: "; libjt.NJD_print(njd) # for debug
 	libjt.njd2jpcommon(jpcommon, njd)
+	print "JPCommon_print: "; libjt.JPCommon_print(jpcommon) # for debug
 	libjt.JPCommon_make_label(jpcommon)
 	
-	libjt.HTS_GStreamSet_get_total_nsample.argtypes = [HTS_GStreamSet_ptr]
-	libjt.HTS_GStreamSet_get_speech.argtypes = [HTS_GStreamSet_ptr, c_int]
-	
-	if libjt.JPCommon_get_label_size(jpcommon) > 2:
+	s = libjt.JPCommon_get_label_size(jpcommon)
+	if s > 2:
 		f = libjt.JPCommon_get_label_feature(jpcommon)
-		s = libjt.JPCommon_get_label_size(jpcommon)
-		print "label_size: ", s
+		JPC_label_print(f, s) # for debug
 		libjt.HTS_Engine_load_label_from_string_list(engine, f, s)
 		libjt.HTS_Engine_create_sstream(engine)
 		libjt.HTS_Engine_create_pstream(engine)
@@ -442,14 +470,18 @@ def OpenJTalk_synthesis(feature, size):
 	Mecab_refresh()
 
 def OpenJTalk_clear():
-	pass
+	libjt.NJD_clear.argtypes = [NJD_ptr]
+	libjt.JPCommon_clear.argtypes = [JPCommon_ptr]
+	libjt.HTS_Engine_clear.argtypes = [HTS_Engine_ptr]
+	libjt.NJD_clear(njd)
+	libjt.JPCommon_clear(jpcommon)
+	libjt.HTS_Engine_clear(engine)
 
 ############################################
 
 def main():
-	#global mecab
-	#text = u'こんにちは。今日はいい天気です。'
-	text = u'今日ABC'
+	#text = u'ABCこんにちは。今日はいい天気です。'
+	text = u'あ'
 	text = text.encode('utf-8')
 
 	# Notice: Mecab is separated from OpenJTalk
@@ -459,11 +491,13 @@ def main():
 	Mecab_initialize()
 	Mecab_load()
 	
-	buff = create_string_buffer(len(text) * 2 + 1)
+	print "text: ", text.decode('utf-8') # for debug
+	buff = create_string_buffer(1000)
 	OpenJTalk_text2mecab(buff, text)
-	print buff.value.decode('utf-8')
-
-	[feature, size] = Mecab_analysis(buff.value)
+	str = buff.value
+	print "text2mecab: ", str.decode('utf-8') # for debug
+	[feature, size] = Mecab_analysis(str)
+	Mecab_print_utf8(feature, size) # for debug
 	OpenJTalk_synthesis(feature, size)
 
 	OpenJTalk_clear()
