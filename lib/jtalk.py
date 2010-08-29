@@ -98,9 +98,8 @@ def Mecab_load():
 	mecab = libmc.mecab_new2(r"mecab -d " + DIC)
 	libmc.mecab_sparse_tonode.restype = mecab_node_t_ptr
 
-
 def Mecab_analysis(str):
-	global mecab_feature, mecab_size
+	global mecab_size
 	head = libmc.mecab_sparse_tonode(mecab, str)
 	if head == None: return [None, None]
 
@@ -131,6 +130,8 @@ def Mecab_analysis(str):
 	return [mecab_feature, mecab_size]
 
 def Mecab_refresh():
+	global mecab_size
+	mecab_size = 0
 	pass
 
 def Mecab_clear():
