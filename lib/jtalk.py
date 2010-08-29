@@ -227,6 +227,13 @@ jpcommon = JPCommon()
 engine = HTS_Engine()
 libjt = None
 
+FNLEN = 1000
+FILENAME = c_char * FNLEN
+FILENAME_ptr = POINTER(FILENAME)
+FILENAME_ptr_ptr = POINTER(FILENAME_ptr)
+FILENAME_ptr_x3 = FILENAME_ptr * 3
+FILENAME_ptr_x3_ptr = POINTER(FILENAME_ptr_x3)
+
 def OpenJTalk_initialize():
 	global libjt
 	libjt = cdll.LoadLibrary("libopenjtalk.dll")
@@ -268,12 +275,17 @@ def OpenJTalk_initialize():
 	libjt.HTS_Engine_set_gv_weight(engine, 0, 1.0);
 	libjt.HTS_Engine_set_gv_weight(engine, 1, 0.7);
 
-FNLEN = 1000
-FILENAME = c_char * FNLEN
-FILENAME_ptr = POINTER(FILENAME)
-FILENAME_ptr_ptr = POINTER(FILENAME_ptr)
-FILENAME_ptr_x3 = FILENAME_ptr * 3
-FILENAME_ptr_x3_ptr = POINTER(FILENAME_ptr_x3)
+	# for OpenJTalk_synthesis()
+	libjt.mecab2njd.argtypes = [NJD_ptr, FEATURE_ptr_array_ptr, c_int]
+	libjt.njd_set_pronunciation.argtypes = [NJD_ptr]
+	libjt.njd_set_digit.argtypes = [NJD_ptr]
+	libjt.njd_set_accent_phrase.argtypes = [NJD_ptr]
+	libjt.njd_set_accent_type.argtypes = [NJD_ptr]
+	libjt.njd_set_unvoiced_vowel.argtypes = [NJD_ptr]
+	libjt.njd_set_long_vowel.argtypes = [NJD_ptr]
+	libjt.njd2jpcommon.argtypes = [JPCommon_ptr, NJD_ptr]
+	libjt.JPCommon_make_label.argtypes = [JPCommon_ptr]
+	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
 
 def OpenJTalk_load():
 	libjt.HTS_Engine_load_duration_from_fn.argtypes = [
@@ -363,18 +375,7 @@ def OpenJTalk_text2mecab(buff, txt):
 def OpenJTalk_synthesis(feature, size):
 	if feature == None or size == None: return
 	#print "starting OpenJTalk_synthesis, size:", size
-	libjt.mecab2njd.argtypes = [NJD_ptr, FEATURE_ptr_array_ptr, c_int]
 	libjt.mecab2njd(njd, feature, size)
-	#print "done"
-
-	libjt.njd_set_pronunciation.argtypes = [NJD_ptr]
-	libjt.njd_set_digit.argtypes = [NJD_ptr]
-	libjt.njd_set_accent_phrase.argtypes = [NJD_ptr]
-	libjt.njd_set_accent_type.argtypes = [NJD_ptr]
-	libjt.njd_set_unvoiced_vowel.argtypes = [NJD_ptr]
-	libjt.njd_set_long_vowel.argtypes = [NJD_ptr]
-	libjt.njd2jpcommon.argtypes = [JPCommon_ptr, NJD_ptr]
-	libjt.JPCommon_make_label.argtypes = [JPCommon_ptr]
 
 	libjt.njd_set_pronunciation(njd)
 	libjt.njd_set_digit(njd)
@@ -384,6 +385,38 @@ def OpenJTalk_synthesis(feature, size):
 	libjt.njd_set_long_vowel(njd)
 	libjt.njd2jpcommon(jpcommon, njd)
 	libjt.JPCommon_make_label(jpcommon)
+	
+	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
+	libjt.JPCommon_get_label_feature.argtypes = [JPCommon_ptr]
+	libjt.JPCommon_get_label_feature.restype = FEATURE_ptr_array_ptr
+	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
+	libjt.HTS_Engine_load_label_from_string_list.argtypes = [
+		HTS_Engine_ptr, FEATURE_ptr_array_ptr, c_int]
+	libjt.HTS_Engine_create_sstream.argtypes = [HTS_Engine_ptr]
+	libjt.HTS_Engine_create_pstream.argtypes = [HTS_Engine_ptr]
+	libjt.HTS_Engine_create_gstream.argtypes = [HTS_Engine_ptr]
+	libjt.HTS_Engine_refresh.argtypes = [HTS_Engine_ptr]
+	libjt.JPCommon_refresh.argtypes = [JPCommon_ptr]
+	libjt.NJD_refresh.argtypes = [NJD_ptr]
+	if libjt.JPCommon_get_label_size(jpcommon) > 2:
+		f = libjt.JPCommon_get_label_feature(jpcommon)
+		s = libjt.JPCommon_get_label_size(jpcommon)
+		libjt.HTS_Engine_load_label_from_string_list(engine, f, s)
+		libjt.HTS_Engine_create_sstream(engine)
+		libjt.HTS_Engine_create_pstream(engine)
+		libjt.HTS_Engine_create_gstream(engine)
+		# HTS_Engine *engine = &open_jtalk->engine;
+		# int i;
+		# short temp;
+		# HTS_GStreamSet *gss = &engine->gss;
+		# for (i = 0; i < HTS_GStreamSet_get_total_nsample(gss); i++) {
+		#   temp = HTS_GStreamSet_get_speech(gss, i);
+		#   fwrite(&temp, sizeof(short), 1, wavfp);
+		# }
+		libjt.HTS_Engine_refresh(engine)
+	libjt.JPCommon_refresh(jpcommon)
+	libjt.NJD_refresh(njd)
+	Mecab_refresh()
 
 def OpenJTalk_clear():
 	pass
