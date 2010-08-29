@@ -89,9 +89,13 @@ def Mecab_initialize():
 	libmc.mecab_sparse_tonode.restype = mecab_node_t_ptr
 	mecab_size = 0
 	mecab_feature = FEATURE_ptr_array()
+# 	for i in xrange(0, FECOUNT):
+# 		buf = create_string_buffer(FELEN)
+# 		mecab_feature[i] = cast(byref(buf), FEATURE_ptr)
+	if libjt == None: return
 	for i in xrange(0, FECOUNT):
-		buf = create_string_buffer(FELEN)
-		mecab_feature[i] = cast(byref(buf), FEATURE_ptr)
+		buf = libjt.jt_malloc(FELEN)
+		mecab_feature[i] = cast(buf, FEATURE_ptr)
 
 def Mecab_load():
 	global mecab
@@ -114,9 +118,9 @@ def Mecab_analysis(str):
 			s = string_at(node[0].surface, c) + "," + string_at(node[0].feature)
 			print s.decode('utf-8') # for debug
 			buf = create_string_buffer(s)
-# 			dst_ptr = mecab_feature[i]
-# 			src_ptr = byref(buf)
-# 			memmove(dst_ptr, src_ptr, len(s)+1)
+			dst_ptr = mecab_feature[i]
+			src_ptr = byref(buf)
+			memmove(dst_ptr, src_ptr, len(s)+1)
 			i += 1
 		node = node[0].next
 		mecab_size = i
@@ -358,10 +362,10 @@ def OpenJTalk_text2mecab(buff, txt):
 
 def OpenJTalk_synthesis(feature, size):
 	if feature == None or size == None: return
-	print "starting OpenJTalk_synthesis, size:", size
+	#print "starting OpenJTalk_synthesis, size:", size
 	libjt.mecab2njd.argtypes = [NJD_ptr, FEATURE_ptr_array_ptr, c_int]
 	libjt.mecab2njd(njd, feature, size)
-	print "done"
+	#print "done"
 
 def OpenJTalk_clear():
 	pass
@@ -375,12 +379,12 @@ def main():
 	text = text.encode('utf-8')
 
 	# Notice: Mecab is separated from OpenJTalk
-	Mecab_initialize()
-	Mecab_load()
-	
 	OpenJTalk_initialize()
 	OpenJTalk_load()
 
+	Mecab_initialize()
+	Mecab_load()
+	
 	buff = create_string_buffer(len(text) * 2 + 1)
 	OpenJTalk_text2mecab(buff, text)
 	print buff.value.decode('utf-8')

@@ -316,6 +316,23 @@ FILE *Getfp(const char *name, const char *opt)
    return (fp);
 }
 
+void *jt_malloc(unsigned int size)
+{
+    return (void *)malloc(size);
+}
+
+void jt_free(void *ptr)
+{
+    free(ptr);
+}
+
+void jt_mem_test()
+{
+    void *ptr;
+    ptr = jt_malloc(100);
+    jt_free(ptr);
+}
+
 int libopen_jtalk_main(char *buff, char *owfile)
 {
     fprintf(stderr, "buff %s\n", buff);
