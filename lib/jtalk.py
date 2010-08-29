@@ -270,9 +270,10 @@ FILENAME_ptr_ptr = POINTER(FILENAME_ptr)
 FILENAME_ptr_x3 = FILENAME_ptr * 3
 FILENAME_ptr_x3_ptr = POINTER(FILENAME_ptr_x3)
 
-LABEL_ptr = c_char_p
-LABEL_ptr_array = LABEL_ptr * 100
-LABEL_ptr_array_ptr = POINTER(LABEL_ptr_array)
+# LABEL = c_char * 300
+# LABEL_ptr = POINTER(LABEL)
+# LABEL_ptr_array = LABEL_ptr * 100
+# LABEL_ptr_array_ptr = POINTER(LABEL_ptr_array)
 
 def OpenJTalk_initialize():
 	global libjt
@@ -328,10 +329,12 @@ def OpenJTalk_initialize():
 	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
 	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
 	libjt.JPCommon_get_label_feature.argtypes = [JPCommon_ptr]
-	libjt.JPCommon_get_label_feature.restype = LABEL_ptr_array_ptr
+
+	libjt.JPCommon_get_label_feature.restype = c_char_p_p
 	libjt.JPCommon_get_label_size.argtypes = [JPCommon_ptr]
 	libjt.HTS_Engine_load_label_from_string_list.argtypes = [
-		HTS_Engine_ptr, LABEL_ptr_array_ptr, c_int]
+		HTS_Engine_ptr, c_char_p_p, c_int]
+
 	libjt.HTS_Engine_create_sstream.argtypes = [HTS_Engine_ptr]
 	libjt.HTS_Engine_create_pstream.argtypes = [HTS_Engine_ptr]
 	libjt.HTS_Engine_create_gstream.argtypes = [HTS_Engine_ptr]
