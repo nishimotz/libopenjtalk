@@ -6733,7 +6733,7 @@ else
 fi
 
 # Makefiles
-ac_config_files="$ac_config_files Makefile bin/Makefile text2mecab/Makefile mecab/Makefile mecab/src/Makefile mecab2njd/Makefile njd/Makefile njd_set_pronunciation/Makefile njd_set_digit/Makefile njd_set_accent_phrase/Makefile njd_set_accent_type/Makefile njd_set_unvoiced_vowel/Makefile njd_set_long_vowel/Makefile njd2jpcommon/Makefile jpcommon/Makefile mecab-naist-jdic/Makefile lib/Makefile"
+ac_config_files="$ac_config_files Makefile bin/Makefile text2mecab/Makefile mecab2njd/Makefile njd/Makefile njd_set_pronunciation/Makefile njd_set_digit/Makefile njd_set_accent_phrase/Makefile njd_set_accent_type/Makefile njd_set_unvoiced_vowel/Makefile njd_set_long_vowel/Makefile njd2jpcommon/Makefile jpcommon/Makefile"
 
 
 # make mecab/config.h
@@ -7457,8 +7457,6 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "bin/Makefile") CONFIG_FILES="$CONFIG_FILES bin/Makefile" ;;
     "text2mecab/Makefile") CONFIG_FILES="$CONFIG_FILES text2mecab/Makefile" ;;
-    "mecab/Makefile") CONFIG_FILES="$CONFIG_FILES mecab/Makefile" ;;
-    "mecab/src/Makefile") CONFIG_FILES="$CONFIG_FILES mecab/src/Makefile" ;;
     "mecab2njd/Makefile") CONFIG_FILES="$CONFIG_FILES mecab2njd/Makefile" ;;
     "njd/Makefile") CONFIG_FILES="$CONFIG_FILES njd/Makefile" ;;
     "njd_set_pronunciation/Makefile") CONFIG_FILES="$CONFIG_FILES njd_set_pronunciation/Makefile" ;;
@@ -7469,8 +7467,6 @@ do
     "njd_set_long_vowel/Makefile") CONFIG_FILES="$CONFIG_FILES njd_set_long_vowel/Makefile" ;;
     "njd2jpcommon/Makefile") CONFIG_FILES="$CONFIG_FILES njd2jpcommon/Makefile" ;;
     "jpcommon/Makefile") CONFIG_FILES="$CONFIG_FILES jpcommon/Makefile" ;;
-    "mecab-naist-jdic/Makefile") CONFIG_FILES="$CONFIG_FILES mecab-naist-jdic/Makefile" ;;
-    "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
 
   *) as_fn_error "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

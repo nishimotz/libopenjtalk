@@ -1,6 +1,5 @@
 
 SUBDIRS = text2mecab \
-          mecab \
           mecab2njd \
           njd \
           njd_set_pronunciation \
@@ -11,9 +10,10 @@ SUBDIRS = text2mecab \
           njd_set_long_vowel \
           njd2jpcommon \
           jpcommon \
-          bin \
-          lib
+          bin
 
+#         lib
+#         mecab
 #         mecab-naist-jdic 
 
 EXTRA_DIST = AUTHORS COPYING ChangeLog INSTALL NEWS README

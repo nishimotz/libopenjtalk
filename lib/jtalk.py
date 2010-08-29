@@ -6,7 +6,10 @@
 import os
 from ctypes import *
 
-DIC = r"C:\openjtalk\open_jtalk_dic_utf_8-1.00"
+CODE = 'shift_jis'
+
+DIC = r"C:\openjtalk\open_jtalk_dic_shift_jis-1.00"
+#DIC = r"C:\openjtalk\open_jtalk_dic_utf_8-1.00"
 VOICE = r"C:\openjtalk\hts_voice_nitech_jp_atr503_m001-1.01"
 
 c_double_p = POINTER(c_double)
@@ -84,7 +87,7 @@ mecab_feature = None
 mecab_size = None
 
 # for debug
-def Mecab_print_utf8(feature, size):
+def Mecab_print(feature, size):
 	if feature == None or size == None: 
 		print "Mecab_print size: 0"
 		return
@@ -92,7 +95,7 @@ def Mecab_print_utf8(feature, size):
 	for i in xrange(0, size):
 		s = string_at(feature[i])
 		if s:
-			print s.decode('utf-8')
+			print s.decode(CODE)
 		else:
 			print "[None]"
 
@@ -131,7 +134,7 @@ def Mecab_analysis(str):
 		if s != MECAB_BOS_NODE and s != MECAB_EOS_NODE:
 			c = node[0].length
 			s = string_at(node[0].surface, c) + "," + string_at(node[0].feature)
-			# print s.decode('utf-8') # for debug
+			#print s.decode(CODE) # for debug
 			buf = create_string_buffer(s)
 			dst_ptr = mecab_feature[i]
 			src_ptr = byref(buf)
@@ -481,8 +484,8 @@ def OpenJTalk_clear():
 
 def main():
 	#text = u'ABCこんにちは。今日はいい天気です。'
-	text = u'あ'
-	text = text.encode('utf-8')
+	text = u'今日'
+	text = text.encode(CODE)
 
 	# Notice: Mecab is separated from OpenJTalk
 	OpenJTalk_initialize()
@@ -491,13 +494,13 @@ def main():
 	Mecab_initialize()
 	Mecab_load()
 	
-	print "text: ", text.decode('utf-8') # for debug
+	print "text: ", text.decode(CODE) # for debug
 	buff = create_string_buffer(1000)
 	OpenJTalk_text2mecab(buff, text)
 	str = buff.value
-	print "text2mecab: ", str.decode('utf-8') # for debug
+	print "text2mecab: ", str.decode(CODE) # for debug
 	[feature, size] = Mecab_analysis(str)
-	Mecab_print_utf8(feature, size) # for debug
+	Mecab_print(feature, size) # for debug
 	OpenJTalk_synthesis(feature, size)
 
 	OpenJTalk_clear()
