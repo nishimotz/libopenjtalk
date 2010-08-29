@@ -172,35 +172,35 @@ def OpenJTalk_initialize():
 	e = libjt.JPCommon_initialize(jpcommon)
 
 	libjt.HTS_Engine_initialize.argtypes = [HTS_Engine_ptr, c_int]
-	e = libjt.HTS_Engine_initialize(engine, 2);
+	libjt.HTS_Engine_initialize(engine, 2);
 	
 	libjt.HTS_Engine_set_sampling_rate.argtypes = [HTS_Engine_ptr, c_int]
-	e = libjt.HTS_Engine_set_sampling_rate(engine, 16000);
+	libjt.HTS_Engine_set_sampling_rate(engine, 16000);
 	
 	libjt.HTS_Engine_set_fperiod.argtypes = [HTS_Engine_ptr, c_int]
-	e = libjt.HTS_Engine_set_fperiod(engine, 80);
+	libjt.HTS_Engine_set_fperiod(engine, 80);
 
 	libjt.HTS_Engine_set_alpha.argtypes = [HTS_Engine_ptr, c_double]
-	e = libjt.HTS_Engine_set_alpha(engine, 0.42);
+	libjt.HTS_Engine_set_alpha(engine, 0.42);
 
 	libjt.HTS_Engine_set_gamma.argtypes = [HTS_Engine_ptr, c_int]
-	e = libjt.HTS_Engine_set_gamma(engine, 0);
+	libjt.HTS_Engine_set_gamma(engine, 0);
 	
 	libjt.HTS_Engine_set_log_gain.argtypes = [HTS_Engine_ptr, c_int]
-	e = libjt.HTS_Engine_set_log_gain(engine, 0);
+	libjt.HTS_Engine_set_log_gain(engine, 0);
 	
 	libjt.HTS_Engine_set_beta.argtypes = [HTS_Engine_ptr, c_double]
-	e = libjt.HTS_Engine_set_beta(engine, 0.0);
+	libjt.HTS_Engine_set_beta(engine, 0.0);
 	
 	libjt.HTS_Engine_set_audio_buff_size.argtypes = [HTS_Engine_ptr, c_int]
-	e = libjt.HTS_Engine_set_audio_buff_size(engine, 1600);
+	libjt.HTS_Engine_set_audio_buff_size(engine, 1600);
 	
 	libjt.HTS_Engine_set_msd_threshold.argtypes = [HTS_Engine_ptr, c_int, c_double]
-	e = libjt.HTS_Engine_set_msd_threshold(engine, 1, 0.5);
+	libjt.HTS_Engine_set_msd_threshold(engine, 1, 0.5);
 	
 	libjt.HTS_Engine_set_gv_weight.argtypes = [HTS_Engine_ptr, c_int, c_double]
-	e = libjt.HTS_Engine_set_gv_weight(engine, 0, 1.0);
-	e = libjt.HTS_Engine_set_gv_weight(engine, 1, 0.7);
+	libjt.HTS_Engine_set_gv_weight(engine, 0, 1.0);
+	libjt.HTS_Engine_set_gv_weight(engine, 1, 0.7);
 
 ############################################
 
