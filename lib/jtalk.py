@@ -345,6 +345,12 @@ def OpenJTalk_initialize():
 	libjt.JPCommon_print.argtypes = [JPCommon_ptr]
 	libjt.JPCommonLabel_print.argtypes = [JPCommonLabel_ptr]
 
+	libjt.jt_total_nsample.argtypes = [HTS_Engine_ptr]
+	libjt.jt_speech_ptr.argtypes = [HTS_Engine_ptr]
+	libjt.jt_speech_ptr.restype = c_short_p
+	libjt.jt_save_logs.argtypes = [c_char_p, HTS_Engine_ptr, NJD_ptr]
+	libjt.jt_save_riff.argtypes = [c_char_p, HTS_Engine_ptr]
+
 def OpenJTalk_load():
 	libjt.HTS_Engine_load_duration_from_fn.argtypes = [
 		HTS_Engine_ptr, FILENAME_ptr_ptr, FILENAME_ptr_ptr, c_int]
@@ -468,22 +474,14 @@ def OpenJTalk_synthesis(feature, size):
 		libjt.HTS_Engine_create_sstream(engine)
 		libjt.HTS_Engine_create_pstream(engine)
 		libjt.HTS_Engine_create_gstream(engine)
-		# HTS_Engine *engine = &open_jtalk->engine;
-		# int i;
-		# short temp;
-		# HTS_GStreamSet *gss = &engine->gss;
-		# for (i = 0; i < HTS_GStreamSet_get_total_nsample(gss); i++) {
-		#   temp = HTS_GStreamSet_get_speech(gss, i);
-		#   fwrite(&temp, sizeof(short), 1, wavfp);
-		# }
-		gss = engine.gss
-		n = libjt.HTS_GStreamSet_get_total_nsample(gss)
-		print "total_nsample: ", n
 		#
-		libjt.jt_save_logs.argtypes = [c_char_p, HTS_Engine_ptr, NJD_ptr]
+		total_nsample = libjt.jt_total_nsample(engine)
+		speech_ptr = libjt.jt_speech_ptr(engine)
+		print "total_nsample: ", total_nsample
+		print "speech_ptr: ", speech_ptr
+		#for i in xrange(0, total_nsample):
+		#	print speech_ptr[i]
 		libjt.jt_save_logs("_logfile", engine, njd)
-		
-		libjt.jt_save_riff.argtypes = [c_char_p, HTS_Engine_ptr]
 		libjt.jt_save_riff("_out.wav", engine)
 	
 	libjt.HTS_Engine_refresh(engine)

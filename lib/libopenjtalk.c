@@ -358,6 +358,18 @@ void jt_save_riff(char *filename, HTS_Engine *engine)
     fclose(wavfp);
 }
 
+int jt_total_nsample(HTS_Engine * engine)
+{
+   HTS_GStreamSet *gss = &engine->gss;
+   return HTS_GStreamSet_get_total_nsample(gss);
+}
+
+short *jt_speech_ptr(HTS_Engine * engine)
+{
+   HTS_GStreamSet *gss = &engine->gss;
+   return gss->gspeech;
+}
+
 int _libopenjtalk_main(char *buff, char *owfile)
 {
     fprintf(stderr, "buff %s\n", buff);
