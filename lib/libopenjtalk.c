@@ -333,7 +333,32 @@ void jt_mem_test()
     jt_free(ptr);
 }
 
-int libopen_jtalk_main(char *buff, char *owfile)
+void jt_save_logs(char *filename, HTS_Engine *engine, NJD *njd)
+{
+    FILE *logfp;
+    logfp = fopen(filename, "wt");
+    if (logfp != NULL) {
+         fprintf(logfp, "[Text analysis result]\n");
+         NJD_fprint(njd, logfp);
+         fprintf(logfp, "\n[Output label]\n");
+         HTS_Engine_save_label(engine, logfp);
+         fprintf(logfp, "\n");
+         HTS_Engine_save_information(engine, logfp);
+    }
+    fclose(logfp);
+}
+
+void jt_save_riff(char *filename, HTS_Engine *engine)
+{
+    FILE *wavfp;
+    wavfp = fopen(filename, "wb");
+    if (wavfp != NULL) {
+        HTS_Engine_save_riff(engine, wavfp);
+    }
+    fclose(wavfp);
+}
+
+int _libopenjtalk_main(char *buff, char *owfile)
 {
     fprintf(stderr, "buff %s\n", buff);
     fprintf(stderr, "owfile %s\n", owfile);

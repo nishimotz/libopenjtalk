@@ -9,7 +9,6 @@ from ctypes import *
 CODE = 'shift_jis'
 
 DIC = r"C:\openjtalk\open_jtalk_dic_shift_jis-1.00"
-#DIC = r"C:\openjtalk\open_jtalk_dic_utf_8-1.00"
 VOICE = r"C:\openjtalk\hts_voice_nitech_jp_atr503_m001-1.01"
 
 c_double_p = POINTER(c_double)
@@ -195,7 +194,6 @@ HTS_GStream_ptr = POINTER(HTS_GStream)
 
 class HTS_GStreamSet(Structure):
 	_fields_ = [
-		# ("_dummy", c_byte * 20),
 		("total_nsample", c_int), #   int total_nsample;           /* total sample */
 		("total_frame", c_int), #    int total_frame;             /* total frame */
 		("nstream", c_int), # int nstream;                 /* # of streams */
@@ -351,10 +349,10 @@ def OpenJTalk_load():
 	libjt.HTS_Engine_load_duration_from_fn.argtypes = [
 		HTS_Engine_ptr, FILENAME_ptr_ptr, FILENAME_ptr_ptr, c_int]
 	
-	fn_ms_dur_buf = create_string_buffer(VOICE + "/dur.pdf", FNLEN)
+	fn_ms_dur_buf = create_string_buffer(VOICE + os.sep + "dur.pdf")
 	fn_ms_dur_buf_ptr = cast(byref(fn_ms_dur_buf), FILENAME_ptr)
 	fn_ms_dur = cast(byref(fn_ms_dur_buf_ptr), FILENAME_ptr_ptr)
-	fn_ts_dur_buf = create_string_buffer(VOICE + "/tree-dur.inf", FNLEN)
+	fn_ts_dur_buf = create_string_buffer(VOICE + os.sep + "tree-dur.inf")
 	fn_ts_dur_buf_ptr = cast(byref(fn_ts_dur_buf), FILENAME_ptr)
 	fn_ts_dur = cast(byref(fn_ts_dur_buf_ptr), FILENAME_ptr_ptr)
 	libjt.HTS_Engine_load_duration_from_fn(engine, fn_ms_dur, fn_ts_dur, 1)
@@ -363,15 +361,15 @@ def OpenJTalk_load():
 		HTS_Engine_ptr, FILENAME_ptr_ptr, FILENAME_ptr_ptr,
 		FILENAME_ptr_x3_ptr, c_int, c_int, c_int, c_int]
 	
-	fn_ms_mcp_buf = create_string_buffer(VOICE + "/mgc.pdf", FNLEN)
+	fn_ms_mcp_buf = create_string_buffer(VOICE + os.sep + "mgc.pdf")
 	fn_ms_mcp_buf_ptr = cast(byref(fn_ms_mcp_buf), FILENAME_ptr)
 	fn_ms_mcp = cast(byref(fn_ms_mcp_buf_ptr), FILENAME_ptr_ptr)
-	fn_ts_mcp_buf = create_string_buffer(VOICE + "/tree-mgc.inf", FNLEN)
+	fn_ts_mcp_buf = create_string_buffer(VOICE + os.sep + "tree-mgc.inf")
 	fn_ts_mcp_buf_ptr = cast(byref(fn_ts_mcp_buf), FILENAME_ptr)
 	fn_ts_mcp = cast(byref(fn_ts_mcp_buf_ptr), FILENAME_ptr_ptr)
-	fn_ws_mcp_buf_1 = create_string_buffer(VOICE + "/mgc.win1", FNLEN)
-	fn_ws_mcp_buf_2 = create_string_buffer(VOICE + "/mgc.win2", FNLEN)
-	fn_ws_mcp_buf_3 = create_string_buffer(VOICE + "/mgc.win3", FNLEN)
+	fn_ws_mcp_buf_1 = create_string_buffer(VOICE + os.sep + "mgc.win1")
+	fn_ws_mcp_buf_2 = create_string_buffer(VOICE + os.sep + "mgc.win2")
+	fn_ws_mcp_buf_3 = create_string_buffer(VOICE + os.sep + "mgc.win3")
 	fn_ws_mcp_buf_ptr_x3 = FILENAME_ptr_x3(
 		cast(byref(fn_ws_mcp_buf_1), FILENAME_ptr),
 		cast(byref(fn_ws_mcp_buf_2), FILENAME_ptr),
@@ -381,15 +379,15 @@ def OpenJTalk_load():
 		engine, fn_ms_mcp, fn_ts_mcp, fn_ws_mcp, 
 		0, 0, 3, 1)
 	
-	fn_ms_lf0_buf = create_string_buffer(VOICE + "/lf0.pdf", FNLEN)
+	fn_ms_lf0_buf = create_string_buffer(VOICE + os.sep + "lf0.pdf")
 	fn_ms_lf0_buf_ptr = cast(byref(fn_ms_lf0_buf), FILENAME_ptr)
 	fn_ms_lf0 = cast(byref(fn_ms_lf0_buf_ptr), FILENAME_ptr_ptr)
-	fn_ts_lf0_buf = create_string_buffer(VOICE + "/tree-lf0.inf", FNLEN)
+	fn_ts_lf0_buf = create_string_buffer(VOICE + os.sep + "tree-lf0.inf")
 	fn_ts_lf0_buf_ptr = cast(byref(fn_ts_lf0_buf), FILENAME_ptr)
 	fn_ts_lf0 = cast(byref(fn_ts_lf0_buf_ptr), FILENAME_ptr_ptr)
-	fn_ws_lf0_buf_1 = create_string_buffer(VOICE + "/lf0.win1", FNLEN)
-	fn_ws_lf0_buf_2 = create_string_buffer(VOICE + "/lf0.win2", FNLEN)
-	fn_ws_lf0_buf_3 = create_string_buffer(VOICE + "/lf0.win3", FNLEN)
+	fn_ws_lf0_buf_1 = create_string_buffer(VOICE + os.sep + "lf0.win1")
+	fn_ws_lf0_buf_2 = create_string_buffer(VOICE + os.sep + "lf0.win2")
+	fn_ws_lf0_buf_3 = create_string_buffer(VOICE + os.sep + "lf0.win3")
 	fn_ws_lf0_buf_ptr_x3 = FILENAME_ptr_x3(
 		cast(byref(fn_ws_lf0_buf_1), FILENAME_ptr),
 		cast(byref(fn_ws_lf0_buf_2), FILENAME_ptr),
@@ -403,19 +401,19 @@ def OpenJTalk_load():
 		HTS_Engine_ptr, FILENAME_ptr_ptr, FILENAME_ptr_ptr, 
 		c_int, c_int]
 
-	fn_ms_gvm_buf = create_string_buffer(VOICE + "/gv-mgc.pdf", FNLEN)
+	fn_ms_gvm_buf = create_string_buffer(VOICE + os.sep + "gv-mgc.pdf")
 	fn_ms_gvm_buf_ptr = cast(byref(fn_ms_gvm_buf), FILENAME_ptr)
 	fn_ms_gvm = cast(byref(fn_ms_gvm_buf_ptr), FILENAME_ptr_ptr)
-	fn_ts_gvm_buf = create_string_buffer(VOICE + "/tree-gv-mgc.inf", FNLEN)
+	fn_ts_gvm_buf = create_string_buffer(VOICE + os.sep + "tree-gv-mgc.inf")
 	fn_ts_gvm_buf_ptr = cast(byref(fn_ts_gvm_buf), FILENAME_ptr)
 	fn_ts_gvm = cast(byref(fn_ts_gvm_buf_ptr), FILENAME_ptr_ptr)
 	libjt.HTS_Engine_load_gv_from_fn(
 		engine, fn_ms_gvm, fn_ts_gvm, 0, 1)
 
-	fn_ms_gvl_buf = create_string_buffer(VOICE + "/gv-lf0.pdf", FNLEN)
+	fn_ms_gvl_buf = create_string_buffer(VOICE + os.sep + "gv-lf0.pdf")
 	fn_ms_gvl_buf_ptr = cast(byref(fn_ms_gvl_buf), FILENAME_ptr)
 	fn_ms_gvl = cast(byref(fn_ms_gvl_buf_ptr), FILENAME_ptr_ptr)
-	fn_ts_gvl_buf = create_string_buffer(VOICE + "/tree-gv-lf0.inf", FNLEN)
+	fn_ts_gvl_buf = create_string_buffer(VOICE + os.sep + "tree-gv-lf0.inf")
 	fn_ts_gvl_buf_ptr = cast(byref(fn_ts_gvl_buf), FILENAME_ptr)
 	fn_ts_gvl = cast(byref(fn_ts_gvl_buf_ptr), FILENAME_ptr_ptr)
 	libjt.HTS_Engine_load_gv_from_fn(
@@ -424,7 +422,7 @@ def OpenJTalk_load():
 	libjt.HTS_Engine_load_gv_switch_from_fn.argtypes = [
 		HTS_Engine_ptr, FILENAME_ptr]
 
-	fn_gv_switch_buf = create_string_buffer(VOICE + "/gv-switch.inf", FNLEN)
+	fn_gv_switch_buf = create_string_buffer(VOICE + os.sep + "gv-switch.inf")
 	fn_gv_switch = cast(byref(fn_gv_switch_buf), FILENAME_ptr)
 	libjt.HTS_Engine_load_gv_switch_from_fn(
 		engine, fn_gv_switch)
@@ -482,7 +480,13 @@ def OpenJTalk_synthesis(feature, size):
 		n = libjt.HTS_GStreamSet_get_total_nsample(gss)
 		print "total_nsample: ", n
 		#
-		libjt.HTS_Engine_refresh(engine)
+		libjt.jt_save_logs.argtypes = [c_char_p, HTS_Engine_ptr, NJD_ptr]
+		libjt.jt_save_logs("_logfile", engine, njd)
+		
+		libjt.jt_save_riff.argtypes = [c_char_p, HTS_Engine_ptr]
+		libjt.jt_save_riff("_out.wav", engine)
+	
+	libjt.HTS_Engine_refresh(engine)
 	libjt.JPCommon_refresh(jpcommon)
 	libjt.NJD_refresh(njd)
 	Mecab_refresh()
@@ -498,8 +502,8 @@ def OpenJTalk_clear():
 ############################################
 
 def main():
-	#text = u'ABCこんにちは。今日はいい天気です。'
-	text = u'今日'
+	text = u'ABCこんにちは。今日はいい天気です。'
+	#text = u'今日'
 	text = text.encode(CODE)
 
 	# Notice: Mecab is separated from OpenJTalk
