@@ -326,17 +326,19 @@ void jt_free(void *ptr)
     free(ptr);
 }
 
+#if 0
 void jt_mem_test()
 {
     void *ptr;
     ptr = jt_malloc(100);
     jt_free(ptr);
 }
+#endif
 
 void jt_save_logs(char *filename, HTS_Engine *engine, NJD *njd)
 {
     FILE *logfp;
-    logfp = fopen(filename, "wt");
+    logfp = fopen(filename, "at");
     if (logfp != NULL) {
          fprintf(logfp, "[Text analysis result]\n");
          NJD_fprint(njd, logfp);
@@ -344,6 +346,8 @@ void jt_save_logs(char *filename, HTS_Engine *engine, NJD *njd)
          HTS_Engine_save_label(engine, logfp);
          fprintf(logfp, "\n");
          HTS_Engine_save_information(engine, logfp);
+         fprintf(logfp, "\n");
+         fprintf(logfp, "\n");
     }
     fclose(logfp);
 }

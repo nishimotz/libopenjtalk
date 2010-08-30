@@ -186,19 +186,20 @@ class HTS_PStreamSet(Structure):
 
 class HTS_GStream(Structure):
 	_fields_ = [
-		("static_length", c_int), # int static_length;           /* static features length */
-		("par", c_double_p_p), # double **par;                /* generated parameter */
+		("static_length", c_int), # int static_length;  /* static features length */
+		("par", c_double_p_p), # double **par; /* generated parameter */
 	]
 
 HTS_GStream_ptr = POINTER(HTS_GStream)
 
+# FIXME: engine.gss.total_nsample is always 0
 class HTS_GStreamSet(Structure):
 	_fields_ = [
-		("total_nsample", c_int), #   int total_nsample;           /* total sample */
-		("total_frame", c_int), #    int total_frame;             /* total frame */
-		("nstream", c_int), # int nstream;                 /* # of streams */
-		("gstream", HTS_GStream_ptr), # HTS_GStream *gstream;        /* generated parameter streams */
-		("gspeech", c_short_p), # short *gspeech;              /* generated speech */
+		("total_nsample", c_int), # int total_nsample; /* total sample */
+		("total_frame", c_int), # int total_frame; /* total frame */
+		("nstream", c_int), # int nstream; /* # of streams */
+		("gstream", HTS_GStream_ptr), # HTS_GStream *gstream; /* generated parameter streams */
+		("gspeech", c_short_p), # short *gspeech; /* generated speech */
 	]
 HTS_GStreamSet_ptr = POINTER(HTS_GStreamSet)
 
@@ -267,11 +268,6 @@ FILENAME_ptr = POINTER(FILENAME)
 FILENAME_ptr_ptr = POINTER(FILENAME_ptr)
 FILENAME_ptr_x3 = FILENAME_ptr * 3
 FILENAME_ptr_x3_ptr = POINTER(FILENAME_ptr_x3)
-
-# LABEL = c_char * 300
-# LABEL_ptr = POINTER(LABEL)
-# LABEL_ptr_array = LABEL_ptr * 100
-# LABEL_ptr_array_ptr = POINTER(LABEL_ptr_array)
 
 def OpenJTalk_initialize():
 	global libjt
