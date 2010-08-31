@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # a speech engine for nvdajp
 # 2010-08-31 by Takuya Nishimoto
-# based on Open-JTalk
-# portion is based on NVDA (synthDrivers/_espeak.py)
+# based on Open-JTalk (bin/open_jtalk.c)
+# based on NVDA (synthDrivers/_espeak.py)
 
 from ctypes import *
 import time
@@ -18,6 +18,8 @@ CODE = 'shift_jis'
 
 DIC = r"C:\openjtalk\open_jtalk_dic_shift_jis-1.00"
 VOICE = r"C:\openjtalk\hts_voice_nitech_jp_atr503_m001-1.01"
+MECAB_DLL = r"C:\MeCab\bin\libmecab.dll"
+JT_DLL = "libopenjtalk.dll"
 
 c_double_p = POINTER(c_double)
 c_double_p_p = POINTER(c_double_p) 
@@ -109,7 +111,7 @@ def Mecab_print(feature, size):
 def Mecab_initialize():
 	global libmc
 	global mecab_feature, mecab_size
-	libmc = cdll.LoadLibrary(r"C:\MeCab\bin\libmecab.dll")
+	libmc = cdll.LoadLibrary(MECAB_DLL)
 	libmc.mecab_sparse_tonode.restype = mecab_node_t_ptr
 	mecab_size = 0
 	mecab_feature = FEATURE_ptr_array()
@@ -279,7 +281,7 @@ FILENAME_ptr_x3_ptr = POINTER(FILENAME_ptr_x3)
 
 def OpenJTalk_initialize():
 	global libjt
-	libjt = cdll.LoadLibrary("libopenjtalk.dll")
+	libjt = cdll.LoadLibrary(JT_DLL)
 
 	libjt.NJD_initialize.argtypes = [NJD_ptr]
 	libjt.NJD_initialize(njd)
@@ -541,6 +543,7 @@ def _execWhenDone(func, *args, **kwargs):
 
 MSGLEN = 1000
 
+# call from BgThread
 def _speak(msg, index=None, isCharacter=False):
 	global isSpeaking
 	#uniqueID=c_int()
