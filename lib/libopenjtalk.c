@@ -2,6 +2,8 @@
  * based on ../bin/open_jtalk.c
  * by Takuya Nishimoto
  * since 2010-06-27    
+ * Notice: some functions in this file is dummy 
+ * (to export functions inside the *.a)
  */
 
 #define VOICE "../../../share/open_jtalk/hts_voice_nitech_jp_atr503_m001-1.01"
@@ -73,6 +75,88 @@
 #include "njd_set_unvoiced_vowel.h"
 #include "njd_set_long_vowel.h"
 #include "njd2jpcommon.h"
+
+/* 
+ * based on http://espeak.sourceforge.net/speak_lib.h
+ */
+typedef enum {
+    jtEVENT_NONE = -1
+} jt_EVENT_TYPE;
+
+typedef struct {
+    jt_EVENT_TYPE type;
+} jt_EVENT;
+
+typedef int (t_jt_callback)(short *, int, jt_EVENT*);
+
+static t_jt_callback * m_jt_callback = NULL;
+
+void jt_SetSynthCallback(t_jt_callback* SynthCallback)
+{
+    m_jt_callback = SynthCallback;
+}
+
+void *jt_malloc(unsigned int size)
+{
+    return (void *)malloc(size);
+}
+
+void jt_free(void *ptr)
+{
+    free(ptr);
+}
+
+#if 0
+void jt_mem_test()
+{
+    void *ptr;
+    ptr = jt_malloc(100);
+    jt_free(ptr);
+}
+#endif
+
+void jt_save_logs(char *filename, HTS_Engine *engine, NJD *njd)
+{
+    FILE *logfp;
+    logfp = fopen(filename, "at");
+    if (logfp != NULL) {
+         fprintf(logfp, "[Text analysis result]\n");
+         NJD_fprint(njd, logfp);
+         fprintf(logfp, "\n[Output label]\n");
+         HTS_Engine_save_label(engine, logfp);
+         fprintf(logfp, "\n");
+         HTS_Engine_save_information(engine, logfp);
+         fprintf(logfp, "\n");
+         fprintf(logfp, "\n");
+    }
+    fclose(logfp);
+}
+
+void jt_save_riff(char *filename, HTS_Engine *engine)
+{
+    FILE *wavfp;
+    wavfp = fopen(filename, "wb");
+    if (wavfp != NULL) {
+        HTS_Engine_save_riff(engine, wavfp);
+    }
+    fclose(wavfp);
+}
+
+int jt_total_nsample(HTS_Engine * engine)
+{
+   HTS_GStreamSet *gss = &engine->gss;
+   return HTS_GStreamSet_get_total_nsample(gss);
+}
+
+short *jt_speech_ptr(HTS_Engine * engine)
+{
+   HTS_GStreamSet *gss = &engine->gss;
+   return gss->gspeech;
+}
+
+/*
+ * dummy functions from here
+ */
 
 #define MAXBUFLEN 1024
 
@@ -316,64 +400,7 @@ FILE *Getfp(const char *name, const char *opt)
    return (fp);
 }
 
-void *jt_malloc(unsigned int size)
-{
-    return (void *)malloc(size);
-}
-
-void jt_free(void *ptr)
-{
-    free(ptr);
-}
-
-#if 0
-void jt_mem_test()
-{
-    void *ptr;
-    ptr = jt_malloc(100);
-    jt_free(ptr);
-}
-#endif
-
-void jt_save_logs(char *filename, HTS_Engine *engine, NJD *njd)
-{
-    FILE *logfp;
-    logfp = fopen(filename, "at");
-    if (logfp != NULL) {
-         fprintf(logfp, "[Text analysis result]\n");
-         NJD_fprint(njd, logfp);
-         fprintf(logfp, "\n[Output label]\n");
-         HTS_Engine_save_label(engine, logfp);
-         fprintf(logfp, "\n");
-         HTS_Engine_save_information(engine, logfp);
-         fprintf(logfp, "\n");
-         fprintf(logfp, "\n");
-    }
-    fclose(logfp);
-}
-
-void jt_save_riff(char *filename, HTS_Engine *engine)
-{
-    FILE *wavfp;
-    wavfp = fopen(filename, "wb");
-    if (wavfp != NULL) {
-        HTS_Engine_save_riff(engine, wavfp);
-    }
-    fclose(wavfp);
-}
-
-int jt_total_nsample(HTS_Engine * engine)
-{
-   HTS_GStreamSet *gss = &engine->gss;
-   return HTS_GStreamSet_get_total_nsample(gss);
-}
-
-short *jt_speech_ptr(HTS_Engine * engine)
-{
-   HTS_GStreamSet *gss = &engine->gss;
-   return gss->gspeech;
-}
-
+// dummy function
 int _libopenjtalk_main(char *buff, char *owfile)
 {
     fprintf(stderr, "buff %s\n", buff);
