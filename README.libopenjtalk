@@ -1,8 +1,9 @@
-jtalk.py (libopenjtalk) by Takuya Nishimoto
+lib/jtalk.py (libopenjtalk) by Takuya Nishimoto
 
 http://ja.nishimotz.com/project:libopenjtalk
 
-usage for cygwin-1.7.6 and mecab-0.98 for Win32
+=============================================
+usage for cygwin-1.7.6, mecab-0.98 for Win32, Python 2.6.x Win32
 
 $ export CXX='g++ -mno-cygwin'
 $ export CC='gcc -mno-cygwin'
@@ -30,3 +31,11 @@ libmecab.dll          mecab-dict-gen.exe    mecab-system-eval.exe  mecab.exe
 mecab-cost-train.exe  mecab-dict-index.exe  mecab-test-gen.exe
 
 $ python jtalk.py
+
+=============================================
+usage for Ubuntu Linux 9.04 / 10.04
+
+$ sudo aptitude install autoconf libtool
+$ autoreconf
+
+to be written.

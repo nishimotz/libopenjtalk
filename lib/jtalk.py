@@ -1,10 +1,18 @@
 # jtalk.py 
 # -*- coding: utf-8 -*-
 # a speech engine for nvdajp
+# 2010-08-31 by Takuya Nishimoto
 # based on Open-JTalk
-# by Takuya Nishimoto
-import os
+# portion is based on NVDA (synthDrivers/_espeak.py)
+
 from ctypes import *
+import time
+import threading
+import Queue
+import os
+import codecs
+
+import nvwave
 
 CODE = 'shift_jis'
 
@@ -456,16 +464,16 @@ def OpenJTalk_synthesis(feature, size):
 	libjt.njd_set_accent_type(njd)
 	libjt.njd_set_unvoiced_vowel(njd)
 	libjt.njd_set_long_vowel(njd)
-	print "NJD_print: "; libjt.NJD_print(njd) # for debug
+	#print "NJD_print: "; libjt.NJD_print(njd) # for debug
 	libjt.njd2jpcommon(jpcommon, njd)
-	print "JPCommon_print: "; libjt.JPCommon_print(jpcommon) # for debug
+	#print "JPCommon_print: "; libjt.JPCommon_print(jpcommon) # for debug
 	libjt.JPCommon_make_label(jpcommon)
-	print "JPCommonLabel_print: "; libjt.JPCommonLabel_print(jpcommon.label) # for debug
+	#print "JPCommonLabel_print: "; libjt.JPCommonLabel_print(jpcommon.label) # for debug
 	
 	s = libjt.JPCommon_get_label_size(jpcommon)
 	if s > 2:
 		f = libjt.JPCommon_get_label_feature(jpcommon)
-		JPC_label_print(f, s) # for debug
+		#JPC_label_print(f, s) # for debug
 		libjt.HTS_Engine_load_label_from_string_list(engine, f, s)
 		libjt.HTS_Engine_create_sstream(engine)
 		libjt.HTS_Engine_create_pstream(engine)
@@ -473,12 +481,13 @@ def OpenJTalk_synthesis(feature, size):
 		#
 		total_nsample = libjt.jt_total_nsample(engine)
 		speech_ptr = libjt.jt_speech_ptr(engine)
-		print "total_nsample: ", total_nsample
-		print "speech_ptr: ", speech_ptr
+		player.feed(string_at(speech_ptr, total_nsample * sizeof(c_short)))
+		#print "total_nsample: ", total_nsample
+		#print "speech_ptr: ", speech_ptr
 		#for i in xrange(0, total_nsample):
 		#	print speech_ptr[i]
-		libjt.jt_save_logs("_logfile", engine, njd)
-		libjt.jt_save_riff("_out.wav", engine)
+		#libjt.jt_save_logs("_logfile", engine, njd)
+		#libjt.jt_save_riff("_out.wav", engine)
 	
 	libjt.HTS_Engine_refresh(engine)
 	libjt.JPCommon_refresh(jpcommon)
@@ -494,30 +503,133 @@ def OpenJTalk_clear():
 	libjt.HTS_Engine_clear(engine)
 
 ############################################
+# based on _espeak.py (nvda)
 
-def main():
-	text = u'ABCこんにちは。今日はいい天気です。'
-	#text = u'今日'
-	text = text.encode(CODE)
+isSpeaking = False
+lastIndex = None
+bgThread = None
+bgQueue = None
+player = None
 
-	# Notice: Mecab is separated from OpenJTalk
-	OpenJTalk_initialize()
-	OpenJTalk_load()
+class BgThread(threading.Thread):
+	def __init__(self):
+		threading.Thread.__init__(self)
+		self.setDaemon(True)
 
-	Mecab_initialize()
-	Mecab_load()
-	
-	print "text: ", text.decode(CODE) # for debug
-	buff = create_string_buffer(1000)
+	def run(self):
+		global isSpeaking
+		while True:
+			func, args, kwargs = bgQueue.get()
+			if not func:
+				break
+			try:
+				func(*args, **kwargs)
+			except:
+				pass # log.error("Error running function from queue", exc_info=True)
+			bgQueue.task_done()
+
+def _execWhenDone(func, *args, **kwargs):
+	global bgQueue
+	# This can't be a kwarg in the function definition because it will consume the first non-keywor dargument which is meant for func.
+	mustBeAsync = kwargs.pop("mustBeAsync", False)
+	if mustBeAsync or bgQueue.unfinished_tasks != 0:
+		# Either this operation must be asynchronous or There is still an operation in progress.
+		# Therefore, run this asynchronously in the background thread.
+		bgQueue.put((func, args, kwargs))
+	else:
+		func(*args, **kwargs)
+
+MSGLEN = 1000
+
+def _speak(msg, index=None, isCharacter=False):
+	global isSpeaking
+	#uniqueID=c_int()
+	isSpeaking = True
+	text = msg.encode(CODE)
+	#print "text: ", text.decode(CODE) # for debug
+	buff = create_string_buffer(MSGLEN)
 	OpenJTalk_text2mecab(buff, text)
 	str = buff.value
-	print "text2mecab: ", str.decode(CODE) # for debug
+	#print "text2mecab: ", str.decode(CODE) # for debug
 	[feature, size] = Mecab_analysis(str)
-	Mecab_print(feature, size) # for debug
+	#Mecab_print(feature, size) # for debug
 	OpenJTalk_synthesis(feature, size)
+	#player.feed(string_at(wav, numsamples * sizeof(c_short)))
+	isSpeaking = False
 
-	OpenJTalk_clear()
+def speak(msg, index=None,isCharacter=False):
+	#global bgQueue
+	_execWhenDone(_speak, msg, index, isCharacter, mustBeAsync=True)
+
+def stop():
+	global isSpeaking, bgQueue
+	# Kill all speech from now.
+	# We still want parameter changes to occur, so requeue them.
+	params = []
+	try:
+		while True:
+			item = bgQueue.get_nowait()
+			if item[0] != _speak:
+				params.append(item)
+			bgQueue.task_done()
+	except Queue.Empty:
+		# Let the exception break us out of this loop, as queue.empty() is not reliable anyway.
+		pass
+	for item in params:
+		bgQueue.put(item)
+	isSpeaking = False
+	player.stop()
+
+def pause(switch):
+	#global player
+	player.pause(switch)
+
+def initialize():
+	global bgThread, bgQueue, player
+	player = nvwave.WavePlayer(channels=1, samplesPerSec=16000, bitsPerSample=16)
+	bgQueue = Queue.Queue()
+	bgThread = BgThread()
+	bgThread.start()
+	#
+	OpenJTalk_initialize()
+	OpenJTalk_load()
+	Mecab_initialize()
+	Mecab_load()
+
+def terminate():
+	global bgThread, bgQueue, player
+	stop()
+	bgQueue.put((None, None, None))
+	bgThread.join()
+	bgThread = None
+	bgQueue = None
+	player.close()
+	player = None
+	#
 	Mecab_clear()
+	OpenJTalk_clear()
+
+############################################
+
+def main():
+	initialize()
+	print "speaking"
+	speak(u'ABC')
+	speak(u'おはよう。')
+	speak(u'こんにちは。')
+	print "sleep"
+	time.sleep(2.5)
+	print "stopping"
+	stop()
+	print "sleep"
+	speak(u'今日はいい天気です。')
+	time.sleep(1.2)
+	print "stopping"
+	stop()
+	time.sleep(2)
+	print "terminating"
+	terminate()
+	print "end"
 
 if __name__ == "__main__":
 	main()

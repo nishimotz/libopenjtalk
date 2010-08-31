@@ -1,27 +1,15 @@
-Dynamic library version of Open-JTalk (for C and Python)
+libopenjtalk
+Dynamic library version of Open-JTalk and Python wrapper
 
 stated on 2010-06-27 by Takuya Nishimoto
+http://ja.nishimotz.com/project:libopenjtalk
 
-Notice: This is unfinished work. See 'lib' directory.
+based on Open-JTalk
+http://sourceforge.net/projects/open-jtalk/
+see README.open_jtalk-1.01 and COPYING-open_jtalk
 
-http://ja.nishimotz.com/open-jtalk
-
-Environment: Ubuntu Linux 9.04 / 10.04
-
-$ sudo aptitude install autoconf libtool
-$ autoreconf
-
-== how to test shared-lib ==
-
-$ cd /usr/local/share
-$ sudo mkdir /open_jtalk
-$ sudo tar xvfz /path/to/open_jtalk_dic_utf8-1.00.tar.gz
-$ sudo tar xvfz /path/to/hts_voice_nitech_jp_atr503_m001-1.01.tar.gz
-
-$ sh configure --with-charset=UTF-8
-$ make
-$ cd lib
-$ make -f Makefile.shlib
-$ export LD_LIBRARY_PATH=.
-$ ./dlmain -ow _hoge.wav input.txt
-
+based on NonVisual Desktop Access (NVDA)
+(lib/{nvwave.py, winKernel.py, jtalk.py})
+Copyright (C) 2006-2008 NVDA Contributors <http://www.nvda-project.org/>
+This file is covered by the GNU General Public License.
+See COPYING-NVDA
