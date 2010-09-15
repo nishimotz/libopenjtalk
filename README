@@ -1,10 +1,10 @@
 libopenjtalk
-Dynamic library version of Open-JTalk and Python wrapper
+Dynamic library version of Open JTalk and Python wrapper
 
 stated on 2010-06-27 by Takuya Nishimoto
 http://ja.nishimotz.com/project:libopenjtalk
 
-based on Open-JTalk
+based on Open JTalk
 http://sourceforge.net/projects/open-jtalk/
 see README.open_jtalk-1.01 and COPYING-open_jtalk
 

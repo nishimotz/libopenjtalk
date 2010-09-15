@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # a speech engine for nvdajp
 # 2010-08-31 by Takuya Nishimoto
-# based on Open-JTalk (bin/open_jtalk.c)
+# based on Open JTalk (bin/open_jtalk.c)
 # based on NVDA (synthDrivers/_espeak.py)
 
 from ctypes import *
