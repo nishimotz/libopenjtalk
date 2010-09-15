@@ -11,14 +11,18 @@ import threading
 import Queue
 import os
 import codecs
+import struct
 
 import nvwave
 
+rate = 100 # 0-100
 CODE = 'shift_jis'
 
-DIC = r"C:\openjtalk\open_jtalk_dic_shift_jis-1.00"
-VOICE = r"C:\openjtalk\hts_voice_nitech_jp_atr503_m001-1.01"
-MECAB_DLL = r"C:\MeCab\bin\libmecab.dll"
+JT_DIR = r'C:\work\jtalk'
+DIC = JT_DIR + r"\dic"
+VOICE = JT_DIR + r"\voice"
+MECAB_DLL = JT_DIR + r"\libmecab.dll"
+MECABRC = JT_DIR + r"\mecabrc"
 JT_DLL = "libopenjtalk.dll"
 
 c_double_p = POINTER(c_double)
@@ -125,8 +129,7 @@ def Mecab_initialize():
 
 def Mecab_load():
 	global mecab
-	mecab = libmc.mecab_new2(r"mecab -d " + DIC)
-	libmc.mecab_sparse_tonode.restype = mecab_node_t_ptr
+	mecab = libmc.mecab_new2(r"mecab -d " + DIC + " -r " + MECABRC)
 
 def Mecab_analysis(str):
 	global mecab_size
@@ -456,6 +459,27 @@ def JPC_label_print(feature, size):
 		else:
 			print "[None]"
 
+def trim_silence(buf, byte_count):
+	begin_pos = 0
+	for p in xrange(0, byte_count, 2): # low-byte
+		if abs(struct.unpack('h', buf[p:p+2])[0]) > 64:
+			begin_pos = p
+			break
+	end_pos = byte_count
+	for p in xrange(byte_count-2, -2, -2): # low-byte
+		if abs(struct.unpack('h', buf[p:p+2])[0]) > 64:
+			end_pos = p
+			break
+	#if DEBUG_INFO:
+	#	log.info("trim_silence (%d:%d)/%d" % (begin_pos, end_pos, byte_count))
+	return buf[begin_pos:end_pos]
+
+def refresh():
+	libjt.HTS_Engine_refresh(engine)
+	libjt.JPCommon_refresh(jpcommon)
+	libjt.NJD_refresh(njd)
+	Mecab_refresh()
+
 def OpenJTalk_synthesis(feature, size):
 	if feature == None or size == None: return
 	#print "starting OpenJTalk_synthesis, size:", size
@@ -473,28 +497,26 @@ def OpenJTalk_synthesis(feature, size):
 	#print "JPCommonLabel_print: "; libjt.JPCommonLabel_print(jpcommon.label) # for debug
 	
 	s = libjt.JPCommon_get_label_size(jpcommon)
-	if s > 2:
-		f = libjt.JPCommon_get_label_feature(jpcommon)
-		#JPC_label_print(f, s) # for debug
-		libjt.HTS_Engine_load_label_from_string_list(engine, f, s)
-		libjt.HTS_Engine_create_sstream(engine)
-		libjt.HTS_Engine_create_pstream(engine)
-		libjt.HTS_Engine_create_gstream(engine)
-		#
-		total_nsample = libjt.jt_total_nsample(engine)
-		speech_ptr = libjt.jt_speech_ptr(engine)
-		player.feed(string_at(speech_ptr, total_nsample * sizeof(c_short)))
-		#print "total_nsample: ", total_nsample
-		#print "speech_ptr: ", speech_ptr
-		#for i in xrange(0, total_nsample):
-		#	print speech_ptr[i]
-		#libjt.jt_save_logs("_logfile", engine, njd)
-		#libjt.jt_save_riff("_out.wav", engine)
+	if s < 2: refresh(); return
+
+	f = libjt.JPCommon_get_label_feature(jpcommon)
+	#JPC_label_print(f, s) # for debug
+	libjt.HTS_Engine_load_label_from_string_list(engine, f, s)
+	libjt.HTS_Engine_create_sstream(engine)
+	libjt.HTS_Engine_create_pstream(engine)
+	libjt.HTS_Engine_set_fperiod(engine, 80 - rate/2) # 80(point=5ms) frame period
+	libjt.HTS_Engine_create_gstream(engine)
+	#
+	total_nsample = libjt.jt_total_nsample(engine)
+	speech_ptr = libjt.jt_speech_ptr(engine)
+	byte_count = total_nsample * sizeof(c_short)
+	buf = string_at(speech_ptr, byte_count)
+	buf = trim_silence(buf, byte_count)
+	player.feed(buf)
+	libjt.jt_save_logs("_logfile", engine, njd)
+	libjt.jt_save_riff("_out.wav", engine)
 	
-	libjt.HTS_Engine_refresh(engine)
-	libjt.JPCommon_refresh(jpcommon)
-	libjt.NJD_refresh(njd)
-	Mecab_refresh()
+	refresh()
 
 def OpenJTalk_clear():
 	libjt.NJD_clear.argtypes = [NJD_ptr]
@@ -546,23 +568,27 @@ MSGLEN = 1000
 # call from BgThread
 def _speak(msg, index=None, isCharacter=False):
 	global isSpeaking
-	#uniqueID=c_int()
 	isSpeaking = True
 	text = msg.encode(CODE)
-	#print "text: ", text.decode(CODE) # for debug
+	print "text: ", text.decode(CODE) # for debug
 	buff = create_string_buffer(MSGLEN)
 	OpenJTalk_text2mecab(buff, text)
 	str = buff.value
-	#print "text2mecab: ", str.decode(CODE) # for debug
+	print "text2mecab: ", str.decode(CODE) # for debug
 	[feature, size] = Mecab_analysis(str)
-	#Mecab_print(feature, size) # for debug
+	Mecab_print(feature, size) # for debug
 	OpenJTalk_synthesis(feature, size)
-	#player.feed(string_at(wav, numsamples * sizeof(c_short)))
 	isSpeaking = False
 
 def speak(msg, index=None,isCharacter=False):
-	#global bgQueue
 	_execWhenDone(_speak, msg, index, isCharacter, mustBeAsync=True)
+
+def _setRate(value):
+	global rate
+	rate = value
+
+def setRate(value):
+	_execWhenDone(_setRate, value)
 
 def stop():
 	global isSpeaking, bgQueue
@@ -617,20 +643,19 @@ def terminate():
 def main():
 	initialize()
 	print "speaking"
-	speak(u'ABC')
-	speak(u'おはよう。')
 	speak(u'こんにちは。')
-	print "sleep"
-	time.sleep(2.5)
-	print "stopping"
-	stop()
-	print "sleep"
-	speak(u'今日はいい天気です。')
-	time.sleep(1.2)
-	print "stopping"
-	stop()
-	time.sleep(2)
-	print "terminating"
+	#print "sleep"
+	#time.sleep(1.5)
+	#print "stopping"
+	#stop()
+	#time.sleep(2)
+	#print "sleep"
+	#speak(u'今日はいい天気です。')
+	#time.sleep(1.2)
+	#print "stopping"
+	#stop()
+	time.sleep(10)
+	#print "terminating"
 	terminate()
 	print "end"
 
