@@ -15,7 +15,7 @@ import struct
 
 import nvwave
 
-rate = 100 # 0-100
+rate = 0 # 0-100
 CODE = 'shift_jis'
 
 JT_DIR = r'C:\work\jtalk'
