@@ -100,7 +100,7 @@ mecab_feature = None
 mecab_size = None
 
 # for debug
-def Mecab_print(feature, size):
+def Mecab_print(feature, size, doDecode=True):
 	if feature == None or size == None: 
 		print "Mecab_print size: 0"
 		return
@@ -108,7 +108,10 @@ def Mecab_print(feature, size):
 	for i in xrange(0, size):
 		s = string_at(feature[i])
 		if s:
-			print s.decode(CODE)
+			if doDecode:
+				print s.decode(CODE)
+			else:
+				print s
 		else:
 			print "[None]"
 
@@ -582,7 +585,7 @@ def _speak(msg, index=None, isCharacter=False, isFeatures=False):
 		[feature, size] = msg
 	else:
 		[feature, size] = make_features(msg)
-	Mecab_print(feature, size) # for debug
+	#Mecab_print(feature, size) # for debug
 	OpenJTalk_synthesis(feature, size)
 	isSpeaking = False
 
