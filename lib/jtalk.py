@@ -119,9 +119,6 @@ def Mecab_initialize():
 	libmc.mecab_sparse_tonode.restype = mecab_node_t_ptr
 	mecab_size = 0
 	mecab_feature = FEATURE_ptr_array()
-	# for i in xrange(0, FECOUNT):
-	# 	buf = create_string_buffer(FELEN)
-	# 	mecab_feature[i] = cast(byref(buf), FEATURE_ptr)
 	if libjt == None: return
 	for i in xrange(0, FECOUNT):
 		buf = libjt.jt_malloc(FELEN)
@@ -565,23 +562,32 @@ def _execWhenDone(func, *args, **kwargs):
 
 MSGLEN = 1000
 
-# call from BgThread
-def _speak(msg, index=None, isCharacter=False):
-	global isSpeaking
-	isSpeaking = True
+def make_features(msg, debug=False):
 	text = msg.encode(CODE)
-	print "text: ", text.decode(CODE) # for debug
+	if debug:
+		print "text: ", text.decode(CODE)
 	buff = create_string_buffer(MSGLEN)
 	OpenJTalk_text2mecab(buff, text)
 	str = buff.value
-	print "text2mecab: ", str.decode(CODE) # for debug
+	if debug:
+		print "text2mecab: ", str.decode(CODE)
 	[feature, size] = Mecab_analysis(str)
+	return [feature, size]
+
+# call from BgThread
+def _speak(msg, index=None, isCharacter=False, isFeatures=False):
+	global isSpeaking
+	isSpeaking = True
+	if isFeatures:
+		[feature, size] = msg
+	else:
+		[feature, size] = make_features(msg)
 	Mecab_print(feature, size) # for debug
 	OpenJTalk_synthesis(feature, size)
 	isSpeaking = False
 
-def speak(msg, index=None,isCharacter=False):
-	_execWhenDone(_speak, msg, index, isCharacter, mustBeAsync=True)
+def speak(msg, index=None, isCharacter=False, isFeatures=False):
+	_execWhenDone(_speak, msg, index, isCharacter, isFeatures, mustBeAsync=True)
 
 def _setRate(value):
 	global rate
