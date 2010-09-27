@@ -50,13 +50,15 @@ def main():
 	]
 	for file in files:
 		print "speaking %s" % file
-		f = load_features( file + '.txt')
-		for i in xrange(0,1): # (0,5)
+		[feature, size] = load_features(file + '.txt')
+		for i in xrange(0,5):
 			r = 100 - i * 25
 			print 'rate:%d' % r
 			setRate(r)
-			speak(f, isFeatures=True);
-			time.sleep(5)
+			#speak(f, isFeatures=True);
+			#time.sleep(5)
+			sf = "out\\" + file + ('-%d' % i)
+			OpenJTalk_synthesis(feature, size, doPlay=False, saveFile=sf)
 		#time.sleep(10)
 	terminate()
 	print "end"

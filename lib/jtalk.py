@@ -480,7 +480,7 @@ def refresh():
 	libjt.NJD_refresh(njd)
 	Mecab_refresh()
 
-def OpenJTalk_synthesis(feature, size):
+def OpenJTalk_synthesis(feature, size, doPlay=True, saveFile=None):
 	if feature == None or size == None: return
 	#print "starting OpenJTalk_synthesis, size:", size
 	libjt.mecab2njd(njd, feature, size)
@@ -512,10 +512,11 @@ def OpenJTalk_synthesis(feature, size):
 	byte_count = total_nsample * sizeof(c_short)
 	buf = string_at(speech_ptr, byte_count)
 	buf = trim_silence(buf, byte_count)
-	player.feed(buf)
-	libjt.jt_save_logs("_logfile", engine, njd)
-	libjt.jt_save_riff("_out.wav", engine)
-	
+	if doPlay:
+		player.feed(buf)
+	if saveFile:
+		libjt.jt_save_logs(saveFile + ".logs", engine, njd)
+		libjt.jt_save_riff(saveFile + ".wav", engine)
 	refresh()
 
 def OpenJTalk_clear():
