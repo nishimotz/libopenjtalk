@@ -516,7 +516,13 @@ def OpenJTalk_synthesis(feature, size, doPlay=True, saveFile=None):
 		player.feed(buf)
 	if saveFile:
 		libjt.jt_save_logs(saveFile + ".logs", engine, njd)
-		libjt.jt_save_riff(saveFile + ".wav", engine)
+		#libjt.jt_save_riff(saveFile + ".wav", engine)
+		import wave
+		w = wave.Wave_write(saveFile + ".wav")
+		p = (1, 2, 16000, len(buf)/2, 'NONE', 'not compressed')
+		w.setparams(p)
+		w.writeframes(buf)
+		w.close()
 	refresh()
 
 def OpenJTalk_clear():
