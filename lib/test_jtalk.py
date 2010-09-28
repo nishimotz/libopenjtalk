@@ -43,21 +43,26 @@ def main():
 	initialize()
 	test_init()
 	files = [
-		'g24','g23','h19','f32','e42','c19','e03','g42',
-		'b21','a47','i18','f33','h34','b42','d29','b49',
 		'd35','b13','i35','f34','c33','f48','d41','e40',
-		#'d19', 'g50', 'g18', 'f01', 'g40',
+		'b21','a47','i18','f33','h34','b42','d29','b49',
+		'g24','g23','h19','f32','e42','c19','e03','g42',
 	]
-	for file in files:
+	names = [
+		'11','12','13','14','15','16','17','18',
+		'21','22','23','24','25','26','27','28',
+		'31','32','33','34','35','36','37','38',
+	]
+	for index in xrange(len(files)):
+		file = files[index]
 		print "speaking %s" % file
 		[feature, size] = load_features(file + '.txt')
 		for i in xrange(0,5):
-			r = 100 - i * 25
+			r = 100 - i * 15
 			print 'rate:%d' % r
 			setRate(r)
 			#speak(f, isFeatures=True);
 			#time.sleep(5)
-			sf = "out\\" + file + ('-%d' % i)
+			sf = "out\\" + names[index] + ('%d'%i) + '-' + file + ('s%d' % (5-i))
 			OpenJTalk_synthesis(feature, size, doPlay=False, saveFile=sf)
 		#time.sleep(10)
 	terminate()
