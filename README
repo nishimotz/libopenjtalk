@@ -1,15 +1,15 @@
 libopenjtalk
-Dynamic library version of Open JTalk and Python wrapper
-
-stated on 2010-06-27 by Takuya Nishimoto
-http://ja.nishimotz.com/project:libopenjtalk
+Dynamic library version of Open JTalk
 
 based on Open JTalk
 http://sourceforge.net/projects/open-jtalk/
-see README.open_jtalk-1.01 and COPYING-open_jtalk
+see README.open_jtalk-1.01 and COPYING
 
-based on NonVisual Desktop Access (NVDA)
-(lib/{nvwave.py, winKernel.py, jtalk.py})
-Copyright (C) 2006-2008 NVDA Contributors <http://www.nvda-project.org/>
-This file is covered by the GNU General Public License.
-See COPYING-NVDA
+libopenjtalk by Takuya Nishimoto
+http://ja.nishimotz.com/project:libopenjtalk
+(contributions of nishimotz is BSD lisence)
+started on 2010-06-27
+
+python wrapper is moved to:
+https://github.com/nishimotz/ojt-python
+
