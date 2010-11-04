@@ -1,9 +1,9 @@
-lib/jtalk.py (libopenjtalk) by Takuya Nishimoto
-
 http://ja.nishimotz.com/project:libopenjtalk
 
 =============================================
-usage for cygwin-1.7.6, mecab-0.98 for Win32, Python 2.6.x Win32
+lib/jtalk.py (libopenjtalk) by Takuya Nishimoto
+
+for cygwin-1.7, mecab-0.98 for Win32, Python 2.7 Win32
 
 $ export CXX='g++ -mno-cygwin'
 $ export CC='gcc -mno-cygwin'
@@ -16,7 +16,7 @@ $ make
 $ cd ..
 
 $ cd libopenjtalk
-$ sh do_configure.sh
+$ sh do_configure_mingw32.sh
 $ make
 $ cd lib
 $ make
