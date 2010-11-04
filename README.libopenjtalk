@@ -33,9 +33,20 @@ mecab-cost-train.exe  mecab-dict-index.exe  mecab-test-gen.exe
 $ python jtalk.py
 
 =============================================
-usage for Ubuntu Linux 9.04 / 10.04
+usage for Ubuntu Linux 9.04
+(default charset is EUC-JP)
 
-$ sudo aptitude install autoconf libtool
+$ sudo apt-get install autoconf libtool
+$ cd htsengineapi
+$ autoconf
+$ ./configure
+$ make
+$ cd ..
+$ cd libopenjtalk
 $ autoreconf
+$ sh do_configure_ubuntu.sh
+$ make
+$ cd lib
+$ make -f Makefile.ubuntu
+$ export LD_LIBRARY_PATH=.libs ; ./mytest
 
-to be written.
