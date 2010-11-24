@@ -23,7 +23,7 @@ DIC = JT_DIR + r"\dic"
 VOICE = JT_DIR + r"\voice"
 MECAB_DLL = JT_DIR + r"\libmecab.dll"
 MECABRC = JT_DIR + r"\mecabrc"
-JT_DLL = "libopenjtalk.dll"
+JT_DLL = JT_DIR + r"\libopenjtalk.dll"
 
 c_double_p = POINTER(c_double)
 c_double_p_p = POINTER(c_double_p) 
