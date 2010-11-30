@@ -9,9 +9,9 @@ SUBDIRS = text2mecab \
           njd_set_unvoiced_vowel \
           njd_set_long_vowel \
           njd2jpcommon \
-          jpcommon \
-          bin
+          jpcommon
 
+#         bin
 #         lib
 #         mecab
 #         mecab-naist-jdic 

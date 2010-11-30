@@ -1,6 +1,7 @@
 # usage:
 # sh /usr/bin/set-gcc-default-3.sh
-# sh do_configure.sh
+# sh do_configure_mingw32.sh
+# autoconf
 # make
 # cd lib
 # make
