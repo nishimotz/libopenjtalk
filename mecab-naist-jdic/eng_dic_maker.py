@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 # since 2010-12-05 by Takuya Nishimoto
 
+IN_FILE  = '/home/nishi/code/jtalk/bep-eng.dic'
+OUT_FILE = 'nvdajp-eng-dic.csv'
+
 def alpha2mb(s):
         # 'abc' -> 'ａｂｃ'
         import string
@@ -18,7 +21,7 @@ if __name__ == '__main__':
 	import re
 	d = []
 	k = {}
-	for line in open('bep-eng.dic'):
+	for line in open(IN_FILE):
 		if line[0] == '#': continue
 		a1, a2 = line.rstrip().decode('UTF-8').split(' ')
 		a1 = re.sub("'", "\\'", a1)
@@ -79,7 +82,7 @@ if __name__ == '__main__':
 			d.append([i[0], i[1]])
 			k[i[0]] = True
 	d.sort()
-	with open(r"_nvdajp-eng-dic.csv", "w") as file:
+	with open(OUT_FILE, "w") as file:
 		for i in d:
 			# ＡＬＴ,1345,1345,6913,名詞,一般,*,*,*,*,ＡＬＴ,オルト,オルト,0/3,C1
 			k1 = alpha2mb(i[0].upper())
