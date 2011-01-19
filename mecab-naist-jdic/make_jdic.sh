@@ -7,8 +7,8 @@
 # sh make_jdic.sh 
 
 SRCDIR=.
-OUTDIR=/home/nishi/code/jtalk/dic
-
+OUTDIR=/home/nishi/code/jtalk/dic-utf16
+DICENC=UTF-16
 mkdir -p $OUTDIR
-/usr/lib/mecab/mecab-dict-index -d $SRCDIR -o $OUTDIR -f EUC-JP -c Shift_JIS
+/usr/lib/mecab/mecab-dict-index -d $SRCDIR -o $OUTDIR -f EUC-JP -c $DICENC
 cp $SRCDIR/dicrc $OUTDIR

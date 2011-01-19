@@ -3,7 +3,7 @@
 # since 2010-12-20 by Takuya Nishimoto
 
 # /home/nishi/code/launchpad/with_jtalk/source/nvdajp_dic.py
-IN_DIR  = '/home/nishi/code/launchpad/with_jtalk/source/'
+# IN_DIR  = '/home/nishi/code/launchpad/with_jtalk/source/'
 OUT_FILE = 'nvdajp-tankan-dic.csv'
 
 import sys
@@ -29,10 +29,3 @@ if __name__ == '__main__':
                         except:
                                 pass
 
-
-
-#文字列に半角カタカナが存在するか？
-#Pythonの正規表現を使用して、渡された文字列に半角カタカナがあるかチェックします。(UTF-8向け) 
-#Python 正規表現 半角カタカナ UTF8
-#↓
-#"文字列に半角カタカナが存在する"
