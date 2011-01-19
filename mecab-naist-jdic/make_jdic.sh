@@ -1,7 +1,10 @@
 #!/bin/bash
 # for Ubuntu Linux 9.04
 
-python eng_dic_maker.py
+# usage:
+# python eng_dic_maker.py
+# python tankan_dic_maker.py
+# sh make_jdic.sh 
 
 SRCDIR=.
 OUTDIR=/home/nishi/code/jtalk/dic
