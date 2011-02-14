@@ -11,7 +11,23 @@ http://ja.nishimotz.com/project:libopenjtalk
 started on 2010-06-27
 
 building libopenjtalk.dll for nvdajp 
+use branch master
 see do_configure_mingw32.sh
 
-python wrapper is moved to:
-https://github.com/nishimotz/ojt-python
+using libopenjtalk.dll for nvdajp
+see source/synthDrivers/_jtalk_core.py
+http://bazaar.launchpad.net/~nishimotz/nvdajp/releases_2011.1
+
+building dic for nvdajp 
+use branch ubuntu_sjis
+see mecab-naist-jdic/
+  make_jdic.sh
+  custom_dic_maker.py
+  eng_dic_maker.py
+  tankan_dic_maker.py
+requires:
+http://cpansearch.perl.org/src/MASH/Lingua-JA-Yomi-0.01/lib/Lingua/JA/bep-eng.dic
+nvdajp: source/nvdajp_dic.py
+
+obsolated: branch nvdajp
+obsolated: Python Wrapper https://github.com/nishimotz/ojt-python
