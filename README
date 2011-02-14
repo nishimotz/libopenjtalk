@@ -7,7 +7,7 @@ see README.open_jtalk-1.01 and COPYING
 
 libopenjtalk by Takuya Nishimoto
 http://ja.nishimotz.com/project:libopenjtalk
-(contributions of nishimotz is BSD lisence)
+(contribution of nishimotz is BSD lisence)
 started on 2010-06-27
 
 building libopenjtalk.dll for nvdajp 
@@ -20,10 +20,10 @@ http://bazaar.launchpad.net/~nishimotz/nvdajp/releases_2011.1
 
 building dic for nvdajp 
 see mecab-naist-jdic/
-  make_jdic.sh
-  custom_dic_maker.py
   eng_dic_maker.py
   tankan_dic_maker.py
+  custom_dic_maker.py
+  make_jdic.sh
 requires:
 http://cpansearch.perl.org/src/MASH/Lingua-JA-Yomi-0.01/lib/Lingua/JA/bep-eng.dic
 nvdajp: source/nvdajp_dic.py
