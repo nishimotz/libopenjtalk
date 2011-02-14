@@ -19,7 +19,6 @@ see source/synthDrivers/_jtalk_core.py
 http://bazaar.launchpad.net/~nishimotz/nvdajp/releases_2011.1
 
 building dic for nvdajp 
-use branch ubuntu_sjis
 see mecab-naist-jdic/
   make_jdic.sh
   custom_dic_maker.py
@@ -29,5 +28,7 @@ requires:
 http://cpansearch.perl.org/src/MASH/Lingua-JA-Yomi-0.01/lib/Lingua/JA/bep-eng.dic
 nvdajp: source/nvdajp_dic.py
 
-obsolated: branch nvdajp
 obsolated: Python Wrapper https://github.com/nishimotz/ojt-python
+obsolated: branch nvdajp
+obsolated: branch ubuntu_sjis (merged to master)
+pending: branch ubuntu_utf16
