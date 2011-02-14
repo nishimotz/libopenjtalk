@@ -10,6 +10,8 @@ http://ja.nishimotz.com/project:libopenjtalk
 (contributions of nishimotz is BSD lisence)
 started on 2010-06-27
 
+building libopenjtalk.dll for nvdajp 
+see do_configure_mingw32.sh
+
 python wrapper is moved to:
 https://github.com/nishimotz/ojt-python
-
