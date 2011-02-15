@@ -10,13 +10,11 @@ SUBDIRS = text2mecab \
           njd_set_long_vowel \
           njd2jpcommon \
           jpcommon
+#          mecab 
+#          bin
+#          mecab-naist-jdic
 
-#         bin
-#         lib
-#         mecab
-#         mecab-naist-jdic 
-
-EXTRA_DIST = AUTHORS COPYING ChangeLog INSTALL NEWS README
+EXTRA_DIST = AUTHORS COPYING ChangeLog INSTALL Makefile.mak NEWS README
 
 DISTCLEANFILES = *.log *.out *~ config/*~
 

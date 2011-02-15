@@ -1,9 +1,9 @@
 # Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT(open_jtalk, 1.01, open-jtalk-users@lists.sourceforge.net)
+AC_INIT(open_jtalk, 1.02, open-jtalk-users@lists.sourceforge.net)
 AC_CONFIG_AUX_DIR([config])
 AC_COPYRIGHT(Copyright 2008-2010 Nagoya Institute of Technology)
-AM_INIT_AUTOMAKE(open_jtalk, 1.01, nostdinc no-installinfo no-installman)
+AM_INIT_AUTOMAKE(open_jtalk, 1.02, nostdinc no-installinfo no-installman)
 
 # Checks for C/C++ compiler
 AC_PROG_CC
@@ -317,7 +317,7 @@ else
 fi
 
 # Makefiles
-AC_CONFIG_FILES([Makefile bin/Makefile text2mecab/Makefile mecab2njd/Makefile njd/Makefile njd_set_pronunciation/Makefile njd_set_digit/Makefile njd_set_accent_phrase/Makefile njd_set_accent_type/Makefile njd_set_unvoiced_vowel/Makefile njd_set_long_vowel/Makefile njd2jpcommon/Makefile jpcommon/Makefile])
+AC_CONFIG_FILES([Makefile bin/Makefile text2mecab/Makefile mecab/Makefile mecab/src/Makefile mecab2njd/Makefile njd/Makefile njd_set_pronunciation/Makefile njd_set_digit/Makefile njd_set_accent_phrase/Makefile njd_set_accent_type/Makefile njd_set_unvoiced_vowel/Makefile njd_set_long_vowel/Makefile njd2jpcommon/Makefile jpcommon/Makefile mecab-naist-jdic/Makefile])
 
 # make mecab/config.h
 AC_OUTPUT
