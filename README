@@ -42,7 +42,8 @@ $ cd libopenjtalk
 $ sh do_configure_mingw32.sh
 $ make
 $ cd lib
-$ make
+$ make -f Makefile.mingw32 clean
+$ make -f Makefile.mingw32
 
 $ file libopenjtalk.dll
 libopenjtalk.dll: PE32 executable for MS Windows (DLL) (console) Intel 80386 32-bit

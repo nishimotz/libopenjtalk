@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -38,6 +38,19 @@
 /* POSSIBILITY OF SUCH DAMAGE.                                       */
 /* ----------------------------------------------------------------- */
 
+#ifndef NJD_SET_LONG_VOWEL_RULE_H
+#define NJD_SET_LONG_VOWEL_RULE_H
+
+#ifdef __cplusplus
+#define NJD_SET_LONG_VOWEL_RULE_H_START extern "C" {
+#define NJD_SET_LONG_VOWEL_RULE_H_END   }
+#else
+#define NJD_SET_LONG_VOWEL_RULE_H_START
+#define NJD_SET_LONG_VOWEL_RULE_H_END
+#endif                          /* __CPLUSPLUS */
+
+NJD_SET_LONG_VOWEL_RULE_H_START;
+
 static const char njd_set_long_vowel_kanji_range[] = {
 #ifdef CHARSET_EUC_JP
    2, 0xA1, 0xFE,
@@ -65,7 +78,7 @@ static const char *njd_set_long_vowel_table[] = {
    "レイ", "レー",
    "ゲイ", "ゲー",
    "ゼイ", "セー",
-   "デイ", "テー",
+   "デイ", "デー",
    "ベイ", "ベー",
    "ペイ", "ペー",
    "ヱイ", "ヱー",
@@ -90,3 +103,7 @@ static const char *njd_set_long_vowel_table[] = {
     */
    NULL, NULL
 };
+
+NJD_SET_LONG_VOWEL_RULE_H_END;
+
+#endif                          /* !NJD_SET_LONG_VOWEL_RULE_H */

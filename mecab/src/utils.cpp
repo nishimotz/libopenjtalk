@@ -5,8 +5,8 @@
 //  Copyright(C) 2004-2006 Nippon Telegraph and Telephone Corporation
 
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -64,9 +64,11 @@
 #include <windows.h>
 #endif
 
+/* for Open JTalk
 #if defined(_WIN32) && !defined(__CYGWIN__)
 extern HINSTANCE DllInstance;
 #endif
+*/
 
 #include "mecab.h"
 #include "common.h"
@@ -305,6 +307,7 @@ bool load_dictionary_resource(Param *param) {
     if (vt == REG_SZ) rcfile = v;
   }
 
+  /* for Open JTalk
   if (rcfile.empty()) {
     vt = GetModuleFileName(DllInstance, v, size);
     if (vt != 0) {
@@ -317,10 +320,10 @@ bool load_dictionary_resource(Param *param) {
       if (ifs) rcfile = s;
     }
   }
+  */
 #endif
 
-  /* for Open JTalk */
-  /*
+  /* for Open JTalk
   if (rcfile.empty()) rcfile = MECAB_DEFAULT_RC;
 
   if (!param->load(rcfile.c_str())) return false;

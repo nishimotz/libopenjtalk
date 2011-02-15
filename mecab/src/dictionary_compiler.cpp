@@ -4,8 +4,8 @@
 //  Copyright(C) 2004-2006 Nippon Telegraph and Telephone Corporation
 
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -108,8 +108,7 @@ class DictionaryComplier {
 #define DCONF(file) create_filename(dicdir, std::string(file)).c_str()
 #define OCONF(file) create_filename(outdir, std::string(file)).c_str()
 
-    /* for Open JTalk */
-    /*
+    /* for Open JTalk
     CHECK_DIE(param.load(DCONF(DICRC)))
         << "no such file or directory: " << DCONF(DICRC);
     */

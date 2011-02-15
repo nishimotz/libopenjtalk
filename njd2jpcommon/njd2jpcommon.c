@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -37,6 +37,19 @@
 /* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE           */
 /* POSSIBILITY OF SUCH DAMAGE.                                       */
 /* ----------------------------------------------------------------- */
+
+#ifndef NJD2JPCOMMON_C
+#define NJD2JPCOMMON_C
+
+#ifdef __cplusplus
+#define NJD2JPCOMMON_C_START extern "C" {
+#define NJD2JPCOMMON_C_END   }
+#else
+#define NJD2JPCOMMON_C_START
+#define NJD2JPCOMMON_C_END
+#endif                          /* __CPLUSPLUS */
+
+NJD2JPCOMMON_C_START;
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -130,3 +143,7 @@ void njd2jpcommon(JPCommon * jpcommon, NJD * njd)
       JPCommon_push(jpcommon, jnode);
    }
 }
+
+NJD2JPCOMMON_C_END;
+
+#endif                          /* !NJD2JPCOMMON_C */

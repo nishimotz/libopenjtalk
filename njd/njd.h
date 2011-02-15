@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -37,6 +37,19 @@
 /* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE           */
 /* POSSIBILITY OF SUCH DAMAGE.                                       */
 /* ----------------------------------------------------------------- */
+
+#ifndef NJD_H
+#define NJD_H
+
+#ifdef __cplusplus
+#define NJD_H_START extern "C" {
+#define NJD_H_END   }
+#else
+#define NJD_H_START
+#define NJD_H_END
+#endif                          /* __CPLUSPLUS */
+
+NJD_H_START;
 
 /* NJDNode */
 
@@ -97,6 +110,7 @@ NJDNode *NJDNode_insert(NJDNode * prev, NJDNode * next, NJDNode * node);
 void NJDNode_copy(NJDNode * node1, NJDNode * node2);
 void NJDNode_print(NJDNode * node);
 void NJDNode_fprint(NJDNode * node, FILE * fp);
+void NJDNode_sprint(NJDNode * node, char *buff, const char *split_code);
 void NJDNode_clear(NJDNode * node);
 
 /* NJD */
@@ -107,11 +121,19 @@ typedef struct _NJD {
 } NJD;
 
 void NJD_initialize(NJD * njd);
+void NJD_load(NJD * njd, char *str);
+void NJD_load_from_fp(NJD * njd, FILE * fp);
 int NJD_get_size(NJD * njd);
 void NJD_push_node(NJD * njd, NJDNode * node);
 void NJD_insert_node(NJD * njd, NJDNode * prev, NJDNode * next, NJDNode * node);
+NJDNode *NJD_remove_node(NJD * njd, NJDNode * node);
 void NJD_remove_silent_node(NJD * njd);
 void NJD_print(NJD * njd);
 void NJD_fprint(NJD * njd, FILE * fp);
+void NJD_sprint(NJD * njd, char *buff, const char *split_code);
 void NJD_refresh(NJD * njd);
 void NJD_clear(NJD * wl);
+
+NJD_H_END;
+
+#endif                          /* !NJD_H */

@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -38,6 +38,19 @@
 /* POSSIBILITY OF SUCH DAMAGE.                                       */
 /* ----------------------------------------------------------------- */
 
+#ifndef NJD_SET_ACCENT_TYPE_RULE_H
+#define NJD_SET_ACCENT_TYPE_RULE_H
+
+#ifdef __cplusplus
+#define NJD_SET_ACCENT_TYPE_RULE_H_START extern "C" {
+#define NJD_SET_ACCENT_TYPE_RULE_H_END   }
+#else
+#define NJD_SET_ACCENT_TYPE_RULE_H_START
+#define NJD_SET_ACCENT_TYPE_RULE_H_END
+#endif                          /* __CPLUSPLUS */
+
+NJD_SET_ACCENT_TYPE_RULE_H_START;
+
 #define NJD_SET_ACCENT_TYPE_KAZU "¿ô"
 #define NJD_SET_ACCENT_TYPE_ICHI "°ì"
 #define NJD_SET_ACCENT_TYPE_NI "Æó"
@@ -49,6 +62,7 @@
 #define NJD_SET_ACCENT_TYPE_HACHI "È¬"
 #define NJD_SET_ACCENT_TYPE_KYUU "¶å"
 #define NJD_SET_ACCENT_TYPE_JYUU "½½"
+#define NJD_SET_ACCENT_TYPE_HYAKU "É´"
 #define NJD_SET_ACCENT_TYPE_SEN "Àé"
 #define NJD_SET_ACCENT_TYPE_MAN "Ëü"
 #define NJD_SET_ACCENT_TYPE_OKU "²¯"
@@ -56,3 +70,7 @@
 #define NJD_SET_ACCENT_TYPE_SUU "¿ô"
 #define NJD_SET_ACCENT_TYPE_NAN "²¿"
 #define NJD_SET_ACCENT_TYPE_IKU "´ö"
+
+NJD_SET_ACCENT_TYPE_RULE_H_END;
+
+#endif                          /* !NJD_SET_ACCENT_TYPE_RULE_H */

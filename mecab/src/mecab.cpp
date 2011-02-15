@@ -1,13 +1,13 @@
 //  MeCab -- Yet Another Part-of-Speech and Morphological Analyzer
 //
-//  $Id: mecab.cpp,v 1.10 2010-04-09 04:57:01 uratec Exp $;
+//  $Id: mecab.cpp,v 1.16 2010-12-12 12:47:27 uratec Exp $;
 //
 //  Copyright(C) 2001-2006 Taku Kudo <taku@chasen.org>
 //  Copyright(C) 2004-2006 Nippon Telegraph and Telephone Corporation
 
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -45,14 +45,23 @@
 /* POSSIBILITY OF SUCH DAMAGE.                                       */
 /* ----------------------------------------------------------------- */
 
+#ifndef MECAB_CPP
+#define MECAB_CPP
+
 #include <stdlib.h>
 #include <string.h>
 
 #include "mecab.h"
 
 #ifdef __cplusplus
-extern "C" {
-#endif
+#define MECAB_CPP_START extern "C" {
+#define MECAB_CPP_END   }
+#else
+#define MECAB_CPP_START
+#define MECAB_CPP_END
+#endif                          /* __CPLUSPLUS */
+
+MECAB_CPP_START;
 
 void Mecab_initialize(Mecab *m){
   m->feature = NULL;
@@ -62,7 +71,7 @@ void Mecab_initialize(Mecab *m){
 
 void Mecab_load(Mecab *m, char *dicdir){
   const int argc = 3;
-  char *argv[] = {"mecab","-d", dicdir};
+  char *argv[] = {(char *) "mecab", (char *) "-d", dicdir};
 
   if(m->mecab != NULL)
     Mecab_clear(m);
@@ -135,6 +144,6 @@ void Mecab_clear(Mecab *m){
   }
 }
 
-#ifdef __cplusplus
-}
-#endif
+MECAB_CPP_END;
+
+#endif                          /* !MECAB_CPP */

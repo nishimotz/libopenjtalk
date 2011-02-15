@@ -7,8 +7,8 @@
 */
 
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -170,13 +170,13 @@ extern "C" {
 
 #ifdef _WIN32
 #include <windows.h>
-#if 0 /* for Open JTalk */
+/* for Open JTalk
 #  ifdef DLL_EXPORT
 #    define MECAB_DLL_EXTERN  __declspec(dllexport)
 #  else
 #    define MECAB_DLL_EXTERN  __declspec(dllimport)
 #  endif
-#endif /* for Open JTalk */
+*/
 #endif
 
 #ifndef MECAB_DLL_EXTERN
@@ -310,9 +310,18 @@ MECAB_DLL_EXTERN const char* getTaggerError();
 #endif
 
 /* for Open JTalk */
+#ifndef MECAB_H
+#define MECAB_H
+
 #ifdef __cplusplus
-extern "C" {
-#endif
+#define MECAB_H_START extern "C" {
+#define MECAB_H_END   }
+#else
+#define MECAB_H_START
+#define MECAB_H_END
+#endif                          /* __CPLUSPLUS */
+
+MECAB_H_START;
 
 typedef struct _Mecab{
    char **feature;
@@ -329,9 +338,8 @@ char **Mecab_get_feature(Mecab *m);
 void Mecab_refresh(Mecab *m);
 void Mecab_clear(Mecab *m);
 
-#ifdef __cplusplus
-}
-#endif
-/* for Open JTalk */
+MECAB_H_END;
+
+#endif                          /* !MECAB_H */
 
 #endif

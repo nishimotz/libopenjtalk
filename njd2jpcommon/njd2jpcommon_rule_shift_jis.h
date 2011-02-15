@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -37,6 +37,19 @@
 /* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE           */
 /* POSSIBILITY OF SUCH DAMAGE.                                       */
 /* ----------------------------------------------------------------- */
+
+#ifndef NJD2JPCOMMON_RULE_H
+#define NJD2JPCOMMON_RULE_H
+
+#ifdef __cplusplus
+#define NJD2JPCOMMON_RULE_H_START extern "C" {
+#define NJD2JPCOMMON_RULE_H_END   }
+#else
+#define NJD2JPCOMMON_RULE_H_START
+#define NJD2JPCOMMON_RULE_H_END
+#endif                          /* __CPLUSPLUS */
+
+NJD2JPCOMMON_RULE_H_START;
 
 static const char *njd2jpcommon_pos_list[] = {
    "ÇªÇÃëº", "ä‘ìä", "*", "*", "ÇªÇÃëº",
@@ -205,3 +218,7 @@ static const char *njd2jpcommon_ctype_list[] = {
    "ï∂åÍÅEÉã", "ï∂åÍèïìÆéå",
    NULL, NULL
 };
+
+NJD2JPCOMMON_RULE_H_END;
+
+#endif                          /* !NJD2JPCOMMON_RULE_H */

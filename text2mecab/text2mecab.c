@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -37,6 +37,19 @@
 /* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE           */
 /* POSSIBILITY OF SUCH DAMAGE.                                       */
 /* ----------------------------------------------------------------- */
+
+#ifndef TEXT2MECAB_C
+#define TEXT2MECAB_C
+
+#ifdef __cplusplus
+#define TEXT2MECAB_C_START extern "C" {
+#define TEXT2MECAB_C_END   }
+#else
+#define TEXT2MECAB_C_START
+#define TEXT2MECAB_C_END
+#endif                          /* __CPLUSPLUS */
+
+TEXT2MECAB_C_START;
 
 #include <stdio.h>
 #include <string.h>
@@ -113,3 +126,7 @@ void text2mecab(char *output, char *input)
    }
    output[index] = '\0';
 }
+
+TEXT2MECAB_C_END;
+
+#endif                          /* !TEXT2MECAB_C */

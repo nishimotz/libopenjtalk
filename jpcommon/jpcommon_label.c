@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -37,6 +37,19 @@
 /* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE           */
 /* POSSIBILITY OF SUCH DAMAGE.                                       */
 /* ----------------------------------------------------------------- */
+
+#ifndef JPCOMMON_LABEL_C
+#define JPCOMMON_LABEL_C
+
+#ifdef __cplusplus
+#define JPCOMMON_LABEL_C_START extern "C" {
+#define JPCOMMON_LABEL_C_END   }
+#else
+#define JPCOMMON_LABEL_C_START
+#define JPCOMMON_LABEL_C_END
+#endif                          /* __CPLUSPLUS */
+
+JPCOMMON_LABEL_C_START;
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -876,3 +889,7 @@ void JPCommonLabel_clear(JPCommonLabel * label)
       free(label->feature);
    }
 }
+
+JPCOMMON_LABEL_C_END;
+
+#endif                          /* !JPCOMMON_LABEL_C */

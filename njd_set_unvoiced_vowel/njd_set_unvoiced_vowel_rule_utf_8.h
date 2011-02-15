@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -37,6 +37,19 @@
 /* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE           */
 /* POSSIBILITY OF SUCH DAMAGE.                                       */
 /* ----------------------------------------------------------------- */
+
+#ifndef NJD_SET_UNVOICED_VOWEL_RULE_H
+#define NJD_SET_UNVOICED_VOWEL_RULE_H
+
+#ifdef __cplusplus
+#define NJD_SET_UNVOICED_VOWEL_RULE_H_START extern "C" {
+#define NJD_SET_UNVOICED_VOWEL_RULE_H_END   }
+#else
+#define NJD_SET_UNVOICED_VOWEL_RULE_H_START
+#define NJD_SET_UNVOICED_VOWEL_RULE_H_END
+#endif                          /* __CPLUSPLUS */
+
+NJD_SET_UNVOICED_VOWEL_RULE_H_START;
 
 /*
   無声子音: k ky s sh t ty ch ts h f hy p py
@@ -275,3 +288,7 @@ static const char *njd_set_unvoiced_vowel_mora_list[] = {
    "ー",
    NULL
 };
+
+NJD_SET_UNVOICED_VOWEL_RULE_H_END;
+
+#endif                          /* !NJD_SET_UNVOICED_VOWEL_RULE_H */

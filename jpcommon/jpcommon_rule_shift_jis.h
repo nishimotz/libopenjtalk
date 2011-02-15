@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -37,6 +37,19 @@
 /* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE           */
 /* POSSIBILITY OF SUCH DAMAGE.                                       */
 /* ----------------------------------------------------------------- */
+
+#ifndef JPCOMMON_RULE_H
+#define JPCOMMON_RULE_H
+
+#ifdef __cplusplus
+#define JPCOMMON_RULE_H_START extern "C" {
+#define JPCOMMON_RULE_H_END   }
+#else
+#define JPCOMMON_RULE_H_START
+#define JPCOMMON_RULE_H_END
+#endif                          /* __CPLUSPLUS */
+
+JPCOMMON_RULE_H_START;
 
 #define JPCOMMON_MORA_UNVOICE "Åf"
 #define JPCOMMON_MORA_LONG_VOWEL "Å["
@@ -283,3 +296,7 @@ static const char *jpcommon_ctype_list[] = {
    "ï∂åÍèïìÆéå", "6",
    NULL, NULL
 };
+
+JPCOMMON_RULE_H_END;
+
+#endif                          /* !JPCOMMON_RULE_H */

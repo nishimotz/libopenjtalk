@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------- */
-/*           The HMM-Based Speech Synthesis System (HTS)             */
-/*           Open JTalk developed by HTS Working Group               */
+/*           The Japanese TTS System "Open JTalk"                    */
+/*           developed by HTS Working Group                          */
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
@@ -37,6 +37,19 @@
 /* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE           */
 /* POSSIBILITY OF SUCH DAMAGE.                                       */
 /* ----------------------------------------------------------------- */
+
+#ifndef NJD_SET_ACCENT_TYPE_C
+#define NJD_SET_ACCENT_TYPE_C
+
+#ifdef __cplusplus
+#define NJD_SET_ACCENT_TYPE_C_START extern "C" {
+#define NJD_SET_ACCENT_TYPE_C_END   }
+#else
+#define NJD_SET_ACCENT_TYPE_C_START
+#define NJD_SET_ACCENT_TYPE_C_END
+#endif                          /* __CPLUSPLUS */
+
+NJD_SET_ACCENT_TYPE_C_START;
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -118,6 +131,8 @@ void njd_set_accent_type(NJD * njd)
    int mora_size = 0;
 
    for (node = njd->head; node != NULL; node = node->next) {
+      if (NJDNode_get_string(node) == NULL)
+         continue;
       if ((node == njd->head) || (NJDNode_get_chain_flag(node) != 1)) {
          /* store the top node */
          top_node = node;
@@ -167,53 +182,85 @@ void njd_set_accent_type(NJD * njd)
       }
 
       /* change accent type for digit */
-      if (node->next != NULL &&
-          strcmp(NJDNode_get_pos_group1(node), NJD_SET_ACCENT_TYPE_KAZU) == 0 &&
+      if (node->prev != NULL && NJDNode_get_chain_flag(node) == 1 &&
+          strcmp(NJDNode_get_pos_group1(node->prev), NJD_SET_ACCENT_TYPE_KAZU) == 0 &&
+          strcmp(NJDNode_get_pos_group1(node), NJD_SET_ACCENT_TYPE_KAZU) == 0) {
+         if (strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_JYUU) == 0) { /* 10^1 */
+            if (NJDNode_get_string(node->prev) != NULL &&
+                (strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_SAN) == 0 ||
+                 strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_YON) == 0 ||
+                 strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_KYUU) == 0 ||
+                 strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_NAN) == 0 ||
+                 strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_SUU) == 0)) {
+               NJDNode_set_acc(node->prev, 1);
+            } else {
+               NJDNode_set_acc(node->prev, 1);
+            }
+            if (NJDNode_get_string(node->prev) != NULL &&
+                (strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_GO) == 0 ||
+                 strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_ROKU) == 0 ||
+                 strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_HACHI) == 0)) {
+               if (NJDNode_get_string(node->next) != NULL
+                   && (strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_ICHI) == 0
+                       || strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_NI) == 0
+                       || strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_SAN) == 0
+                       || strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_YON) == 0
+                       || strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_GO) == 0
+                       || strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_ROKU) == 0
+                       || strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_NANA) == 0
+                       || strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_HACHI) == 0
+                       || strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_KYUU) == 0))
+                  NJDNode_set_acc(node->prev, 0);
+            }
+         } else if (strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_HYAKU) == 0) { /* 10^2 */
+            if (NJDNode_get_string(node->prev) != NULL
+                && strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_NANA) == 0) {
+               NJDNode_set_acc(node->prev, 2);
+            } else if (NJDNode_get_string(node->prev) != NULL &&
+                       (strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_SAN) == 0 ||
+                        strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_YON) == 0 ||
+                        strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_KYUU) == 0 ||
+                        strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_NAN) == 0)) {
+               NJDNode_set_acc(node->prev, 1);
+            } else {
+               NJDNode_set_acc(node->prev,
+                               NJDNode_get_mora_size(node->prev) + NJDNode_get_mora_size(node));
+            }
+         } else if (strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_SEN) == 0) {   /* 10^3 */
+            NJDNode_set_acc(node->prev, NJDNode_get_mora_size(node->prev) + 1);
+         } else if (strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_MAN) == 0) {   /* 10^4 */
+            NJDNode_set_acc(node->prev, NJDNode_get_mora_size(node->prev) + 1);
+         } else if (strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_OKU) == 0) {   /* 10^8 */
+            if (NJDNode_get_string(node->prev) != NULL &&
+                (strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_ICHI) == 0 ||
+                 strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_ROKU) == 0 ||
+                 strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_NANA) == 0 ||
+                 strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_IKU) == 0)) {
+               NJDNode_set_acc(node->prev, 2);
+            } else {
+               NJDNode_set_acc(node->prev, 1);
+            }
+         } else if (strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_CHOU) == 0) {  /* 10^12 */
+            if (NJDNode_get_string(node->prev) != NULL &&
+                (strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_ROKU) == 0 ||
+                 strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_NANA) == 0)) {
+               NJDNode_set_acc(node->prev, 2);
+            } else {
+               NJDNode_set_acc(node->prev, 1);
+            }
+         }
+      }
+
+      if (strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_JYUU) == 0 &&
+          NJDNode_get_chain_flag(node) != 1 && node->next != NULL &&
           strcmp(NJDNode_get_pos_group1(node->next), NJD_SET_ACCENT_TYPE_KAZU) == 0) {
-         if (strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_OKU) == 0 ||
-             strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_CHOU) == 0) {
-            if (strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_SAN) == 0 ||
-                strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_YON) == 0 ||
-                strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_KYUU) == 0 ||
-                strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_JYUU) == 0 ||
-                strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_SEN) == 0) {
-               NJDNode_set_acc(node, 1);
-            }
-         }
-         if (strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_OKU) == 0 ||
-             strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_CHOU) == 0 ||
-             strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_MAN) == 0) {
-            if (strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_SUU) == 0 ||
-                strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_NAN) == 0 ||
-                strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_IKU) == 0) {
-               NJDNode_set_acc(node, 3);
-            }
-         }
-         if (strcmp(NJDNode_get_string(node), NJD_SET_ACCENT_TYPE_JYUU) == 0) {
-            if (node->prev == NULL ||
-                strcmp(NJDNode_get_pos_group1(node->prev), NJD_SET_ACCENT_TYPE_SUU) != 0 ||
-                strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_GO) == 0 ||
-                strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_ROKU) == 0 ||
-                strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_TYPE_HACHI) == 0) {
-               if (strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_ICHI) == 0 ||
-                   strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_NI) == 0 ||
-                   strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_SAN) == 0 ||
-                   strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_YON) == 0 ||
-                   strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_GO) == 0 ||
-                   strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_ROKU) == 0 ||
-                   strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_NANA) == 0 ||
-                   strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_HACHI) == 0 ||
-                   strcmp(NJDNode_get_string(node->next), NJD_SET_ACCENT_TYPE_KYUU) == 0) {
-                  if (node->prev == NULL
-                      || strcmp(NJDNode_get_pos_group1(node->prev), NJD_SET_ACCENT_TYPE_SUU) != 0)
-                     NJDNode_set_acc(node, 0);
-                  else
-                     NJDNode_set_acc(node->prev, 0);
-               }
-            }
-         }
+         NJDNode_set_acc(node, 0);
       }
 
       mora_size += NJDNode_get_mora_size(node);
    }
 }
+
+NJD_SET_ACCENT_TYPE_C_END;
+
+#endif                          /* !NJD_SET_ACCENT_TYPE_C */
