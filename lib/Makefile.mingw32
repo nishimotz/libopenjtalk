@@ -52,3 +52,12 @@ mytest.exe:
 
 clean:
 	\rm -f libopenjtalk.dll libopenjtalk.o mytest.exe
+
+htsengineapi:
+	pushd ../../htsengineapi; make; popd
+
+libjpcommon:
+	pushd ../jpcommon; make; popd
+
+clean-dll:
+	\rm -f libopenjtalk.dll
