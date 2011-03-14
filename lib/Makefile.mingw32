@@ -59,5 +59,8 @@ htsengineapi:
 libjpcommon:
 	pushd ../jpcommon; make; popd
 
+njd_set_unvoiced_vowel:
+	pushd ../njd_set_unvoiced_vowel; make; popd
+
 clean-dll:
 	\rm -f libopenjtalk.dll

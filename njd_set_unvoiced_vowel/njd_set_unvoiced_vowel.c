@@ -136,7 +136,7 @@ static int strcat_skip(char *buff, char *str, int *last_unvoiced_flag, int *mora
       *last_unvoiced_flag = 1;
       return strlen(NJD_SET_UNVOICED_VOWEL_QUOTATION);
    }
-   fprintf(stderr, "WARNING: strcat_voiced() in njd_set_unvoiced_vowel.c: Wrong pron.");
+   HTS_error(0, "WARNING: strcat_voiced() in njd_set_unvoiced_vowel.c: Wrong pron.");
    return 1;
 }
 
