@@ -163,6 +163,7 @@ void jt_speech_normalize(HTS_Engine * engine, short level)
 	int ns, i;
 	short *data;
 	short max = 0;
+	level = abs(level);
 	ns = jt_total_nsample(engine);
 	data = jt_speech_ptr(engine);
 	for (i = 0; i < ns; i++) {
@@ -173,6 +174,33 @@ void jt_speech_normalize(HTS_Engine * engine, short level)
 	for (i = 0; i < ns; i++) {
 		data[i] = (int)((double)(data[i]) * level / 32767.0);
 	}
+}
+
+/* returns: new sample count */
+int jt_trim_silence(HTS_Engine * engine, short thres)
+{
+	int ns, i, size;
+	short *data;
+	int begin_pos = 0, end_pos = 0;
+	ns = jt_total_nsample(engine);
+	data = jt_speech_ptr(engine);
+	thres = abs(thres);
+	for (i = 0; i < ns; i++) {
+		if (abs(data[i]) > thres) {
+			begin_pos = i;
+			break;
+		}
+	}
+	end_pos = ns;
+	for (i = ns - 1; i >= 0; i--) {
+		if (abs(data[i]) > thres) {
+			end_pos = i;
+			break;
+		}
+	}
+	size = end_pos - begin_pos + 1;
+	memmove(data, &(data[begin_pos]), sizeof(short) * size);
+	return size;
 }
 
 /*
