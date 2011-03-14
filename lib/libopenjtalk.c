@@ -157,6 +157,24 @@ short *jt_speech_ptr(HTS_Engine * engine)
    return gss->gspeech;
 }
 
+/* level = 0..32767 */
+void jt_speech_normalize(HTS_Engine * engine, short level)
+{
+	int ns, i;
+	short *data;
+	short max = 0;
+	ns = jt_total_nsample(engine);
+	data = jt_speech_ptr(engine);
+	for (i = 0; i < ns; i++) {
+		int a;
+		a = abs(data[i]);
+		if (max < a) max = a;
+	}
+	for (i = 0; i < ns; i++) {
+		data[i] = (int)((double)(data[i]) * level / 32767.0);
+	}
+}
+
 /*
  * dummy functions from here
  */
