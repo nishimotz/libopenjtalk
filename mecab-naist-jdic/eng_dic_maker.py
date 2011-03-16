@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # since 2010-12-05 by Takuya Nishimoto
 
-IN_FILE  = '/home/nishi/code/jtalk/bep-eng.dic'
+IN_FILE  = '/work/nvda/bep-eng.dic'
 OUT_FILE = 'nvdajp-eng-dic.csv'
 
 def alpha2mb(s):
@@ -34,6 +34,7 @@ if __name__ == '__main__':
 		['acrobat', u'アクロバット'],
 		['adobe', u'アドビ'],
 		['about', u'アバウト'],
+		['au', u'エーユー'],
 		['blank', u'ブランク'],
 		['biz', u'ビズ'],
 		['bazaar', u'バザール'],
@@ -62,6 +63,7 @@ if __name__ == '__main__':
 		['office', u'オフィス'],
 		['python', u'パイソン'],
 		['pro', u'プロ'],
+		['radio', u'ラディオ'],
 		['shift', u'シフト'],
 		['skype', u'スカイプ'],
 		['soft', u'ソフト'],
@@ -84,16 +86,15 @@ if __name__ == '__main__':
 	d.sort()
 	with open(OUT_FILE, "w") as file:
 		for i in d:
-			# ＡＬＴ,1345,1345,6913,名詞,一般,*,*,*,*,ＡＬＴ,オルト,オルト,0/3,C1
-			k1 = alpha2mb(i[0].upper())
-			k2 = alpha2mb(i[0].capitalize())
-			k3 = alpha2mb(i[0].lower())
+			k = i[0]
+			k1 = alpha2mb(k.lower())
 			y = i[1]
-                        mora_count = len(y)
-			s = u"%s,1345,1345,6913,名詞,一般,*,*,*,*,%s,%s,%s,0/%d,C1\n" % (k1,k1,y,y,mora_count)
-			file.write(s.encode('euc_jp'))
-			s = u"%s,1345,1345,6913,名詞,一般,*,*,*,*,%s,%s,%s,0/%d,C1\n" % (k2,k2,y,y,mora_count)
-			file.write(s.encode('euc_jp'))
-			s = u"%s,1345,1345,6913,名詞,一般,*,*,*,*,%s,%s,%s,0/%d,C1\n" % (k3,k3,y,y,mora_count)
-			file.write(s.encode('euc_jp'))
+			mora_count = len(y)
+			pros = "1/%d" % mora_count
+			cost = 1000
+			if len(i) >= 3: pros = i[2]
+			if len(i) >= 4: cost = i[3]
+			# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
+			s = u"%s,-1,-1,%d,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
+			file.write(s.encode('cp932'))
 
