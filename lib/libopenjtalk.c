@@ -176,6 +176,7 @@ void jt_speech_normalize(HTS_Engine * engine, short level)
 	}
 }
 
+#if 0
 /* returns: new sample count */
 int jt_trim_silence(HTS_Engine * engine, short thres)
 {
@@ -191,11 +192,44 @@ int jt_trim_silence(HTS_Engine * engine, short thres)
 			break;
 		}
 	}
-	end_pos = ns;
+	end_pos = ns - 1;
 	for (i = ns - 1; i >= 0; i--) {
 		if (abs(data[i]) > thres) {
 			end_pos = i;
 			break;
+		}
+	}
+	size = end_pos - begin_pos + 1;
+	memmove(data, &(data[begin_pos]), sizeof(short) * size);
+	return size;
+}
+#endif
+
+/* returns: new sample count */
+int jt_trim_silence(HTS_Engine * engine, short begin_thres, short end_thres)
+{
+	int ns, i, size;
+	short *data;
+	int begin_pos = 0, end_pos = 0;
+	ns = jt_total_nsample(engine);
+	data = jt_speech_ptr(engine);
+	if (begin_thres >= 0) {
+		begin_thres = abs(begin_thres);
+		for (i = 0; i < ns; i++) {
+			if (abs(data[i]) > begin_thres) {
+				begin_pos = i;
+				break;
+			}
+		}
+	}
+	end_pos = ns - 1;
+	if (end_thres >= 0) {
+		end_thres = abs(end_thres);
+		for (i = ns - 1; i >= 0; i--) {
+			if (abs(data[i]) > end_thres) {
+				end_pos = i;
+				break;
+			}
 		}
 	}
 	size = end_pos - begin_pos + 1;
