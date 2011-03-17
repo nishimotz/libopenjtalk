@@ -4,6 +4,7 @@
 
 IN_FILE  = '/work/nvda/bep-eng.dic'
 OUT_FILE = 'nvdajp-eng-dic.csv'
+DEFAULT_COST = 2000
 
 def alpha2mb(s):
         # 'abc' -> 'ａｂｃ'
@@ -75,7 +76,7 @@ if __name__ == '__main__':
 		['version', u'バージョン'],
 		['vantage', u'バンテージ'],
 		['wave', u'ウェーブ'],
-		['welcome to', u'ウェルカムトゥー'],
+		#['welcome to', u'ウェルカムトゥー'],
 		['welcome', u'ウェルカム'],
 		['windows', u'ウィンドウズ'],
 	]
@@ -91,9 +92,9 @@ if __name__ == '__main__':
 			y = i[1]
 			mora_count = len(y)
 			pros = "1/%d" % mora_count
-			cost = 1000
-			if len(i) >= 3: pros = i[2]
-			if len(i) >= 4: cost = i[3]
+			cost = DEFAULT_COST
+			#if len(i) >= 3: pros = i[2]
+			#if len(i) >= 4: cost = i[3]
 			# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
 			s = u"%s,-1,-1,%d,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
 			file.write(s.encode('cp932'))

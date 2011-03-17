@@ -26,7 +26,7 @@ jdic = [
 		[u'中の人',		u'ナカノヒト',			"1/5"],
 		[u'中程度',		u'チューテード',		"3/5"],
 		[u'各基',		u'カクキ',				"1/3"],
-		[u'高',			u'コー',				"1/2"],
+		[u'高',			u'コー',				"1/2", 5000],
 		[u'県立高',		u'ケンリツコー',		"0/6"],
 		[u'業務',		u'ギョーム',			"1/3"],
 		[u'値',			u'アタイ',				"0/3"],
@@ -43,6 +43,10 @@ jdic = [
 		[u'１７１', 	u'イチナナイチ',		"2/6"],
 		[u'セブン―イレブン', 	u'セブンイレブン',						"5/7"],
 		[u'ａｋｂ４８', 		u'エーケービーフォーティーエート',		"1/12"],
+		[u'ｎｖｄａ', 			u'エヌブイディーエー', "1/8"],
+		[u'ｊｐ', 		u'ジェーピー', 	"1/4"],
+		[u'ｃｏ', 		u'シーオー', 	"1/4"],
+		[u'ｕｓｂ', 	u'ユーエスビー',	"1/6"],
 	]
 
 edic = [
@@ -72,6 +76,7 @@ edic = [
 		['teiden', 		u'テーデン',		"1/4"],
 		['tokuho',		u'トクホー',		"1/4"],
 		['takeyama', 	u'タケヤマ',		"1/4"],
+		['pref', 		u'プリフ',			"1/3"],
 
 		['opensource', 	u'オープンソース'],
 		['notepad', 	u'ノートパッド'],
@@ -86,6 +91,8 @@ edic = [
 		['nullsoft', 	u'ヌルソフト'],
 		['cygdrive', 	u'シグドライブ'],
 		['ustream', 	u'ユーストリーム'],
+		['ubuntu', 		u'ウブンツー'],
+		['ware', 		u'ウェアー'],
 		
 		['hokkaido', 	u'ホッカイドー'],
 		['yamagata', 	u'ヤマガタ'],
@@ -318,14 +325,12 @@ romadic = [
 		#
 		['wa', 			u'ワ',				1],
 		['wo', 			u'オ',				1],
-		# roma_1
+		# 
 		['a', 			u'ア', 				1],
 		['i', 			u'イ', 				1],
 		['u', 			u'ウ', 				1],
 		['e', 			u'エ', 				1],
 		['o', 			u'オ', 				1],
-		#
-		#['n', 			u'ン',				1],
 	]
 
 def alpha2mb(s):
@@ -343,6 +348,7 @@ def alpha2mb(s):
 
 if __name__ == '__main__':
 	with open(OUT_FILE, "w") as file:
+		## edic
 		for i in edic:
 			try:
 				k = i[0]
@@ -358,6 +364,7 @@ if __name__ == '__main__':
 				file.write(s.encode('cp932'))
 			except Exception, e:
 				print e
+		## jdic
 		for i in jdic:
 			try:
 				k = i[0]
@@ -373,7 +380,7 @@ if __name__ == '__main__':
 				file.write(s.encode('cp932'))
 			except Exception, e:
 				print e
-		#
+		## romadic
 		cost = 10
 		for i in romadic:
 			try:
@@ -382,19 +389,6 @@ if __name__ == '__main__':
 					k1 = k1 = alpha2mb(k.lower() + 'x')
 					y = i[1] + u'ックス'
 					pros = "%d/%d" % (i[2] + 3, i[2] + 3)
-					# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
-					s = u"%s,-1,-1,%d,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
-					file.write(s.encode('cp932'))
-					cost += 1
-			except Exception, e:
-				print e
-		for i in romadic:
-			try:
-				k = i[0]
-				if k != 'nn':
-					k1 = k1 = alpha2mb(k.lower() + 'm')
-					y = i[1] + u'ン'
-					pros = "%d/%d" % (i[2] + 1, i[2] + 1)
 					# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
 					s = u"%s,-1,-1,%d,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
 					file.write(s.encode('cp932'))
@@ -417,12 +411,26 @@ if __name__ == '__main__':
 		for i in romadic:
 			try:
 				k = i[0]
-				k1 = k1 = alpha2mb(k.lower())
-				y = i[1]
-				pros = "%d/%d" % (i[2], i[2])
-				# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
-				s = u"%s,-1,-1,%d,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
-				file.write(s.encode('cp932'))
-				cost += 1
+				if len(k) != 1:
+					k1 = k1 = alpha2mb(k.lower())
+					y = i[1]
+					pros = "%d/%d" % (i[2], i[2])
+					# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
+					s = u"%s,-1,-1,%d,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
+					file.write(s.encode('cp932'))
+					cost += 1
 			except Exception, e:
 				print e
+		#for i in romadic:
+		#	try:
+		#		k = i[0]
+		#		if k != 'nn':
+		#			k1 = k1 = alpha2mb(k.lower() + 'm')
+		#			y = i[1] + u'ン'
+		#			pros = "%d/%d" % (i[2] + 1, i[2] + 1)
+		#			# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
+		#			s = u"%s,-1,-1,%d,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
+		#			file.write(s.encode('cp932'))
+		#			cost += 1
+		#	except Exception, e:
+		#		print e
