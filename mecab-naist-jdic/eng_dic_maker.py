@@ -4,7 +4,7 @@
 
 IN_FILE  = '/work/nvda/bep-eng.dic'
 OUT_FILE = 'nvdajp-eng-dic.csv'
-DEFAULT_COST = 2000
+DEFAULT_COST = 1800
 
 def alpha2mb(s):
         # 'abc' -> 'ａｂｃ'
@@ -31,52 +31,51 @@ if __name__ == '__main__':
 			d.append([a1, a2])
 			k[a1] = True
 	d2 = [
-		['alt', u'オルト'],
+		['alt', 	u'オルト'],
 		['acrobat', u'アクロバット'],
-		['adobe', u'アドビ'],
-		['about', u'アバウト'],
-		['au', u'エーユー'],
-		['blank', u'ブランク'],
-		['biz', u'ビズ'],
-		['bazaar', u'バザール'],
-		['cam', u'キャム'],
-		['ctrl', u'コントロール'],
+		['adobe', 	u'アドビ'],
+		['about', 	u'アバウト'],
+		['au', 		u'エーユー'],
+		['blank', 	u'ブランク'],
+		['biz', 	u'ビズ'],
+		['bazaar', 	u'バザール'],
+		['cam', 	u'キャム'],
+		['ctrl', 	u'コントロール'],
 		['console', u'コンソール'],
-		['caps', u'キャプス'],
-		['cygwin', u'シグウィン'],
-		['delete', u'デリート'],
-		['del', u'デリート'],
+		['caps', 	u'キャプス'],
+		['cygwin', 	u'シグウィン'],
+		['delete', 	u'デリート'],
+		['del', 	u'デリート'],
 		['explorer', u'エクスプローラ'],
-		['esc', u'エスケープ'],
-		['enter', u'エンター'],
+		['esc', 	u'エスケープ'],
+		['enter', 	u'エンター'],
 		['firefox', u'ファイアフォックス'],
-		['for', u'フォー'],
-		['google', u'グーグル'],
-		['home', u'ホーム'],
-		['hub', u'ハブ'],
+		['for', 	u'フォー'],
+		['google', 	u'グーグル'],
+		['home', 	u'ホーム'],
+		['hub', 	u'ハブ'],
 		['internet', u'インターネット'],
-		['insert', u'インサート'],
-		['java', u'ジャバ'],
-		['konica', u'コニカ'],
-		['micro', u'マイクロ'],
+		['insert', 	u'インサート'],
+		['java', 	u'ジャバ'],
+		['konica', 	u'コニカ'],
+		['micro', 	u'マイクロ'],
 		['mozilla', u'モジラ'],
-		['open', u'オープン'],
-		['office', u'オフィス'],
-		['python', u'パイソン'],
-		['pro', u'プロ'],
-		['radio', u'ラディオ'],
-		['shift', u'シフト'],
-		['skype', u'スカイプ'],
-		['soft', u'ソフト'],
+		['open', 	u'オープン'],
+		['office', 	u'オフィス'],
+		['python', 	u'パイソン'],
+		['pro', 	u'プロ'],
+		['radio', 	u'ラディオ'],
+		['shift', 	u'シフト'],
+		['skype', 	u'スカイプ'],
+		['soft', 	u'ソフト'],
 		['systems', u'システムズ'],
-		['think', u'シンク'],
-		['talk', u'トーク'],
-		['tab', u'タブ'],
-		['update', u'アップデート'],
+		['think', 	u'シンク'],
+		['talk', 	u'トーク'],
+		['tab', 	u'タブ'],
+		['update', 	u'アップデート'],
 		['version', u'バージョン'],
 		['vantage', u'バンテージ'],
-		['wave', u'ウェーブ'],
-		#['welcome to', u'ウェルカムトゥー'],
+		['wave', 	u'ウェーブ'],
 		['welcome', u'ウェルカム'],
 		['windows', u'ウィンドウズ'],
 	]
@@ -88,13 +87,15 @@ if __name__ == '__main__':
 	with open(OUT_FILE, "w") as file:
 		for i in d:
 			k = i[0]
+			alpha_count = len(k)
 			k1 = alpha2mb(k.lower())
 			y = i[1]
 			mora_count = len(y)
 			pros = "1/%d" % mora_count
 			cost = DEFAULT_COST
-			#if len(i) >= 3: pros = i[2]
-			#if len(i) >= 4: cost = i[3]
+			if alpha_count <= 3: cost = cost * 5
+			if len(i) >= 3: pros = i[2]
+			if len(i) >= 4: cost = i[3]
 			# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
 			s = u"%s,-1,-1,%d,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
 			file.write(s.encode('cp932'))

@@ -26,7 +26,7 @@ if __name__ == '__main__':
 				y = v[4]
 				mora_count = len(y)
 				# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
-				s = u"%s,-1,-1,10000,名詞,一般,*,*,*,*,%s,%s,%s,0/%d,C0\n" % (k1,k1,y,y,mora_count)
+				s = u"%s,-1,-1,15000,名詞,一般,*,*,*,*,%s,%s,%s,0/%d,C0\n" % (k1,k1,y,y,mora_count)
 				file.write(s.encode('cp932'))
 			except Exception, e:
 				print e
