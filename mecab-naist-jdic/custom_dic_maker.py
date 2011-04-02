@@ -16,7 +16,11 @@ jdic = [
 		[u'３行', 		u'サンギョー',			"1/4"],
 		[u'空行', 		u'クーギョー',			"0/4"],
 		[u'行末', 		u'ギョーマツ',			"0/4"],
-		[u'複数行', 	u'フクスーギョー'		"3/6"],
+		[u'複数行', 	u'フクスーギョー',		"3/6"],
+		[u'行操作',		u'ギョーソーサ',		"1/5"],
+		[u'空要素',		u'カラヨーソ',			"3/5"],
+		[u'ニコ生',		u'ニコナマ',			"0/4"],
+		[u'スリーマイル島原発',	u'スリーマイルトーゲンパツ'],
 
 		[u'孫正義', 	u'ソンマサヨシ', 		"4/6"],
 		[u'池田信夫',	u'イケダノブオ',		"0/6"],
@@ -39,7 +43,7 @@ jdic = [
 		[u'新家', 		u'シンケ',				"1/3"],
 		[u'大嘘', 		u'オーウソ',			"0/4"],
 		[u'１人', 		u'ヒトリ',				"2/3"],
-		[u'一人ひとり', 		u'ヒトリヒトリ',				"0/6"],
+		[u'一人ひとり', u'ヒトリヒトリ',		"0/6"],
 		[u'日中', 		u'ニッチュー',			"3/4"],
 		[u'次',			u'ツギ',				"2/2", 5000],
 		[u'他人事',		u'タニンゴト',			"0/5"],
@@ -55,89 +59,12 @@ jdic = [
 		[u'なう',		u'ナウ',				"1/2"],
 		[u'被り',		u'カブリ',				"0/3"],
 		[u'寺田寅彦',	u'テラダトラヒコ',		"0/7"],
+		[u'橋下知事',	u'ハシモトチジ',		"0/6"],
 	]
 
-edic = [
-		# first field should use single-byte charactors
-		['anpi', 		u'アンピ',			"1/3"],
-		['asian',		u'アジアン',		"1/4"],
-		['asahi', 		u'アサヒ'			"1/3"],
-		['edu',			u'エデュー',		"1/3"],
-		['gamba', 		u'ガンバ', 			"1/3"],
-		['genpatsu',	u'ゲンパツ',		"1/4"],
-		['hinan', 		u'ヒナン', 			"1/3"],
-		['horijun',		u'ホリジュン',		"1/4"],
-		['inosenaoki'	u'イノセナオキ',	"1/7"],
-		['kahoku', 		u'カホク', 			"1/3"],
-		['kurogen',		u'クロゲン',		"1/4"],
-		['medic', 		u'メディック',		"1/4"],
-		['miz',			u'ミズ',			"2/2"],
-		['minpo', 		u'ミンポー',		"1/4"],
-		['seikatsu',	u'セーカツ',		"1/4"],
-		['sagas',		u'サガス',			"1/3"],
-		['shimpo', 		u'シンポー', 		"1/4"],
-		['shimbun', 	u'シンブン'			"1/4"],
-		['teiden', 		u'テーデン',		"1/4"],
-		['tokuho',		u'トクホー',		"1/4"],
-		['takeyama', 	u'タケヤマ',		"1/4"],
-		['pref', 		u'プリフ',			"1/3"],
-		['wikipedia', 	u'ウイキペディーア',	"0/8"],
-		['tepco', 		u'テプコ',			"1/3"],
-		['akb', 		u'エーケービー',		"1/6"],
-		['npo', 		u'エヌピーオー',		"2/6"],
-
-		['opensource', 	u'オープンソース'],
-		['notepad', 	u'ノートパッド'],
-		['guidebook', 	u'ガイドブック'],
-		['blog', 		u'ブログ'],
-		['matlab', 		u'マトラブ'],
-		['keyboard', 	u'キーボード'],
-		['plugins', 	u'プラグインズ'],
-		['facebook', 	u'フェイスブック'],
-		['desktop', 	u'デスクトップ'],
-		['output', 		u'アウトプット'],
-		['nullsoft', 	u'ヌルソフト'],
-		['cygdrive', 	u'シグドライブ'],
-		['ustream', 	u'ユーストリーム'],
-		['ubuntu', 		u'ウブンツー'],
-		['ware', 		u'ウェアー'],
-		['id', 			u'アイディー'],
-		['it', 			u'アイティー'],
-		['time', 		u'タイム'],
-		['home', 		u'ホーム'],
-		['nvda', 		u'エヌブイディーエー', 					"1/8"],
-		['jp', 			u'ジェーピー', 			"1/4"],
-		['co', 			u'シーオー', 			"1/4"],
-		['usb', 		u'ユーエスビー',		"1/6"],
-		['faq', 		u'エフエーキュー',		"1/6"],
-		['iaea', 		u'アイエーイーエー',		"7/8"],
-		['sjis', 		u'エスジス', 			"0/4"],
-		['jis', 		u'ジス', 			"1/2"],
-		['euc', 		u'イーユーシー', 	"1/6"],
-		['au', 			u'エーユー', 		"1/4", 600],
-		['audio', 		u'オーディオ', 		"1/4", 610],
-		['suite', 		u'スイート', 		"2/4", 1000],
-		
-		['morioka', 	u'モリオカ', 		"2/4"],
-		['miyagi', 		u'ミヤギ',			"1/3"],
-		['fukushima', 	u'フクシマ', 		"2/4"],
-		['niigata', 	u'ニーガタ', 		"0/4"],
-		['hokkaido', 	u'ホッカイドー'],
-		['yamagata', 	u'ヤマガタ'],
-		['akita', 		u'アキタ'],
-		['aomori', 		u'アオモリ'],
-		['iwate', 		u'イワテ'],
-		['tsukuba', 	u'ツクバ'],
-		['oshu', 		u'オーシュー'],
-		['hachinohe', 	u'ハチノヘ'],
-		['kesennuma', 	u'ケセンヌマ'],
-		['kantei', 		u'カンテー'],
-		['saigai', 		u'サイガイ'],
-		['tochigi', 	u'トチギ'],
-		['kashima', 	u'カシマ'],
-		['yahoo', 		u'ヤフー',			"2/3"],
-		['japan', 		u'ジャパン',		"2/3"],
-	]
+#edic = [
+#		# first field should use single-byte charactors
+#	]
 
 romadic = [
 		# third item is number of morae
@@ -381,21 +308,21 @@ def alpha2mb(s):
 if __name__ == '__main__':
 	with open(OUT_FILE, "w") as file:
 		## edic
-		for i in edic:
-			try:
-				k = i[0]
-				k1 = alpha2mb(k.lower())
-				y = i[1]
-				mora_count = len(y)
-				pros = "0/%d" % mora_count
-				cost = 1000 # eng_dic_maker cost=1800
-				if len(i) >= 3: pros = i[2]
-				if len(i) >= 4: cost = i[3]
-				# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
-				s = u"%s,-1,-1,%d,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
-				file.write(s.encode('cp932'))
-			except Exception, e:
-				print e
+		# for i in edic:
+			# try:
+				# k = i[0]
+				# k1 = alpha2mb(k.lower())
+				# y = i[1]
+				# mora_count = len(y)
+				# pros = "0/%d" % mora_count
+				# cost = 1000 # eng_dic_maker cost=1800
+				# if len(i) >= 3: pros = i[2]
+				# if len(i) >= 4: cost = i[3]
+				# # 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
+				# s = u"%s,-1,-1,%d,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
+				# file.write(s.encode('cp932'))
+			# except Exception, e:
+				# print e
 		## jdic
 		for i in jdic:
 			try:
