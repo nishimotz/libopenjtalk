@@ -62,6 +62,7 @@ jdic = [
 		[u'橋下知事',	u'ハシモトチジ',		"0/6"],
 		[u'フレッツ光',	u'フレッツヒカリ',		"2/7"],
 		[u'選択行',		u'センタクギョー',		"0/6"],
+		[u'ベクレル',	u'ベクレル',			"1/4", 		1000,		u"名詞,接尾,助数詞,*,*,*"],
 	]
 
 def alpha2mb(s):
@@ -88,10 +89,12 @@ if __name__ == '__main__':
 				mora_count = len(y)
 				pros = "0/%d" % mora_count
 				cost = 1000
+				pos = u"名詞,一般,*,*,*,*"
 				if len(i) >= 3: pros = i[2]
 				if len(i) >= 4: cost = i[3]
+				if len(i) >= 5: pos  = i[4]
 				# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
-				s = u"%s,-1,-1,%d,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
+				s = u"%s,-1,-1,%d,%s,%s,%s,%s,%s,C0\n" % (k1,cost,pos,k1,y,y,pros)
 				file.write(s.encode('cp932'))
 			except Exception, e:
 				print e

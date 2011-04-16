@@ -3,8 +3,7 @@
 # since 2010-12-20 by Takuya Nishimoto
 
 # IN_DIR : location of nvdajp_dic.py
-# IN_DIR  = '/home/nishi/code/launchpad/with_jtalk/source/'
-IN_DIR  = '/work/nvda/releases_2011.1/source'
+IN_DIR  = '/work/nvda/jp2011.1/source'
 OUT_FILE = 'nvdajp-tankan-dic.csv'
 
 import sys
