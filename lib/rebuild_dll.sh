@@ -5,6 +5,7 @@ sh /usr/bin/set-gcc-default-3.sh
 echo 'building htsengineapi'
 pushd ../../htsengineapi
   make clean
+  autoreconf
   autoconf
   ./configure --build=i686-pc-mingw32
   make
@@ -12,6 +13,7 @@ popd
 echo 'building libopenjtalk'
 pushd ..
   make clean
+  autoreconf
   sh do_configure_mingw32.sh
   autoconf
   make

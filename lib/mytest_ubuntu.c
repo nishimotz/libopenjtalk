@@ -13,7 +13,7 @@ int main(int argc, char **argv)
     int (*func_jtalk)(int ac, char **av);
     char *error;
     int ret;
-    handle = dlopen("libopenjtalk.so", RTLD_LAZY);
+    handle = dlopen("libopenjtalk.so.0.0.0", RTLD_LAZY);
     if (!handle) {
         fputs (dlerror(), stderr);
 	fputs ("\n", stderr);

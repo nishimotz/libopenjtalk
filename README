@@ -81,16 +81,24 @@ requires: https://github.com/nishimotz/htsengineapi
 
 $ sudo apt-get install autoconf libtool
 $ cd htsengineapi
+$ autoreconf
 $ autoconf
-$ ./configure
+$ CC='gcc -fPIC' ./configure
+$ make clean
 $ make
 $ cd ..
 $ cd libopenjtalk
 $ autoreconf
 $ sh do_configure_ubuntu.sh
+$ make clean
 $ make
 $ cd lib
-$ make -f Makefile.ubuntu
+$ make -f Makefile.ubuntu target
+
+check symbols:
+$ nm ./libs/libopenjtalk.so.0.0.0 | lv 
+
+test (not working):
 $ export LD_LIBRARY_PATH=.libs ; ./mytest
 
 =============================================
