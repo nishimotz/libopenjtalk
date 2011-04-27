@@ -14,4 +14,5 @@ python custom_dic_maker.py
 python roma_dic_maker.py
 /usr/lib/mecab/mecab-dict-index -d $SRCDIR -o $OUTDIR -f cp932 -c cp932
 cp $SRCDIR/dicrc $OUTDIR
+echo "nvdajp-jtalk-dic" `date -u +%Y%m%d-%H%M%S` > $OUTDIR/DIC_VERSION
 cp -av $OUTDIR/* $OUTDIR2
