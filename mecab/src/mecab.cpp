@@ -1,6 +1,6 @@
 //  MeCab -- Yet Another Part-of-Speech and Morphological Analyzer
 //
-//  $Id: mecab.cpp,v 1.16 2010-12-12 12:47:27 uratec Exp $;
+//  $Id: mecab.cpp,v 1.17 2011-02-07 08:51:14 uratec Exp $;
 //
 //  Copyright(C) 2001-2006 Taku Kudo <taku@chasen.org>
 //  Copyright(C) 2004-2006 Nippon Telegraph and Telephone Corporation
@@ -11,7 +11,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2010  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2011  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */

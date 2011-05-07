@@ -4,7 +4,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2010  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2011  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */
@@ -85,6 +85,7 @@ NJD_SET_ACCENT_PHRASE_RULE_H_START;
 #define NJD_SET_ACCENT_PHRASE_SAHEN_SETSUZOKU "サ変接続"
 #define NJD_SET_ACCENT_PHRASE_TE "て"
 #define NJD_SET_ACCENT_PHRASE_DE "で"
+#define NJD_SET_ACCENT_PHRASE_SETTOUSHI "接頭詞"
 
 NJD_SET_ACCENT_PHRASE_RULE_H_END;
 
