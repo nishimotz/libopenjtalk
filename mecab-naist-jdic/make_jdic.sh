@@ -4,8 +4,8 @@
 # sh make_jdic.sh 
 
 SRCDIR=.
-OUTDIR=/work/nvda/miscdep/source/synthDrivers/jtalk/dic/
-OUTDIR2=/work/nvda/jp2011.1/source/synthDrivers/jtalk/dic/
+OUTDIR=/work/nvda/miscdep/source/nvdajptext/dic/
+OUTDIR2=/work/nvda/jp2011.1/source/nvdajptext/dic/
 
 mkdir -p $OUTDIR
 python eng_dic_maker.py # uses bep-eng.dic
