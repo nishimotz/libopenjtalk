@@ -76,29 +76,6 @@
 #include "njd_set_long_vowel.h"
 #include "njd2jpcommon.h"
 
-#if 0
-/* 
- * based on http://espeak.sourceforge.net/speak_lib.h
- */
-typedef enum {
-    jtEVENT_NONE = -1
-} jt_EVENT_TYPE;
-
-typedef struct {
-    jt_EVENT_TYPE type;
-} jt_EVENT;
-
-/* wav, numsamples, events */
-typedef int (t_jt_callback)(short *, int, jt_EVENT*);
-
-static t_jt_callback * m_jt_callback = NULL;
-
-void jt_SetSynthCallback(t_jt_callback* SynthCallback)
-{
-    m_jt_callback = SynthCallback;
-}
-#endif
-
 void *jt_malloc(unsigned int size)
 {
     return (void *)malloc(size);
