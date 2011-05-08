@@ -76,6 +76,11 @@
 #include "njd_set_long_vowel.h"
 #include "njd2jpcommon.h"
 
+char *jt_version()
+{
+	return "libopenjtalk 20110508";
+}
+
 void *jt_malloc(unsigned int size)
 {
     return (void *)malloc(size);
