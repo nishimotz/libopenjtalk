@@ -5,6 +5,7 @@
  * Notice: some functions in this file is dummy 
  * (to export functions inside the *.a)
  */
+#define LIBOPENJTALK_VERSION "libopenjtalk 20110515"
 
 #define VOICE "../../../share/open_jtalk/hts_voice_nitech_jp_atr503_m001-1.01"
 #define DIC   "../../../share/open_jtalk/open_jtalk_dic_utf_8-1.00"
@@ -79,6 +80,11 @@
 char *jt_version()
 {
 	return "libopenjtalk 20110508";
+}
+
+char *jt_version()
+{
+	return LIBOPENJTALK_VERSION;
 }
 
 void *jt_malloc(unsigned int size)
