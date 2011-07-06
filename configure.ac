@@ -21,7 +21,7 @@ AC_C_BIGENDIAN
 
 # Checks for libraries.
 AC_CHECK_LIB([m], [log])
-AC_CHECK_LIB(stdc++, main, MECAB_LIBS="-lstdc++")
+#AC_CHECK_LIB(stdc++, main, MECAB_LIBS="-lstdc++")
 AC_CHECK_LIB(iconv,iconv_open,use_libiconv=yes)
 AC_CHECK_FUNC(iconv_open,use_iconv=yes)
 
@@ -43,7 +43,7 @@ AC_CHECK_FUNCS(setjmp)
 
 # Set compilier option for mecab
 MECAB_DEFAULT_RC="dummy"
-AC_SUBST(MECAB_DEFAULT_RC)
+#AC_SUBST(MECAB_DEFAULT_RC)
 AC_CONFIG_HEADERS([mecab/config.h:mecab/config.h.in])
 DIC_VERSION="102"
 AC_SUBST(DIC_VERSION)
@@ -102,7 +102,7 @@ AC_TRY_COMPILE(
    ac_template=yes
 ],[
    AC_WARN(${CXX-c++} template <class T> does not work)
-   config_error=yes
+#   config_error=yes
 ])
 AC_MSG_RESULT([$ac_template])
 AC_MSG_CHECKING([if ${CXX-c++} supports const_cast<> (required)])
@@ -116,7 +116,7 @@ AC_TRY_COMPILE(
    ac_const_cast=yes
 ],[
    AC_WARN(${CXX-c++} const_cast<> does not work)
-   config_error=yes
+#   config_error=yes
 ])
 AC_MSG_RESULT([$ac_const_cast])
 AC_MSG_CHECKING(if ${CXX-c++} supports static_cast<> (required))
@@ -130,7 +130,7 @@ AC_TRY_COMPILE(
    ac_static_cast=yes
 ],[
    AC_WARN(${CXX-c++} static_cast<> does not work)
-   config_error=yes
+#   config_error=yes
 ])
 AC_MSG_RESULT([$ac_static_cast])
 AC_MSG_CHECKING(if ${CXX-c++} supports dynamic_cast<> (required))
@@ -145,7 +145,7 @@ AC_TRY_COMPILE(
    ac_dynamic_cast=yes
 ],[
    AC_WARN(${CXX-c++} dynamic_cast<> does not work)
-   config_error=yes
+#   config_error=yes
 ])
 AC_MSG_RESULT([$ac_dynamic_cast])
 AC_MSG_CHECKING(if ${CXX-c++} supports reinterpret_cast<> (required))
@@ -158,7 +158,7 @@ AC_TRY_COMPILE(
    ac_reinterpret_cast=yes
 ],[
    AC_WARN(${CXX-c++} reinterpret_cast<> does not work)
-   config_error=yes
+#   config_error=yes
 ])
 AC_MSG_RESULT([$ac_reinterpret_cast])
 AC_MSG_CHECKING(if ${CXX-c++} supports exception handler (required))
@@ -177,7 +177,7 @@ AC_TRY_COMPILE(
    ac_exception=yes
 ],[
    AC_WARN(${CXX-c++} exception does not work)
-   config_error=yes
+#   config_error=yes
 ])
 AC_MSG_RESULT([$ac_exception])
 AC_MSG_CHECKING(if ${CXX-c++} supports namespaces (required) )
@@ -190,15 +190,16 @@ AC_TRY_COMPILE(
 ],[
    ac_namespaces=yes
 ],[
-   config_error=yes
+#   config_error=yes
    ac_namespaces=no
 ])
 AC_MSG_RESULT([$ac_namespaces])
-AC_MSG_CHECKING(if ${CXX-c++} environment provides all required features)
+AC_MSG_CHECKING(if ${CXX-c++} environment provides all required 
+features)
 if test "x$config_error" = xyes ; then
    AC_MSG_RESULT([no])
    AC_MSG_ERROR([Your compiler is not powerful enough to compile MeCab. \
-                 If it should be, see config.log for more information of why it failed.])
+   If it should be, see config.log for more information of why it failed.])
 fi
 AC_MSG_RESULT([yes])
 

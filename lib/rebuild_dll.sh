@@ -1,10 +1,14 @@
 # for cygwin gcc3
 export CXX='g++ -mno-cygwin'
 export CC='gcc -mno-cygwin'
-sh /usr/bin/set-gcc-default-3.sh
+if [ -f /usr/bin/set-gcc-default-3.sh ] ; then
+  bash /usr/bin/set-gcc-default-3.sh
+fi
 echo 'building htsengineapi'
 pushd ../../htsengineapi
-  make clean
+  if [ -f Makefile ] ; then
+    make clean
+  fi
   autoreconf
   autoconf
   ./configure --build=i686-pc-mingw32
@@ -12,10 +16,16 @@ pushd ../../htsengineapi
 popd
 echo 'building libopenjtalk'
 pushd ..
-  make clean
+  if [ -f Makefile ] ; then
+    make clean
+  fi
   autoreconf
-  sh do_configure_mingw32.sh
+  autoheader
+  aclocal
+  automake
   autoconf
+  bash do_configure_mingw32.sh
+  # autoconf
   make
 popd
 echo 'building DLL'
