@@ -78,7 +78,7 @@
 
 char *jt_version()
 {
-	return "libopenjtalk 20110508";
+	return "libopenjtalk 20111015";
 }
 
 void *jt_malloc(unsigned int size)
@@ -362,6 +362,7 @@ void OpenJTalk_clear(OpenJTalk * open_jtalk)
    HTS_Engine_clear(&open_jtalk->engine);
 }
 
+#if 0
 void Usage()
 {
    fprintf(stderr, "\n");
@@ -451,6 +452,7 @@ void Usage()
 
    exit(0);
 }
+#endif
 
 /* Getfp: wrapper for fopen */
 FILE *Getfp(const char *name, const char *opt)
@@ -465,6 +467,7 @@ FILE *Getfp(const char *name, const char *opt)
    return (fp);
 }
 
+#if 0
 // dummy function
 int _libopenjtalk_main(char *buff, char *owfile)
 {
@@ -767,4 +770,5 @@ int _libopenjtalk_main(char *buff, char *owfile)
       fclose(logfp);
     return 0;
 }
+#endif
 

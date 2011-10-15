@@ -10,3 +10,8 @@ autom4te.cache
 mecab/config.h
 mecab/stamp-h1
 *.in
+*.lib
+*.obj
+*.dll
+*.exp
+

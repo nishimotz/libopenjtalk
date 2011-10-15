@@ -240,7 +240,6 @@ EXPORTS
     OpenJTalk_initialize @242
     OpenJTalk_load @243
     OpenJTalk_synthesis @244
-    Usage @245
     jt_free @247
     jt_malloc @248
     jt_save_logs @249
