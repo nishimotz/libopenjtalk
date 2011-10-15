@@ -1,5 +1,4 @@
 EXPORTS
-    Getfp @1
     HTS_Engine_clear @5
     HTS_Engine_create_gstream @6
     HTS_Engine_create_pstream @7
@@ -236,10 +235,6 @@ EXPORTS
     NJD_remove_node @238
     NJD_remove_silent_node @239
     NJD_sprint @240
-    OpenJTalk_clear @241
-    OpenJTalk_initialize @242
-    OpenJTalk_load @243
-    OpenJTalk_synthesis @244
     jt_free @247
     jt_malloc @248
     jt_save_logs @249
