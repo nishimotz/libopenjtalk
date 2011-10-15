@@ -88,11 +88,11 @@ clean:
 	cd bin
 	nmake /f Makefile.mak clean
 	cd ..
-	cd mecab-naist-jdic
-	nmake /f Makefile.mak clean
-	cd ..
+	rem cd mecab-naist-jdic
+	rem nmake /f Makefile.mak clean
+	rem cd ..
 	cd lib
-	nmake /f Makefile.mak
+	nmake /f Makefile.mak clean
 	cd ..
 
 install::

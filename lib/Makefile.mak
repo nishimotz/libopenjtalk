@@ -7,6 +7,7 @@ target: libopenjtalk.obj libopenjtalk.dll
 
 CC = cl
 LINK = link
+CFLAGS = /O2 /Ob2 /Oi /Ot /Oy /GT /GL /TC 
 
 INCLUDES = -I ../text2mecab \
            -I ../mecab/src \
@@ -42,7 +43,7 @@ libopenjtalk.obj: libopenjtalk.c
 	$(CC) $(INCLUDES) $(CFLAGS) /c libopenjtalk.c
 
 libopenjtalk.dll: libopenjtalk.obj
-	$(LINK) /DLL /OUT:libopenjtalk.dll \
+	$(LINK) /DLL /RELEASE /MACHINE:x86 /LTCG /OUT:libopenjtalk.dll \
 	libopenjtalk.obj $(LDADD) /DEF:libopenjtalk.def
 
 clean:	
