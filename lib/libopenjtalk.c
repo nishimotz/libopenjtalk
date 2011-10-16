@@ -6,9 +6,6 @@
  * (to export functions inside the *.a)
  */
 
-#define VOICE "../../../share/open_jtalk/hts_voice_nitech_jp_atr503_m001-1.01"
-#define DIC   "../../../share/open_jtalk/open_jtalk_dic_utf_8-1.00"
-
 /* ----------------------------------------------------------------- */
 /*           The HMM-Based Speech Synthesis System (HTS)             */
 /*           Open JTalk developed by HTS Working Group               */
@@ -73,7 +70,7 @@
 
 char *jt_version()
 {
-	return "libopenjtalk 20111015";
+	return "libopenjtalk 20111016";
 }
 
 void *jt_malloc(unsigned int size)
