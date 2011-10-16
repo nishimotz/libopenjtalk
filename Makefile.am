@@ -1,5 +1,6 @@
 
 SUBDIRS = text2mecab \
+          mecab \
           mecab2njd \
           njd \
           njd_set_pronunciation \
@@ -9,10 +10,9 @@ SUBDIRS = text2mecab \
           njd_set_unvoiced_vowel \
           njd_set_long_vowel \
           njd2jpcommon \
-          jpcommon
-#          mecab 
-#          bin
-#          mecab-naist-jdic
+          jpcommon \
+          bin \
+          mecab-naist-jdic
 
 EXTRA_DIST = AUTHORS COPYING ChangeLog INSTALL Makefile.mak NEWS README
 

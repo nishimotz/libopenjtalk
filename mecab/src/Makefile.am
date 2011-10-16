@@ -3,7 +3,7 @@ EXTRA_DIST = Makefile.mak
 
 DISTCLEANFILES = *.log *.out *~
 
-MAINTAINERCLEANFILES = Makefile.in 
+MAINTAINERCLEANFILES = Makefile.in mecab-dict-index
 
 INCLUDES = -D DIC_VERSION=@DIC_VERSION@ \
            @MECAB_WITHOUT_MUTEX_LOCK@ \
@@ -12,10 +12,10 @@ INCLUDES = -D DIC_VERSION=@DIC_VERSION@ \
            -D PACKAGE="\"@PACKAGE@\"" \
            -D VERSION="\"@VERSION@\""
 
-#noinst_PROGRAMS = mecab-dict-index
+noinst_PROGRAMS = mecab-dict-index
 
-#mecab_dict_index_SOURCES = mecab-dict-index.cpp
-#mecab_dict_index_LDADD = libmecab.a
+mecab_dict_index_SOURCES = mecab-dict-index.cpp
+mecab_dict_index_LDADD = libmecab.a
 
 noinst_LIBRARIES = libmecab.a
 
