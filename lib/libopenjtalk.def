@@ -253,3 +253,4 @@ EXPORTS
     njd_set_pronunciation @262
     njd_set_unvoiced_vowel @263
     text2mecab @264
+	HTS_Engine_set_lf0_offset @265
