@@ -70,7 +70,7 @@
 
 char *jt_version()
 {
-	return "libopenjtalk 20111016";
+	return "libopenjtalk 20111019";
 }
 
 void *jt_malloc(unsigned int size)
