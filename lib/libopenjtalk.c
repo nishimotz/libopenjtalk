@@ -137,7 +137,7 @@ void jt_speech_normalize(HTS_Engine * engine, short level)
 		if (max < a) max = a;
 	}
 	for (i = 0; i < ns; i++) {
-		data[i] = (int)((double)(data[i]) * level / 32767.0);
+		data[i] = (int)((double)(data[i]) * level / max);
 	}
 }
 
