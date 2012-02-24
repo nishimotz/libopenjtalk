@@ -70,7 +70,7 @@
 
 char *jt_version()
 {
-	return "libopenjtalk 20120222 (github)";
+    return "libopenjtalk 20120224 (github)";
 }
 
 void *jt_malloc(unsigned int size)
@@ -122,14 +122,19 @@ short *jt_speech_ptr(HTS_Engine * engine)
    return gss->gspeech;
 }
 
-/* level = 0..32767 */
-void jt_speech_normalize(HTS_Engine * engine, short level)
+/* level = 0..32000 */
+/* if nsample < 0 then use total_nsample */
+void jt_speech_normalize(HTS_Engine * engine, short level, int nsample)
 {
 	int ns, i;
 	short *data;
 	short max = 0;
 	level = abs(level);
-	ns = jt_total_nsample(engine);
+	if (nsample < 0) {
+		ns = jt_total_nsample(engine);
+	} else {
+		ns = nsample;
+	}
 	data = jt_speech_ptr(engine);
 	for (i = 0; i < ns; i++) {
 		int a;
@@ -137,7 +142,16 @@ void jt_speech_normalize(HTS_Engine * engine, short level)
 		if (max < a) max = a;
 	}
 	for (i = 0; i < ns; i++) {
-		data[i] = (int)((double)(data[i]) * level / max);
+		float f, g;
+		f = (float)data[i];
+		g = f * level / max;
+		if (g > 32000.0) {
+			data[i] = 32000;
+		} else if (g < -32000.0) {
+			data[i] = -32000;
+		} else {
+			data[i] = (short)g;
+		}
 	}
 }
 
