@@ -122,13 +122,13 @@ short *jt_speech_ptr(HTS_Engine * engine)
    return gss->gspeech;
 }
 
-/* level = 0..32000 */
 /* if nsample < 0 then use total_nsample */
 void jt_speech_normalize(HTS_Engine * engine, short level, int nsample)
 {
 	int ns, i;
 	short *data;
 	short max = 0;
+	const int MAX_LEVEL = 32767;
 	level = abs(level);
 	if (nsample < 0) {
 		ns = jt_total_nsample(engine);
@@ -145,10 +145,10 @@ void jt_speech_normalize(HTS_Engine * engine, short level, int nsample)
 		float f, g;
 		f = (float)data[i];
 		g = f * level / max;
-		if (g > 32000.0) {
-			data[i] = 32000;
-		} else if (g < -32000.0) {
-			data[i] = -32000;
+		if (g > MAX_LEVEL) {
+			data[i] = MAX_LEVEL;
+		} else if (g < -MAX_LEVEL) {
+			data[i] = -MAX_LEVEL;
 		} else {
 			data[i] = (short)g;
 		}
@@ -175,7 +175,7 @@ int jt_trim_silence(HTS_Engine * engine, short begin_thres, short end_thres)
 	end_pos = ns - 1;
 	if (end_thres >= 0) {
 		end_thres = abs(end_thres);
-		for (i = ns - 1; i >= 0; i--) {
+		for (i = ns - 1; i > begin_pos; i--) {
 			if (abs(data[i]) > end_thres) {
 				end_pos = i;
 				break;
