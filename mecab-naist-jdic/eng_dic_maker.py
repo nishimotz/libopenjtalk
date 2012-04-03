@@ -4,9 +4,10 @@
 # bep-eng.dic is available at:
 # http://cpansearch.perl.org/src/MASH/Lingua-JA-Yomi-0.01/lib/Lingua/JA/bep-eng.dic
 
-IN_FILE  = '/work/nvda/bep-eng.dic'
+IN_FILE_DEFAULT = 'c:/work/nvda/bep-eng.dic'
 OUT_FILE = 'nvdajp-eng-dic.csv'
 DEFAULT_COST = 1600
+CODE = 'cp932'
 
 def alpha2mb(s):
         # 'abc' -> 'ａｂｃ'
@@ -20,7 +21,7 @@ def alpha2mb(s):
                         result += to_table[pos]
         return result
 
-if __name__ == '__main__':
+def make_dic(IN_FILE):
 	import re
 	d = [
 		['alt', 	u'オルト'],
@@ -28,6 +29,7 @@ if __name__ == '__main__':
 		['adobe', 	u'アドビー', "1/4", 1000],
 		['about', 	u'アバウト'],
 		['ass', 	u'アス', "1/2", 10000],
+		['azure', 	u'アジュール', None, 100],
 		['blank', 	u'ブランク'],
 		['biz', 	u'ビズ'],
 		['bazaar', 	u'バザール'],
@@ -38,25 +40,36 @@ if __name__ == '__main__':
 		['cygwin', 	u'シグウィン'],
 		['delete', 	u'デリート'],
 		['del', 	u'デリート'],
+		['doxygen', u'ドキシゲン'],
 		['explorer', u'エクスプローラ'],
 		['esc', 	u'エスケープ'],
 		['enter', 	u'エンター'],
+		['editions', u'エディションズ'],
+		['essentials', u'エセンシャルズ'],
+		['extentions', u'エクステンションズ'],
 		['firefox', u'ファイアフォックス'],
 		['for', 	u'フォー'],
 		['foryou', 	u'フォーユー'],
+		['folders', u'フォルダーズ'],
+		['favo', u'ファボ'],
 		['guide', 	u'ガイド', None, 1000],
 		['google', 	u'グーグル'],
+		['gnu', 	u'グニュー'],
 		['home', 	u'ホーム'],
 		['hub', 	u'ハブ'],
 		['href',	u'エイチレフ'],
 		['internet', u'インターネット'],
 		['insert', 	u'インサート'],
+		['iis', 	u'アイアイエス'],
 		['java', 	u'ジャバ'],
 		['jaxa',    u'ジャクサ'],
 		['konica', 	u'コニカ'],
+		['kinect', 	u'キネクト'],
+		['kddi', 	u'ケーディーディーアイ'],
 		['micro', 	u'マイクロ'],
 		['mozilla', u'モジラ'],
 		['media',   u'メディア', "1/3", 1000],
+		['mixi', 	u'ミクシー'],
 		['open', 	u'オープン'],
 		['office', 	u'オフィス'],
 		['operation', 	u'オペレーション', None, 1000],
@@ -68,15 +81,24 @@ if __name__ == '__main__':
 		['soft', 	u'ソフト'],
 		['setup',	u'セットアップ'],
 		['systems', u'システムズ'],
+		['shared',  u'シェアード'],
 		['think', 	u'シンク'],
 		['talk', 	u'トーク'],
 		['tab', 	u'タブ'],
+		['tunes', 	u'チューンズ', '1/4', 10],
+		['tools', 	u'ツールズ', '1/4'],
+		['togetter', 	u'トゥギャッター'],
 		['update', 	u'アップデート'],
+		['ui', 	u'ユーアイ'],
+		['uac', 	u'ユーエーシー'],
 		['version', u'バージョン'],
 		['vantage', u'バンテージ'],
 		['wave', 	u'ウェーブ'],
 		['welcome', u'ウェルカム'],
 		['windows', u'ウィンドウズ'],
+		['xna',     u'エクスエヌエー'],
+		['you', 	u'ユー', None, 100],
+		['zune', 	u'ズーン'],
 		
 		['dev',			u'デブ'],
 		['jis', 		u'ジス', 			"1/2", 1000],
@@ -198,5 +220,7 @@ if __name__ == '__main__':
 			if len(i) >= 4: cost = i[3]
 			# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
 			s = u"%s,-1,-1,%d,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
-			file.write(s.encode('cp932'))
+			file.write(s.encode(CODE))
 
+if __name__ == '__main__':
+	make_dic(IN_FILE_DEFAULT)

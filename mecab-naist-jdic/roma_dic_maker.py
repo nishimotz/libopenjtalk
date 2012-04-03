@@ -3,6 +3,7 @@
 # since 2011-04-06 by Takuya Nishimoto
 
 OUT_FILE = 'nvdajp-roma-dic.csv'
+CODE = 'cp932'
 
 import sys
 import re
@@ -246,7 +247,7 @@ def alpha2mb(s):
         return result
 
 
-if __name__ == '__main__':
+def make_dic():
 	with open(OUT_FILE, "w") as file:
 		## romadic
 		cost = 500.0
@@ -260,7 +261,7 @@ if __name__ == '__main__':
 					pros = "%d/%d" % (0, i[2] + 2)
 					# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
 					s = u"%s,-1,-1,%.1f,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
-					file.write(s.encode('cp932'))
+					file.write(s.encode(CODE))
 				cost += step
 				for p in [('a', u'ア'), ('i', u'イ'), ('u', u'ウ'), ('e', u'エ'), ('o', u'オ')]:
 					k1 = k1 = alpha2mb(p[0] + k.lower())
@@ -268,7 +269,7 @@ if __name__ == '__main__':
 					pros = "%d/%d" % (0, i[2] + 2)
 					# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
 					s = u"%s,-1,-1,%.1f,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
-					file.write(s.encode('cp932'))
+					file.write(s.encode(CODE))
 				cost += step
 			except Exception, e:
 				print e
@@ -281,7 +282,7 @@ if __name__ == '__main__':
 					pros = "%d/%d" % (0, i[2] + 4)
 					# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
 					s = u"%s,-1,-1,%.1f,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
-					file.write(s.encode('cp932'))
+					file.write(s.encode(CODE))
 					cost += step
 			except Exception, e:
 				print e
@@ -294,7 +295,7 @@ if __name__ == '__main__':
 					pros = "%d/%d" % (0, i[2] + 2)
 					# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
 					s = u"%s,-1,-1,%.1f,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
-					file.write(s.encode('cp932'))
+					file.write(s.encode(CODE))
 					cost += step
 			except Exception, e:
 				print e
@@ -307,7 +308,10 @@ if __name__ == '__main__':
 					pros = "%d/%d" % (0, i[2] + 1)
 					# 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
 					s = u"%s,-1,-1,%.1f,名詞,一般,*,*,*,*,%s,%s,%s,%s,C0\n" % (k1,cost,k1,y,y,pros)
-					file.write(s.encode('cp932'))
+					file.write(s.encode(CODE))
 					cost += step
 			except Exception, e:
 				print e
+
+if __name__ == '__main__':
+	make_dic()
