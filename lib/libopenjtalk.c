@@ -68,9 +68,11 @@
 #include "njd_set_long_vowel.h"
 #include "njd2jpcommon.h"
 
+#include "libopenjtalk-timestamp.h"
+
 char *jt_version()
 {
-    return "libopenjtalk 20120224 (github)";
+    return JT_VERSION;
 }
 
 void *jt_malloc(unsigned int size)
