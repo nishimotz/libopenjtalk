@@ -142,7 +142,6 @@ EXPORTS
     HTS_free_matrix @145
     HTS_fwrite_little_endian @146
     HTS_get_copyright @147
-    HTS_get_fp @148
     HTS_get_pattern_token @149
     HTS_get_token @150
     HTS_get_token_from_string @151
@@ -253,4 +252,9 @@ EXPORTS
     njd_set_pronunciation @262
     njd_set_unvoiced_vowel @263
     text2mecab @264
-	HTS_Engine_set_lf0_offset_amp @265
+    HTS_Engine_set_lf0_offset_amp @265
+    HTS_Audio_initialize @266
+    HTS_Audio_set_parameter @267
+    HTS_Audio_clear @268
+    HTS_Audio_flush @269
+    HTS_Audio_write @270
