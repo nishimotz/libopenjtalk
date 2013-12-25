@@ -252,7 +252,7 @@ bool EncoderFeatureIndex::buildFeature(LearnerPath *path) {
       feature_cache_.insert(std::pair
                             <std::string, std::pair<const int *, size_t> >
                             (key,
-                             std::make_pair<const int *, size_t>
+                             std::pair<const int *, size_t>
                              (path->rnode->fvector, 1)));
     }
   }
@@ -271,7 +271,7 @@ bool EncoderFeatureIndex::buildFeature(LearnerPath *path) {
         return false;
       feature_cache_.insert(std::pair
                             <std::string, std::pair<const int *, size_t> >
-                            (key, std::make_pair<const int *, size_t>
+                            (key, std::pair<const int *, size_t>
                              (path->fvector, 1)));
     }
   }
@@ -391,7 +391,7 @@ int DecoderFeatureIndex::id(const char *key) {
 int EncoderFeatureIndex::id(const char *key) {
   std::map<std::string, int>::const_iterator it = dic_.find(key);
   if (it == dic_.end()) {
-    dic_.insert(std::make_pair<std::string, int>(std::string(key), maxid_));
+    dic_.insert(std::pair<std::string, int>(std::string(key), maxid_));
     return maxid_++;
   } else {
     return it->second;
@@ -418,7 +418,7 @@ void EncoderFeatureIndex::shrink(size_t freq,
   std::map<int, int> old2new;
   for (size_t i = 0; i < freqv.size(); ++i) {
     if (freqv[i] >= freq)
-      old2new.insert(std::make_pair<int, int>(i, maxid_++));
+      old2new.insert(std::pair<int, int>(i, maxid_++));
   }
 
   // update dic_

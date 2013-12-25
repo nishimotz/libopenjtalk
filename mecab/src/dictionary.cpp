@@ -245,7 +245,7 @@ bool Dictionary::compile(const Param &param,
       token->wcost = cost;
       token->feature = offset;
       token->compound = 0;
-      dic.push_back(std::make_pair<std::string, Token*>(w, token));
+      dic.push_back(std::pair<std::string, Token*>(w, token));
 
       // append to output buffer
       if (!wakati) fbuf.append(key.data(), key.size());

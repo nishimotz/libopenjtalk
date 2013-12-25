@@ -230,7 +230,7 @@ bool DictionaryRewriter::rewrite2(const std::string &feature,
     f.ufeature = *ufeature;
     f.lfeature = *lfeature;
     f.rfeature = *rfeature;
-    cache_.insert(std::make_pair<std::string, FeatureSet>(feature, f));
+    cache_.insert(std::pair<std::string, FeatureSet>(feature, f));
   } else {
     *ufeature = it->second.ufeature;
     *lfeature = it->second.lfeature;

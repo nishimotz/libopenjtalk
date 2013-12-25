@@ -446,7 +446,7 @@ void JPCommonLabel_push_word(JPCommonLabel * label, char *pron, char *pos, char 
       find = strtopcmp(pron, JPCOMMON_MORA_LONG_VOWEL);
       if (find != -1) {
          /* for long vowel */
-         if (label->phoneme_tail != NULL) {
+         if (label->phoneme_tail != NULL && is_first_word != 1) {
             JPCommonLabel_insert_pause(label);
             label->phoneme_tail->next =
                 (JPCommonLabelPhoneme *) calloc(1, sizeof(JPCommonLabelPhoneme));
@@ -726,7 +726,7 @@ void JPCommonLabel_make(JPCommonLabel * label)
       else
          a = p->up->up->up;
       if (a == NULL)
-         sprintf(label->feature[i], "%s/F:xx_xx#xx_xx@xx_xx|xx_xx", label->feature[i]);
+         sprintf(label->feature[i], "%s/F:xx_xx#xx_xx@xx", label->feature[i]);
       else {
          tmp1 = index_accent_phrase_in_breath_group(a);
          tmp2 = index_mora_in_breath_group(a->head->head);
