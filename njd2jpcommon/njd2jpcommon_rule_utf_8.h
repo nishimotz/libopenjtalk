@@ -4,7 +4,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2011  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2013  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */
@@ -120,6 +120,7 @@ static const char *njd2jpcommon_pos_list[] = {
    "名詞", "非自立", "形容動詞語幹", "*", "名詞-非自立",
    "名詞", "非自立", "助動詞語幹", "*", "名詞-非自立",
    "名詞", "非自立", "副詞可能", "*", "名詞-非自立",
+   "名詞", "非自立", "*", "*", "名詞-非自立",
    "名詞", "副詞可能", "*", "*", "名詞-普通名詞",
    "連体詞", "*", "*", "*", "連体詞",
    NULL, NULL, NULL, NULL, NULL

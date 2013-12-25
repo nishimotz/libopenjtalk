@@ -63,7 +63,6 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AR = @AR@
-AUDIO_PLAY = @AUDIO_PLAY@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -87,7 +86,6 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 GREP = @GREP@
-HTS_EMBEDDED = @HTS_EMBEDDED@
 HTS_ENGINE_HEADER = @HTS_ENGINE_HEADER@
 HTS_ENGINE_HEADER_DIR = @HTS_ENGINE_HEADER_DIR@
 HTS_ENGINE_LIBRARY = @HTS_ENGINE_LIBRARY@
@@ -106,7 +104,6 @@ MECAB_CHARSET = @MECAB_CHARSET@
 MECAB_DEFAULT_RC = @MECAB_DEFAULT_RC@
 MECAB_LIBS = @MECAB_LIBS@
 MECAB_USE_UTF8_ONLY = @MECAB_USE_UTF8_ONLY@
-MECAB_WITHOUT_MUTEX_LOCK = @MECAB_WITHOUT_MUTEX_LOCK@
 MKDIR_P = @MKDIR_P@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -179,6 +176,9 @@ INCLUDES = -I @top_srcdir@/njd @CHARSET@
 noinst_LIBRARIES = libnjd_set_accent_type.a
 libnjd_set_accent_type_a_SOURCES = njd_set_accent_type.h \
                                    njd_set_accent_type.c \
+                                   njd_set_accent_type_rule_ascii_for_euc_jp.h \
+                                   njd_set_accent_type_rule_ascii_for_shift_jis.h \
+                                   njd_set_accent_type_rule_ascii_for_utf_8.h \
                                    njd_set_accent_type_rule_euc_jp.h \
                                    njd_set_accent_type_rule_shift_jis.h \
                                    njd_set_accent_type_rule_utf_8.h

@@ -4,7 +4,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2011  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2013  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */
@@ -54,6 +54,7 @@ NJD_SET_DIGIT_RULE_H_START;
 #define NJD_SET_DIGIT_KAZU "数"
 #define NJD_SET_DIGIT_SUUSETSUZOKU "数接続"
 #define NJD_SET_DIGIT_JOSUUSHI "助数詞"
+#define NJD_SET_DIGIT_FUKUSHIKANOU "副詞可能"
 #define NJD_SET_DIGIT_HAIHUN1 "―"
 #define NJD_SET_DIGIT_HAIHUN2 "−"
 #define NJD_SET_DIGIT_HAIHUN3 "‐"
@@ -175,12 +176,23 @@ static const char *njd_set_digit_rule_numeral_list7[] = {
 };
 
 static const char *njd_set_digit_rule_numeral_list8[] = {
-   "百", "千", NULL
+   "百", NULL
 };
 
 static const char *njd_set_digit_rule_numeral_list9[] = {
    "六", "ロッ", "0", "2",
-   "八", "ハッ", "1", "2",
+   "八", "ハッ", "0", "2",
+   NULL, NULL, NULL
+};
+
+static const char *njd_set_digit_rule_numeral_list10[] = {
+   "千", "兆", NULL
+};
+
+static const char *njd_set_digit_rule_numeral_list11[] = {
+   "一", "イッ", "0", "2",
+   "八", "ハッ", "0", "2",
+   "十", "ジュッ", "1", "2",
    NULL, NULL, NULL
 };
 
@@ -197,7 +209,7 @@ static const char *njd_set_digit_rule_conv_table1b[] = {
    NULL, NULL, NULL, NULL
 };
 
-static const char *njd_set_digit_rule_numerative_class1c[] = {
+static const char *njd_set_digit_rule_numerative_class1c1[] = {
    /* from paper */
    "時", "時間", "人",
    /* from dictionary */
@@ -205,9 +217,21 @@ static const char *njd_set_digit_rule_numerative_class1c[] = {
    NULL
 };
 
-static const char *njd_set_digit_rule_conv_table1c[] = {
+static const char *njd_set_digit_rule_conv_table1c1[] = {
    "四", "ヨ", "0", "1",
    "七", "シチ", "1", "2",
+   NULL, NULL, NULL, NULL
+};
+
+static const char *njd_set_digit_rule_numerative_class1c2[] = {
+   /* from paper */
+   "時", "時間",
+   /* from dictionary */
+   "時限", "時半",
+   NULL
+};
+
+static const char *njd_set_digit_rule_conv_table1c2[] = {
    "九", "ク", "0", "1",
    NULL, NULL, NULL, NULL
 };
@@ -294,7 +318,7 @@ static const char *njd_set_digit_rule_numerative_class1h[] = {
    "線", "選", "銭", "層", "相", "揃", "たび", "つかみ", "つがい", "つぶ", "つまみ", "つ折",
    "つ折り", "とおり", "とき", "ところ", "とせ", "玉", "月", "手", "束", "続き", "体", "対",
    "卓", "樽", "反", "丁", "丁目", "鳥", "通", "掴み", "艇", "滴", "店", "転", "点", "斗", "棟",
-   "盗", "灯", "等", "等席", "等地", "等分", "答", "得", "噸", "粒",
+   "盗", "灯", "等", "等席", "等地", "等分", "答", "得", "噸", "粒", "種類", "歳馬", "世紀",
    NULL
 };
 

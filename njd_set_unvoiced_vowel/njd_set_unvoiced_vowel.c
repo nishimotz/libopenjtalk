@@ -4,7 +4,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2011  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2013  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */
@@ -58,6 +58,17 @@ NJD_SET_UNVOICED_VOWEL_C_START;
 #include "njd.h"
 #include "njd_set_unvoiced_vowel.h"
 
+#ifdef ASCII_HEADER
+#if defined(CHARSET_EUC_JP)
+#include "njd_set_unvoiced_vowel_rule_ascii_for_euc_jp.h"
+#elif defined(CHARSET_SHIFT_JIS)
+#include "njd_set_unvoiced_vowel_rule_ascii_for_shift_jis.h"
+#elif defined(CHARSET_UTF_8)
+#include "njd_set_unvoiced_vowel_rule_ascii_for_utf_8.h"
+#else
+#error CHARSET is not specified
+#endif
+#else
 #if defined(CHARSET_EUC_JP)
 #include "njd_set_unvoiced_vowel_rule_euc_jp.h"
 #elif defined(CHARSET_SHIFT_JIS)
@@ -67,10 +78,11 @@ NJD_SET_UNVOICED_VOWEL_C_START;
 #else
 #error CHARSET is not specified
 #endif
+#endif
 
 #define MAXBUFLEN 1024
 
-static int strtopcmp(char *str, const char *pattern)
+static int strtopcmp(const char *str, const char *pattern)
 {
    int i;
 
@@ -84,29 +96,17 @@ static int strtopcmp(char *str, const char *pattern)
    }
 }
 
-static int check_next_mora(char *str)
-{
-   int i;
-
-   for (i = 0; njd_set_unvoiced_vowel_next_mora_list[i] != NULL; i++) {
-      if (strtopcmp(str, njd_set_unvoiced_vowel_next_mora_list[i]) > 0)
-         return 1;
-   }
-   return 0;
-}
-
-static int strcat_unvoiced(char *buff, const char *str, int *last_unvoiced_flag, int *mora_in_word,
+static int strcat_unvoiced(char *buff, const char *str, int *last_unvoiced_flag,
                            int *mora_in_accent_phrase)
 {
    strcat(buff, str);
    strcat(buff, NJD_SET_UNVOICED_VOWEL_QUOTATION);
    *last_unvoiced_flag = 1;
-   *mora_in_word += 1;
    *mora_in_accent_phrase += 1;
    return strlen(str);
 }
 
-static int strcat_skip(char *buff, char *str, int *last_unvoiced_flag, int *mora_in_word,
+static int strcat_skip(char *buff, const char *str, int *last_unvoiced_flag,
                        int *mora_in_accent_phrase)
 {
    int i, byte;
@@ -116,7 +116,6 @@ static int strcat_skip(char *buff, char *str, int *last_unvoiced_flag, int *mora
       if (byte > 0) {
          strncat(buff, njd_set_unvoiced_vowel_mora_list[i], byte);
          *last_unvoiced_flag = 0;
-         *mora_in_word += 1;
          *mora_in_accent_phrase += 1;
          return strlen(njd_set_unvoiced_vowel_mora_list[i]);
       }
@@ -136,45 +135,33 @@ static int strcat_skip(char *buff, char *str, int *last_unvoiced_flag, int *mora
       *last_unvoiced_flag = 1;
       return strlen(NJD_SET_UNVOICED_VOWEL_QUOTATION);
    }
-   HTS_error(0, "WARNING: strcat_voiced() in njd_set_unvoiced_vowel.c: Wrong pron.");
+   fprintf(stderr, "WARNING: strcat_voiced() in njd_set_unvoiced_vowel.c: Wrong pron.");
    return 1;
 }
 
 static void set_unvoiced_vowel(NJDNode * node, int *acc_in_accent_phrase,
                                int *mora_in_accent_phrase, int *last_unvoiced_flag)
 {
-   int i, j;
-   int len, mora_in_word;
+   int i, j, k;
+   int len;
    char buff[MAXBUFLEN];
-   char *str;
+   const char *str;
    const char *tmp;
+   const char *pat;
    int find;
 
    /* initialize */
    str = NJDNode_get_pron(node);
    buff[0] = '\0';
 
-   /* Rule 1 */
-   if (strcmp(NJDNode_get_pos(node), NJD_SET_UNVOICED_VOWEL_JODOUSHI) == 0) {
-      for (i = 0; njd_set_unvoiced_vowel_jodoushi_table[i] != NULL; i += 3) {
-         if (strcmp(str, njd_set_unvoiced_vowel_jodoushi_table[i]) == 0) {
-            NJDNode_set_pron(node, (char *) njd_set_unvoiced_vowel_jodoushi_table[i + 1]);
-            *mora_in_accent_phrase += atoi(njd_set_unvoiced_vowel_jodoushi_table[i + 2]);
-            *last_unvoiced_flag = 1;
-            return;
-         }
-      }
-   }
-
    len = strlen(str);
-   mora_in_word = 0;
    for (i = 0; i < len;) {
       if (*last_unvoiced_flag == 1) {
          /* Rule 2 */
-         i += strcat_skip(buff, &str[i], last_unvoiced_flag, &mora_in_word, mora_in_accent_phrase);
+         i += strcat_skip(buff, &str[i], last_unvoiced_flag, mora_in_accent_phrase);
       } else if (*acc_in_accent_phrase == *mora_in_accent_phrase + 1) {
          /* Rule 3 */
-         i += strcat_skip(buff, &str[i], last_unvoiced_flag, &mora_in_word, mora_in_accent_phrase);
+         i += strcat_skip(buff, &str[i], last_unvoiced_flag, mora_in_accent_phrase);
       } else {
          /* Rule 4 */
          tmp = NULL;
@@ -186,29 +173,64 @@ static void set_unvoiced_vowel(NJDNode * node, int *acc_in_accent_phrase,
          }
          if (tmp == NULL) {
             /* unknown mora */
-            i += strcat_skip(buff, &str[i], last_unvoiced_flag, &mora_in_word,
-                             mora_in_accent_phrase);
+            i += strcat_skip(buff, &str[i], last_unvoiced_flag, mora_in_accent_phrase);
          } else {
-            find = 0;
-            for (j = 0; njd_set_unvoiced_vowel_candidate_list[j] != NULL; j++) {
-               if (strcmp(tmp, njd_set_unvoiced_vowel_candidate_list[j]) == 0) {
-                  if (check_next_mora(&str[i + strlen(tmp)]) == 1) {
-                     find = 1;
-                  } else if (NJDNode_get_mora_size(node) == mora_in_word + 1 && node->next != NULL
-                             && check_next_mora(NJDNode_get_pron(node->next)) == 1) {
-                     find = 1;
-                  } else {
+            j = i + strlen(tmp);
+            pat = NULL;
+            if (j < len)
+               pat = &str[j];
+            else if (node->next != NULL)
+               pat = NJDNode_get_pron(node->next);
+            if (pat != NULL)
+               find = -1;
+            else
+               find = 0;
+            if (find < 0) {
+               for (j = 0; njd_set_unvoiced_vowel_candidate_list1[j] != NULL; j++) {
+                  if (strcmp(tmp, njd_set_unvoiced_vowel_candidate_list1[j]) == 0) {
                      find = 0;
+                     for (k = 0; njd_set_unvoiced_vowel_next_mora_list1[k] != NULL; k++) {
+                        if (strtopcmp(pat, njd_set_unvoiced_vowel_next_mora_list1[k]) > 0) {
+                           find = 1;
+                           break;
+                        }
+                     }
+                     break;
                   }
-                  break;
+               }
+            }
+            if (find < 0) {
+               for (j = 0; njd_set_unvoiced_vowel_candidate_list2[j] != NULL; j++) {
+                  if (strcmp(tmp, njd_set_unvoiced_vowel_candidate_list2[j]) == 0) {
+                     find = 0;
+                     for (k = 0; njd_set_unvoiced_vowel_next_mora_list2[k] != NULL; k++) {
+                        if (strtopcmp(pat, njd_set_unvoiced_vowel_next_mora_list2[k]) > 0) {
+                           find = 1;
+                           break;
+                        }
+                     }
+                     break;
+                  }
+               }
+            }
+            if (find < 0) {
+               for (j = 0; njd_set_unvoiced_vowel_candidate_list3[j] != NULL; j++) {
+                  if (strcmp(tmp, njd_set_unvoiced_vowel_candidate_list3[j]) == 0) {
+                     find = 0;
+                     for (k = 0; njd_set_unvoiced_vowel_next_mora_list3[k] != NULL; k++) {
+                        if (strtopcmp(pat, njd_set_unvoiced_vowel_next_mora_list3[k]) > 0) {
+                           find = 1;
+                           break;
+                        }
+                     }
+                     break;
+                  }
                }
             }
             if (find == 1)      /* unvoiced */
-               i += strcat_unvoiced(buff, njd_set_unvoiced_vowel_candidate_list[j],
-                                    last_unvoiced_flag, &mora_in_word, mora_in_accent_phrase);
+               i += strcat_unvoiced(buff, tmp, last_unvoiced_flag, mora_in_accent_phrase);
             else                /* skip */
-               i += strcat_skip(buff, &str[i], last_unvoiced_flag, &mora_in_word,
-                                mora_in_accent_phrase);
+               i += strcat_skip(buff, tmp, last_unvoiced_flag, mora_in_accent_phrase);
          }
       }
    }
@@ -223,7 +245,7 @@ void njd_set_unvoiced_vowel(NJD * njd)
    NJDNode *node;
 
    for (node = njd->head; node != NULL; node = node->next) {
-      if (NJDNode_get_chain_flag(node) <= 0) {
+      if (NJDNode_get_chain_flag(node) != 1) {
          acc_in_accent_phrase = NJDNode_get_acc(node);
          mora_in_accent_phrase = 0;
       }

@@ -4,7 +4,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2011  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2013  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */
@@ -57,6 +57,17 @@ NJD_SET_ACCENT_PHRASE_C_START;
 #include "njd.h"
 #include "njd_set_accent_phrase.h"
 
+#ifdef ASCII_HEADER
+#if defined(CHARSET_EUC_JP)
+#include "njd_set_accent_phrase_rule_ascii_for_euc_jp.h"
+#elif defined(CHARSET_SHIFT_JIS)
+#include "njd_set_accent_phrase_rule_ascii_for_shift_jis.h"
+#elif defined(CHARSET_UTF_8)
+#include "njd_set_accent_phrase_rule_ascii_for_utf_8.h"
+#else
+#error CHARSET is not specified
+#endif
+#else
 #if defined(CHARSET_EUC_JP)
 #include "njd_set_accent_phrase_rule_euc_jp.h"
 #elif defined(CHARSET_SHIFT_JIS)
@@ -66,8 +77,9 @@ NJD_SET_ACCENT_PHRASE_C_START;
 #else
 #error CHARSET is not specified
 #endif
+#endif
 
-static int strtopcmp(char *str, const char *pattern)
+static int strtopcmp(const char *str, const char *pattern)
 {
    int i;
 
@@ -81,12 +93,11 @@ static int strtopcmp(char *str, const char *pattern)
    }
 }
 
-
 void njd_set_accent_phrase(NJD * njd)
 {
    NJDNode *node;
 
-   if (njd->head == NULL)
+   if (njd == NULL || njd->head == NULL)
       return;
 
    for (node = njd->head->next; node != NULL; node = node->next) {
@@ -182,7 +193,7 @@ void njd_set_accent_phrase(NJD * njd)
 
          /* Rule 12 */
          if (strcmp(NJDNode_get_pos(node), NJD_SET_ACCENT_PHRASE_DOUSHI) == 0)
-            if (strcmp(NJDNode_get_pos_group1(node), NJD_SET_ACCENT_PHRASE_HIJIRITSU)) {
+            if (strcmp(NJDNode_get_pos_group1(node), NJD_SET_ACCENT_PHRASE_HIJIRITSU) == 0) {
                if (strcmp(NJDNode_get_pos(node->prev), NJD_SET_ACCENT_PHRASE_DOUSHI) == 0) {
                   if (strtopcmp(NJDNode_get_cform(node->prev), NJD_SET_ACCENT_PHRASE_RENYOU) != -1)
                      NJDNode_set_chain_flag(node, 1);
@@ -191,27 +202,39 @@ void njd_set_accent_phrase(NJD * njd)
                       (NJDNode_get_pos_group1(node->prev),
                        NJD_SET_ACCENT_PHRASE_SAHEN_SETSUZOKU) == 0)
                      NJDNode_set_chain_flag(node, 1);
-               } else if (strcmp(NJDNode_get_pos(node->prev), NJD_SET_ACCENT_PHRASE_JOSHI) == 0) {
-                  if (strcmp
-                      (NJDNode_get_pos_group1(node->prev),
-                       NJD_SET_ACCENT_PHRASE_SETSUZOKUJOSHI) == 0) {
-                     if (strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_PHRASE_TE) == 0)
-                        NJDNode_set_chain_flag(node, 1);
-                     else if (strcmp(NJDNode_get_string(node->prev), NJD_SET_ACCENT_PHRASE_DE)
-                              == 0)
-                        NJDNode_set_chain_flag(node, 1);
-                  }
                }
             }
 
          /* Rule 13 */
+         if (strcmp(NJDNode_get_pos(node->prev), NJD_SET_ACCENT_PHRASE_MEISHI) == 0) {
+            if (strcmp(NJDNode_get_pos(node), NJD_SET_ACCENT_PHRASE_DOUSHI) == 0 ||
+                strcmp(NJDNode_get_pos(node), NJD_SET_ACCENT_PHRASE_KEIYOUSHI) == 0 ||
+                strcmp(NJDNode_get_pos_group1(node), NJD_SET_ACCENT_PHRASE_KEIYOUDOUSHI_GOKAN) == 0)
+               NJDNode_set_chain_flag(node, 0);
+         }
+
+         /* Rule 14 */
          if (strcmp(NJDNode_get_pos(node), NJD_SET_ACCENT_PHRASE_KIGOU) == 0 ||
              strcmp(NJDNode_get_pos(node->prev), NJD_SET_ACCENT_PHRASE_KIGOU) == 0)
             NJDNode_set_chain_flag(node, 0);
 
-         /* Rule 14 */
+         /* Rule 15 */
          if (strcmp(NJDNode_get_pos(node), NJD_SET_ACCENT_PHRASE_SETTOUSHI) == 0)
             NJDNode_set_chain_flag(node, 0);
+
+         /* Rule 16 */
+         if (strcmp(NJDNode_get_pos_group3(node->prev), NJD_SET_ACCENT_PHRASE_SEI) == 0
+             && strcmp(NJDNode_get_pos(node), NJD_SET_ACCENT_PHRASE_MEISHI) == 0)
+            NJDNode_set_chain_flag(node, 0);
+
+         /* Rule 17 */
+         if (strcmp(NJDNode_get_pos(node->prev), NJD_SET_ACCENT_PHRASE_MEISHI) == 0
+             && strcmp(NJDNode_get_pos_group3(node), NJD_SET_ACCENT_PHRASE_MEI) == 0)
+            NJDNode_set_chain_flag(node, 0);
+
+         /* Rule 18 */
+         if (strcmp(NJDNode_get_pos_group1(node), NJD_SET_ACCENT_PHRASE_SETSUBI) == 0)
+            NJDNode_set_chain_flag(node, 1);
       }
    }
 }

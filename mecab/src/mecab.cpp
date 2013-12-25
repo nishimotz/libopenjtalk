@@ -1,6 +1,5 @@
 //  MeCab -- Yet Another Part-of-Speech and Morphological Analyzer
 //
-//  $Id: mecab.cpp,v 1.17 2011-02-07 08:51:14 uratec Exp $;
 //
 //  Copyright(C) 2001-2006 Taku Kudo <taku@chasen.org>
 //  Copyright(C) 2004-2006 Nippon Telegraph and Telephone Corporation
@@ -11,7 +10,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2011  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2013  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */
@@ -63,35 +62,59 @@
 
 MECAB_CPP_START;
 
-void Mecab_initialize(Mecab *m){
+BOOL Mecab_initialize(Mecab *m){
   m->feature = NULL;
   m->size = 0;
   m->mecab = NULL;
+  return TRUE;
 }
 
-void Mecab_load(Mecab *m, char *dicdir){
-  const int argc = 3;
-  char *argv[] = {(char *) "mecab", (char *) "-d", dicdir};
+BOOL Mecab_load(Mecab *m, const char *dicdir){
+  int i;
+  int argc = 3;
+  char **argv;
+
+  if(m == NULL)
+    return FALSE;
 
   if(m->mecab != NULL)
     Mecab_clear(m);
-  m->mecab = mecab_new(argc,argv);
+
+  if(dicdir == NULL || strlen(dicdir) == 0)
+    return FALSE;
+
+  argv = (char **) malloc(sizeof(char *) * argc);
+
+  argv[0] = strdup("mecab");
+  argv[1] = strdup("-d");
+  argv[2] = strdup(dicdir);
+
+  m->mecab = mecab_new(argc, argv);
+
+  for(i = 0;i < argc;i++)
+    free(argv[i]);
+  free(argv);
+
   if(m->mecab == NULL){
     fprintf(stderr,"ERROR: Mecab_load() in mecab.cpp: Cannot open %s.\n",dicdir);
-    exit(1);
+    return FALSE;
   }
+  return TRUE;
 }
 
-void Mecab_analysis(Mecab *m, char *str){
+BOOL Mecab_analysis(Mecab *m, const char *str){
   int i = 0;
   mecab_node_t *head;
   mecab_node_t *node;
+
+  if(m->mecab == NULL)
+    return FALSE;
 
   if(m->size > 0 || m->feature != NULL)
     Mecab_refresh(m);
 
   head = (mecab_node_t *) mecab_sparse_tonode(m->mecab, str);
-  if(head == NULL) return;
+  if(head == NULL) return FALSE;
   for (node = head; node != NULL; node = node->next) {
     if(node->stat != MECAB_BOS_NODE && node->stat != MECAB_EOS_NODE)
       m->size++;
@@ -107,13 +130,15 @@ void Mecab_analysis(Mecab *m, char *str){
       i++;
     }
   }
+  return TRUE;
 }
 
-void Mecab_print(Mecab *m){
+BOOL Mecab_print(Mecab *m){
   int i;
   
   for(i = 0;i < m->size;i++)
     printf("%s\n",m->feature[i]);
+  return TRUE;
 }
 
 int Mecab_get_size(Mecab *m){
@@ -124,7 +149,7 @@ char **Mecab_get_feature(Mecab *m){
   return m->feature;
 }
 
-void Mecab_refresh(Mecab *m){
+BOOL Mecab_refresh(Mecab *m){
   int i;
   
   if(m->feature != NULL){
@@ -134,14 +159,17 @@ void Mecab_refresh(Mecab *m){
     m->feature = NULL;
     m->size = 0;
   }
+
+  return TRUE;
 }
 
-void Mecab_clear(Mecab *m){
+BOOL Mecab_clear(Mecab *m){
   Mecab_refresh(m);
   if(m->mecab != NULL){
     mecab_destroy(m->mecab);
     m->mecab = NULL;
   }
+  return TRUE;
 }
 
 MECAB_CPP_END;

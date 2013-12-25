@@ -5,9 +5,9 @@ all:
 	cd text2mecab
 	nmake /f Makefile.mak
 	cd ..
-	rem cd mecab
-	rem nmake /f Makefile.mak
-	rem cd ..
+	cd mecab
+	nmake /f Makefile.mak
+	cd ..
 	cd mecab2njd
 	nmake /f Makefile.mak
 	cd ..
@@ -38,15 +38,12 @@ all:
 	cd jpcommon
 	nmake /f Makefile.mak
 	cd ..
-	cd lib
+	cd bin
 	nmake /f Makefile.mak
 	cd ..
-	rem cd bin
-	rem nmake /f Makefile.mak
-	rem cd ..
-	rem cd mecab-naist-jdic
-	rem nmake /f Makefile.mak
-	rem cd ..
+	cd mecab-naist-jdic
+	nmake /f Makefile.mak
+	cd ..
 
 clean:
 	cd text2mecab
@@ -88,10 +85,7 @@ clean:
 	cd bin
 	nmake /f Makefile.mak clean
 	cd ..
-	rem cd mecab-naist-jdic
-	rem nmake /f Makefile.mak clean
-	rem cd ..
-	cd lib
+	cd mecab-naist-jdic
 	nmake /f Makefile.mak clean
 	cd ..
 

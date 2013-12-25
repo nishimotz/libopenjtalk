@@ -81,7 +81,6 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AR = @AR@
-AUDIO_PLAY = @AUDIO_PLAY@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -105,7 +104,6 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 GREP = @GREP@
-HTS_EMBEDDED = @HTS_EMBEDDED@
 HTS_ENGINE_HEADER = @HTS_ENGINE_HEADER@
 HTS_ENGINE_HEADER_DIR = @HTS_ENGINE_HEADER_DIR@
 HTS_ENGINE_LIBRARY = @HTS_ENGINE_LIBRARY@
@@ -124,7 +122,6 @@ MECAB_CHARSET = @MECAB_CHARSET@
 MECAB_DEFAULT_RC = @MECAB_DEFAULT_RC@
 MECAB_LIBS = @MECAB_LIBS@
 MECAB_USE_UTF8_ONLY = @MECAB_USE_UTF8_ONLY@
-MECAB_WITHOUT_MUTEX_LOCK = @MECAB_WITHOUT_MUTEX_LOCK@
 MKDIR_P = @MKDIR_P@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -194,7 +191,6 @@ EXTRA_DIST = Makefile.mak
 DISTCLEANFILES = *.log *.out *~
 MAINTAINERCLEANFILES = Makefile.in mecab-dict-index
 INCLUDES = -D DIC_VERSION=@DIC_VERSION@ \
-           @MECAB_WITHOUT_MUTEX_LOCK@ \
            @MECAB_USE_UTF8_ONLY@ \
            -D MECAB_DEFAULT_RC="\"@MECAB_DEFAULT_RC@\"" \
            -D PACKAGE="\"@PACKAGE@\"" \
@@ -232,9 +228,7 @@ libmecab_a_SOURCES = char_property.cpp \
                      libmecab.cpp \
                      mecab.cpp \
                      mecab.h \
-                     mempool.h \
                      mmap.h \
-                     mutex.h \
                      nbest_generator.cpp \
                      nbest_generator.h \
                      param.cpp \
@@ -254,6 +248,7 @@ libmecab_a_SOURCES = char_property.cpp \
                      viterbi.cpp \
                      viterbi.h \
                      viterbisub.h \
+                     winmain.h \
                      writer.cpp \
                      writer.h
 

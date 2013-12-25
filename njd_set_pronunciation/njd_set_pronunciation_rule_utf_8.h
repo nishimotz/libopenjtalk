@@ -4,7 +4,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2011  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2013  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */
@@ -512,6 +512,17 @@ static const char *njd_set_pronunciation_symbol_list[] = {
    "−", "、",
    NULL, NULL
 };
+
+#define NJD_SET_PRONUNCIATION_U        "ウ"
+#define NJD_SET_PRONUNCIATION_DOUSHI   "動詞"
+#define NJD_SET_PRONUNCIATION_JODOUSHI "助動詞"
+#define NJD_SET_PRONUNCIATION_CHOUON   "ー"
+
+#define NJD_SET_PRONUNCIATION_QUESTION  "？"
+#define NJD_SET_PRONUNCIATION_DESU_STR  "です"
+#define NJD_SET_PRONUNCIATION_MASU_STR  "ます"
+#define NJD_SET_PRONUNCIATION_DESU_PRON "デス"
+#define NJD_SET_PRONUNCIATION_MASU_PRON "マス"
 
 NJD_SET_PRONUNCIATION_RULE_H_END;
 
