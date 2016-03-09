@@ -4,7 +4,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2013  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2015  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */
@@ -55,16 +55,19 @@ NJD_SET_DIGIT_RULE_H_START;
 #define NJD_SET_DIGIT_SUUSETSUZOKU "数接続"
 #define NJD_SET_DIGIT_JOSUUSHI "助数詞"
 #define NJD_SET_DIGIT_FUKUSHIKANOU "副詞可能"
-#define NJD_SET_DIGIT_HAIHUN1 "―"
-#define NJD_SET_DIGIT_HAIHUN2 "－"
-#define NJD_SET_DIGIT_HAIHUN3 "‐"
+#define NJD_SET_DIGIT_HAIHUN1 "―"     /* horizontal bar */
+#define NJD_SET_DIGIT_HAIHUN2 "－"     /* minus sign */
+#define NJD_SET_DIGIT_HAIHUN3 "‐"     /* hyphen */
+#define NJD_SET_DIGIT_HAIHUN4 "―"     /* em dash */
+#define NJD_SET_DIGIT_HAIHUN5 "－"     /* fullwidth hyphen-minus */
 #define NJD_SET_DIGIT_KAKKO1 "（"
 #define NJD_SET_DIGIT_KAKKO2 "）"
 #define NJD_SET_DIGIT_BANGOU "番号"
 #define NJD_SET_DIGIT_TEN1 "．"
 #define NJD_SET_DIGIT_TEN2 "・"
 #define NJD_SET_DIGIT_TEN_FEATURE "．,名詞,接尾,助数詞,*,*,*,．,テン,テン,0/2,*,-1"
-#define NJD_SET_DIGIT_ZERO "〇"
+#define NJD_SET_DIGIT_ZERO1 "〇"
+#define NJD_SET_DIGIT_ZERO2 "０"
 #define NJD_SET_DIGIT_ZERO_BEFORE_DP "レー"
 #define NJD_SET_DIGIT_ZERO_AFTER_DP "ゼロ"
 #define NJD_SET_DIGIT_TWO "二"
@@ -79,6 +82,15 @@ NJD_SET_DIGIT_RULE_H_START;
 #define NJD_SET_DIGIT_NICHIKAN "日間"
 #define NJD_SET_DIGIT_ONE "一"
 #define NJD_SET_DIGIT_TSUITACHI "一日,名詞,副詞可能,*,*,*,*,一日,ツイタチ,ツイタチ,4/4,*"
+#define NJD_SET_DIGIT_FOUR "四"
+#define NJD_SET_DIGIT_TEN "十"
+#define NJD_SET_DIGIT_JUYOKKA "十四日,名詞,副詞可能,*,*,*,*,十四日,ジュウヨッカ,ジューヨッカ,1/5,*"
+#define NJD_SET_DIGIT_JUYOKKAKAN "十四日間,名詞,副詞可能,*,*,*,*,十四日間,ジュウヨッカカン,ジューヨッカカン,5/7,*"
+#define NJD_SET_DIGIT_NIJU "二十,名詞,副詞可能,*,*,*,*,二十,ニジュウ,ニジュー,1/3,*"
+#define NJD_SET_DITIT_YOKKA "四日,名詞,副詞可能,*,*,*,*,四日,ヨッカ,ヨッカ,0/3,*,0"
+#define NJD_SET_DIGIT_YOKKAKAN "四日間,名詞,副詞可能,*,*,*,*,四日間,ヨッカカン,ヨッカカン,3/5,*,0"
+#define NJD_SET_DITIT_HATSUKA "二十日,名詞,副詞可能,*,*,*,*,二十日,ハツカ,ハツカ,0/3,*"
+#define NJD_SET_DIGIT_HATSUKAKAN "二十日間,名詞,副詞可能,*,*,*,*,二十日間,ハツカカン,ハツカカン,3/5,*"
 
 static const char *njd_set_digit_rule_numeral_list1[] = {
    "○", "0", "〇",
@@ -110,7 +122,7 @@ static const char *njd_set_digit_rule_numeral_list1[] = {
    "はち", "8", "八",
    "きゅう", "9", "九",
    "〇", "0", "〇",
-   "０", "0", "〇",
+   "０", "0", "０",
    "壱", "1", "一",
    "弐", "2", "二",
    "貳", "2", "二",
@@ -135,20 +147,20 @@ static const char *njd_set_digit_rule_numeral_list3[] = {
    "万,名詞,数,*,*,*,*,万,マン,マン,1/2,*",
    "億,名詞,数,*,*,*,*,億,オク,オク,1/2,*",
    "兆,名詞,数,*,*,*,*,兆,チョウ,チョー,1/2,C3",
-   "京,名詞,数,*,*,*,*,京,ケイ,ケイ,1/2,*",
+   "京,名詞,数,*,*,*,*,京,ケイ,ケー,1/2,*",
    "垓,名詞,数,*,*,*,*,垓,ガイ,ガイ,1/2,*",
-   "禾予,名詞,数,*,*,*,*,禾予,ジョ,ジョ,1/1,*", /* No character in EUC-JP */
-   "穣,名詞,数,*,*,*,*,穣,ジョウ,ジョウ,1/2,*",
+   "禾予,名詞,数,*,*,*,*,禾予,ジョ,ジョ,1/1,*", /* none in this charcode */
+   "穣,名詞,数,*,*,*,*,穣,ジョウ,ジョー,1/2,*",
    "溝,名詞,数,*,*,*,*,溝,コウ,コウ,1/2,*",
    "澗,名詞,数,*,*,*,*,澗,カン,カン,1/2,*",
-   "正,名詞,数,*,*,*,*,正,セイ,セイ,1/2,*",
+   "正,名詞,数,*,*,*,*,正,セイ,セー,1/2,*",
    "載,名詞,数,*,*,*,*,載,サイ,サイ,1/2,*",
    "極,名詞,数,*,*,*,*,極,ゴク,ゴク,1/2,*",
    "恒河沙,名詞,数,*,*,*,*,恒河沙,ゴウガシャ,ゴウガシャ,1/4,*",
-   "阿僧祇,名詞,数,*,*,*,*,阿僧祇,アソウギ,アソウギ,2/4,*",
+   "阿僧祇,名詞,数,*,*,*,*,阿僧祇,アソウギ,アソーギ,2/4,*",
    "那由他,名詞,数,*,*,*,*,那由他,ナユタ,ナユタ,1/3,*",
    "不可思議,名詞,数,*,*,*,*,不可思議,フカシギ,フカシギ,2/4,*",
-   "無量大数,名詞,数,*,*,*,*,無量大数,ムリョウタイスウ,ムリョータイスウ,6/7,*",
+   "無量大数,名詞,数,*,*,*,*,無量大数,ムリョウタイスウ,ムリョータイスー,6/7,*",
    NULL
 };
 
@@ -158,7 +170,9 @@ static const char *njd_set_digit_rule_numeral_list4[] = {
 };
 
 static const char *njd_set_digit_rule_numeral_list5[] = {
-   "十", "百", "千", "万", "億", "兆", "京", "垓", "禾予", "穣", "溝", "澗", "正", "載", "極",
+   "十", "百", "千", "万", "億", "兆", "京", "垓",
+   "禾予", /* none in this charcode */
+   "穣", "溝", "澗", "正", "載", "極",
    "恒河沙", "阿僧祇", "那由他", "不可思議", "無量大数",
    NULL
 };
@@ -211,9 +225,9 @@ static const char *njd_set_digit_rule_conv_table1b[] = {
 
 static const char *njd_set_digit_rule_numerative_class1c1[] = {
    /* from paper */
-   "時", "時間", "人",
+   "人",
    /* from dictionary */
-   "時限", "時半", "人月", "人前", "人組",
+   "人月", "人前", "人組",
    NULL
 };
 
@@ -232,6 +246,8 @@ static const char *njd_set_digit_rule_numerative_class1c2[] = {
 };
 
 static const char *njd_set_digit_rule_conv_table1c2[] = {
+   "四", "ヨ", "0", "1",
+   "七", "シチ", "1", "2",
    "九", "ク", "0", "1",
    NULL, NULL, NULL, NULL
 };
@@ -292,7 +308,7 @@ static const char *njd_set_digit_rule_numerative_class1g[] = {
    "桁", "ケタ", "校", "港", "行", "項", "組", "件", "軒", "言", "戸", "湖", "光年", "石",
    "ぴき", "ぺん", "波", "派", "敗", "杯", "拍", "泊", "版", "犯", "班", "匹", "匹", "筆", "俵",
    "票", "品", "分間", "分目", "片", "片", "篇", "編", "辺", "遍", "歩", "歩", "報", "方", "方",
-   "法", "本立て",
+   "法", "本立て", "頭身",
    NULL
 };
 
@@ -319,6 +335,7 @@ static const char *njd_set_digit_rule_numerative_class1h[] = {
    "つ折り", "とおり", "とき", "ところ", "とせ", "玉", "月", "手", "束", "続き", "体", "対",
    "卓", "樽", "反", "丁", "丁目", "鳥", "通", "掴み", "艇", "滴", "店", "転", "点", "斗", "棟",
    "盗", "灯", "等", "等席", "等地", "等分", "答", "得", "噸", "粒", "種類", "歳馬", "世紀",
+   "車種",
    NULL
 };
 
@@ -369,7 +386,7 @@ static const char *njd_set_digit_rule_numerative_class1k[] = {
    "ｐａ", "ｐｐｍ", "パーセント", "パーミル", "パスカル", "パック", "パット", "ピーピーエム",
    "ピコ", "ページ", "頁", "ペア", "ペセタ", "ペソ", "ペニー", "ペニヒ", "ペンス", "ポイント",
    "振り", "針", "袋", "張り", "平米", "平方キロ", "平方キロメートル", "平方センチメートル",
-   "平方メートル",
+   "平方メートル", "品目",
    NULL
 };
 
@@ -423,7 +440,7 @@ static const char *njd_set_digit_rule_conv_table2c[] = {
 };
 
 static const char *njd_set_digit_rule_numerative_class2d[] = {
-/* from paper */
+   /* from paper */
    /* "羽", "把", *//* modified */
    NULL
 };
@@ -582,17 +599,18 @@ static const char *njd_set_digit_rule_conv_table4[] = {
 
 static const char *njd_set_digit_rule_conv_table5[] = {
    "一", "一日,名詞,副詞可能,*,*,*,*,一日,イチニチ,イチニチ,4/4,*",
-   "二", "二日,名詞,副詞可能,*,*,*,*,二日,フツカ,フツカ,3/3,*",
-   "三", "三日,名詞,副詞可能,*,*,*,*,三日,ミッカ,ミッカ,3/3,*",
-   "四", "四日,名詞,副詞可能,*,*,*,*,四日,ヨッカ,ヨッカ,3/3,*",
-   "五", "五日,名詞,副詞可能,*,*,*,*,五日,イツカ,イツカ,3/3,*",
-   "六", "六日,名詞,副詞可能,*,*,*,*,六日,ムイカ,ムイカ,3/3,*",
-   "七", "七日,名詞,副詞可能,*,*,*,*,七日,ナノカ,ナノカ,3/3,*",
-   "八", "八日,名詞,副詞可能,*,*,*,*,八日,ヨウカ,ヨウカ,3/3,*",
-   "九", "九日,名詞,副詞可能,*,*,*,*,九日,ココノカ,ココノカ,4/4,*",
-   "十", "十日,名詞,副詞可能,*,*,*,*,十日,トウカ,トーカ,3/3,*",
+   "二", "二日,名詞,副詞可能,*,*,*,*,二日,フツカ,フツカ,0/3,*",
+   "三", "三日,名詞,副詞可能,*,*,*,*,三日,ミッカ,ミッカ,0/3,*",
+   "四", "四日,名詞,副詞可能,*,*,*,*,四日,ヨッカ,ヨッカ,0/3,*",
+   "五", "五日,名詞,副詞可能,*,*,*,*,五日,イツカ,イツカ,0/3,*",
+   "六", "六日,名詞,副詞可能,*,*,*,*,六日,ムイカ,ムイカ,0/3,*",
+   "七", "七日,名詞,副詞可能,*,*,*,*,七日,ナノカ,ナノカ,0/3,*",
+   "八", "八日,名詞,副詞可能,*,*,*,*,八日,ヨウカ,ヨーカ,0/3,*",
+   "九", "九日,名詞,副詞可能,*,*,*,*,九日,ココノカ,ココノカ,0/4,*",
+   "十", "十日,名詞,副詞可能,*,*,*,*,十日,トウカ,トーカ,0/3,*",
    NULL, NULL
 };
+
 static const char *njd_set_digit_rule_conv_table6[] = {
    "一", "一日間,名詞,副詞可能,*,*,*,*,一日間,イチニチカン,イチニチカン,4/6,*",
    "二", "二日間,名詞,副詞可能,*,*,*,*,二日,フツカカン,フツカカン,3/5,*",
@@ -601,7 +619,7 @@ static const char *njd_set_digit_rule_conv_table6[] = {
    "五", "五日間,名詞,副詞可能,*,*,*,*,五日,イツカカン,イツカカン,3/5,*",
    "六", "六日間,名詞,副詞可能,*,*,*,*,六日,ムイカカン,ムイカカン,3/5,*",
    "七", "七日間,名詞,副詞可能,*,*,*,*,七日,ナノカカン,ナノカカン,3/5,*",
-   "八", "八日間,名詞,副詞可能,*,*,*,*,八日,ヨウカカン,ヨウカカン,3/5,*",
+   "八", "八日間,名詞,副詞可能,*,*,*,*,八日,ヨウカカン,ヨーカカン,3/5,*",
    "九", "九日間,名詞,副詞可能,*,*,*,*,九日,ココノカカン,ココノカカン,4/6,*",
    "十", "十日間,名詞,副詞可能,*,*,*,*,十日,トウカカン,トーカカン,3/5,*",
    NULL, NULL

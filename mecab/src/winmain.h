@@ -9,7 +9,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2013  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2015  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */
@@ -103,6 +103,9 @@ class CommandLine {
 
 int wmain_to_main_wrapper(int argc, char **argv);
 
+#if defined(__MINGW32__)
+extern "C"
+#endif
 int wmain(int argc, wchar_t **argv) {
   CommandLine cmd(argc, argv);
   return wmain_to_main_wrapper(cmd.argc(), cmd.argv());

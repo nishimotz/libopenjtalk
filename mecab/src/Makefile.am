@@ -5,11 +5,11 @@ DISTCLEANFILES = *.log *.out *~
 
 MAINTAINERCLEANFILES = Makefile.in mecab-dict-index
 
-INCLUDES = -D DIC_VERSION=@DIC_VERSION@ \
-           @MECAB_USE_UTF8_ONLY@ \
-           -D MECAB_DEFAULT_RC="\"@MECAB_DEFAULT_RC@\"" \
-           -D PACKAGE="\"@PACKAGE@\"" \
-           -D VERSION="\"@VERSION@\""
+AM_CPPFLAGS = -D DIC_VERSION=@DIC_VERSION@ \
+              @MECAB_USE_UTF8_ONLY@ \
+              -D MECAB_DEFAULT_RC="\"@MECAB_DEFAULT_RC@\"" \
+              -D PACKAGE="\"@PACKAGE@\"" \
+              -D VERSION="\"@VERSION@\""
 
 noinst_PROGRAMS = mecab-dict-index
 
@@ -66,7 +66,6 @@ libmecab_a_SOURCES = char_property.cpp \
                      utils.h \
                      viterbi.cpp \
                      viterbi.h \
-                     viterbisub.h \
                      winmain.h \
                      writer.cpp \
                      writer.h

@@ -4,7 +4,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2013  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2015  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */
@@ -155,7 +155,6 @@ static const char *jpcommon_mora_list[] = {
    "デョ", "dy", "o",
    "デュ", "dy", "u",
    "デャ", "dy", "a",
-   "デェ", "dy", "e",
    "ディ", "d", "i",
    "デ", "d", "e",
    "テョ", "ty", "o",
@@ -255,7 +254,7 @@ static const char *jpcommon_pos_list[] = {
    "接頭辞-形容詞的", "16",
    "接頭辞-動詞的", "16",
    "接頭辞-名詞的", "16",
-   "接尾辞-形状詞的", "16",
+   "接尾辞-形状詞的", "15",
    "接尾辞-形容詞的", "15",
    "接尾辞-動詞的", "15",
    "接尾辞-名詞的", "15",

@@ -4,7 +4,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2013  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2015  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */
@@ -109,6 +109,10 @@ static int Open_JTalk_load(Open_JTalk * open_jtalk, char *dn_mecab, char *fn_voi
       Open_JTalk_clear(open_jtalk);
       return 0;
    }
+   if (strcmp(HTS_Engine_get_fullcontext_label_format(&open_jtalk->engine), "HTS_TTS_JPN") != 0) {
+      Open_JTalk_clear(open_jtalk);
+      return 0;
+   }
    return 1;
 }
 
@@ -150,6 +154,11 @@ static void Open_JTalk_set_msd_threshold(Open_JTalk * open_jtalk, size_t i, doub
 static void Open_JTalk_set_gv_weight(Open_JTalk * open_jtalk, size_t i, double f)
 {
    HTS_Engine_set_gv_weight(&open_jtalk->engine, i, f);
+}
+
+static void Open_JTalk_set_volume(Open_JTalk * open_jtalk, double f)
+{
+   HTS_Engine_set_volume(&open_jtalk->engine, f);
 }
 
 static void Open_JTalk_set_audio_buff_size(Open_JTalk * open_jtalk, size_t i)
@@ -202,14 +211,14 @@ static int Open_JTalk_synthesis(Open_JTalk * open_jtalk, const char *txt, FILE *
 static void usage()
 {
    fprintf(stderr, "The Japanese TTS System \"Open JTalk\"\n");
-   fprintf(stderr, "Version 1.07 (http://open-jtalk.sourceforge.net/)\n");
-   fprintf(stderr, "Copyright (C) 2008-2013 Nagoya Institute of Technology\n");
+   fprintf(stderr, "Version 1.09 (http://open-jtalk.sourceforge.net/)\n");
+   fprintf(stderr, "Copyright (C) 2008-2015 Nagoya Institute of Technology\n");
    fprintf(stderr, "All rights reserved.\n");
    fprintf(stderr, "\n");
    fprintf(stderr, "%s", HTS_COPYRIGHT);
    fprintf(stderr, "\n");
    fprintf(stderr, "Yet Another Part-of-Speech and Morphological Analyzer \"Mecab\"\n");
-   fprintf(stderr, "Version 0.994 (http://mecab.sourceforge.net/)\n");
+   fprintf(stderr, "Version 0.996 (http://mecab.sourceforge.net/)\n");
    fprintf(stderr, "Copyright (C) 2001-2008 Taku Kudo\n");
    fprintf(stderr, "              2004-2008 Nippon Telegraph and Telephone Corporation\n");
    fprintf(stderr, "All rights reserved.\n");
@@ -251,10 +260,8 @@ static void usage()
            "    -jm f          : weight of GV for spectrum                               [  1.0][ 0.0--    ]\n");
    fprintf(stderr,
            "    -jf f          : weight of GV for log F0                                 [  1.0][ 0.0--    ]\n");
-#ifdef HTS_MELP
    fprintf(stderr,
-           "    -jl f          : weight of GV for low-pass filter                        [  1.0][ 0.0--    ]\n");
-#endif                          /* HTS_MELP */
+           "    -g  f          : volume (dB)                                             [  0.0][    --    ]\n");
    fprintf(stderr,
            "    -z  i          : audio buffer size (if i==0, turn off)                   [    0][   0--    ]\n");
    fprintf(stderr, "  infile:\n");
@@ -398,15 +405,14 @@ int main(int argc, char **argv)
             case 'p':
                Open_JTalk_set_gv_weight(&open_jtalk, 1, atof(*++argv));
                break;
-#ifdef HTS_MELP
-            case 'l':
-               Open_JTalk_set_gv_weight(&open_jtalk, 2, atof(*++argv));
-               break;
-#endif                          /* HTS_MELP */
             default:
                fprintf(stderr, "Error: Invalid option '-j%c'.\n", *(*argv + 2));
                exit(1);
             }
+            --argc;
+            break;
+         case 'g':
+            Open_JTalk_set_volume(&open_jtalk, atof(*++argv));
             --argc;
             break;
          case 'z':

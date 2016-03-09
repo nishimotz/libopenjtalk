@@ -10,7 +10,7 @@
 /*           http://open-jtalk.sourceforge.net/                      */
 /* ----------------------------------------------------------------- */
 /*                                                                   */
-/*  Copyright (c) 2008-2013  Nagoya Institute of Technology          */
+/*  Copyright (c) 2008-2015  Nagoya Institute of Technology          */
 /*                           Department of Computer Science          */
 /*                                                                   */
 /* All rights reserved.                                              */
@@ -66,6 +66,11 @@
 #endif /* for Open JTalk */
 #include <windows.h>
 #include <stdlib.h>
+#endif
+
+/* for Open JTalk */
+#if !defined(_WIN32) || defined(__CYGWIN__)
+#include <stdint.h>
 #endif
 
 /* for Open JTalk
@@ -335,6 +340,7 @@ int load_request_type(const Param &param) {
 bool load_dictionary_resource(Param *param) {
   std::string rcfile = param->get<std::string>("rcfile");
 
+  /* for Open JTalk
 #ifdef HAVE_GETENV
   if (rcfile.empty()) {
     const char *homedir = getenv("HOME");
@@ -394,12 +400,11 @@ bool load_dictionary_resource(Param *param) {
     }
   }
 
-  /* for Open JTalk
   if (rcfile.empty()) {
     vt = ::GetModuleFileNameW(DllInstance, v.get(), size);
     if (vt != 0) {
       scoped_fixed_array<wchar_t, _MAX_DRIVE> drive;
-      scoped_fixed_array<wchar_t, _MAX_DRIVE> dir;
+      scoped_fixed_array<wchar_t, _MAX_DIR> dir;
       _wsplitpath(v.get(), drive.get(), dir.get(), NULL, NULL);
       const std::wstring path =
           std::wstring(drive.get()) + std::wstring(dir.get()) + L"mecabrc";
@@ -408,10 +413,8 @@ bool load_dictionary_resource(Param *param) {
       }
     }
   }
-  */
 #endif
 
-  /* for Open JTalk
   if (rcfile.empty()) {
     rcfile = MECAB_DEFAULT_RC;
   }
@@ -455,7 +458,7 @@ namespace {
 
 #else   // defined(_MSC_VER)
 
-#define FORCE_INLINE __attribute__((always_inline))
+#define FORCE_INLINE inline __attribute__((always_inline))
 
 inline uint32_t rotl32 ( uint32_t x, uint8_t r ) {
   return (x << r) | (x >> (32 - r));
