@@ -1,0 +1,7 @@
+EXPORTS
+	mecab_version
+	mecab_strerror
+	mecab_sparse_tonode
+	mecab_new
+	mecab_new2
+	mecab_destroy
